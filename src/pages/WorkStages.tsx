@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TimelineStep } from "@/components/ui/TimelineStep";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { ArrowRight } from "lucide-react";
 
 const stages = [
@@ -46,44 +47,51 @@ const WorkStages = () => {
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
-          <SectionHeader
-            badge="Этапы работ"
-            title="Пошаговый процесс выполнения работ"
-            description="Системный подход к каждому проекту — от первичного анализа до сдачи готовой документации"
-          />
+          <AnimatedSection>
+            <SectionHeader
+              badge="Этапы работ"
+              title="Пошаговый процесс выполнения работ"
+              description="Системный подход к каждому проекту — от первичного анализа до сдачи готовой документации"
+            />
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Timeline */}
       <section className="section-padding pt-0">
         <div className="container-custom max-w-3xl">
-          {stages.map((stage, index) => (
-            <TimelineStep
-              key={index}
-              number={index + 1}
-              title={stage.title}
-              description={stage.description}
-              isLast={index === stages.length - 1}
-            />
-          ))}
+          <StaggerContainer staggerDelay={0.15}>
+            {stages.map((stage, index) => (
+              <StaggerItem key={index}>
+                <TimelineStep
+                  number={index + 1}
+                  title={stage.title}
+                  description={stage.description}
+                  isLast={index === stages.length - 1}
+                />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
       {/* CTA */}
       <section className="section-padding bg-ocean-dark">
         <div className="container-custom text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
-            Готовы начать проект?
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Оставьте заявку — мы свяжемся с вами для обсуждения деталей и подготовки коммерческого предложения
-          </p>
-          <Button size="lg" className="btn-glow" asChild>
-            <Link to="/contacts">
-              Оставить заявку
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </Button>
+          <AnimatedSection animation="scale">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Готовы начать проект?
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Оставьте заявку — мы свяжемся с вами для обсуждения деталей и подготовки коммерческого предложения
+            </p>
+            <Button size="lg" className="btn-glow" asChild>
+              <Link to="/contacts">
+                Оставить заявку
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+          </AnimatedSection>
         </div>
       </section>
     </Layout>
