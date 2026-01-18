@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { TimelineStep } from "@/components/ui/TimelineStep";
+import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { motion } from "framer-motion";
 import { 
   Ship, 
   Anchor, 
@@ -93,18 +94,38 @@ const Index = () => {
         {/* Content */}
         <div className="container-custom relative z-10 py-20">
           <div className="max-w-3xl">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-fade-in">
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+            >
               Приказ Минтранса РФ №176
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 animate-slide-up">
+            </motion.span>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6"
+            >
               Судоподъём, водолазные обследования и проектная документация{" "}
               <span className="text-gradient">под ключ</span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl animate-slide-up" style={{ animationDelay: "0.1s" }}>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl"
+            >
               Работы в соответствии с требованиями надзорных органов. 
               Полный цикл от обследования до сдачи отчётной документации.
-            </p>
-            <div className="flex flex-wrap gap-4 animate-slide-up" style={{ animationDelay: "0.2s" }}>
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex flex-wrap gap-4"
+            >
               <Button size="lg" className="btn-glow" asChild>
                 <Link to="/contacts">
                   Оставить заявку
@@ -123,7 +144,7 @@ const Index = () => {
                   Написать в Telegram
                 </a>
               </Button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -131,72 +152,78 @@ const Index = () => {
       {/* Why Trust Us */}
       <section className="section-padding bg-ocean-dark">
         <div className="container-custom">
-          <SectionHeader
-            badge="Преимущества"
-            title="Почему нам доверяют"
-            description="Профессиональный подход и строгое соответствие нормативным требованиям"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <AnimatedSection>
+            <SectionHeader
+              badge="Преимущества"
+              title="Почему нам доверяют"
+              description="Профессиональный подход и строгое соответствие нормативным требованиям"
+            />
+          </AnimatedSection>
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {whyTrustUs.map((item, index) => (
-              <div 
-                key={index}
-                className="card-ocean p-6 text-center hover:border-primary/50 transition-colors"
-              >
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="w-6 h-6 text-primary" />
+              <StaggerItem key={index}>
+                <div className="card-ocean p-6 text-center hover:border-primary/50 transition-colors h-full">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <item.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <p className="text-sm text-foreground font-medium">{item.text}</p>
                 </div>
-                <p className="text-sm text-foreground font-medium">{item.text}</p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* Clients */}
       <section className="section-padding">
         <div className="container-custom">
-          <SectionHeader
-            badge="Клиенты"
-            title="Для кого мы работаем"
-            description="Широкий спектр заказчиков — от государственных органов до частных судовладельцев"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <AnimatedSection>
+            <SectionHeader
+              badge="Клиенты"
+              title="Для кого мы работаем"
+              description="Широкий спектр заказчиков — от государственных органов до частных судовладельцев"
+            />
+          </AnimatedSection>
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {clients.map((client, index) => (
-              <div 
-                key={index}
-                className="flex items-center gap-4 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-              >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <client.icon className="w-5 h-5 text-primary" />
+              <StaggerItem key={index}>
+                <div className="flex items-center gap-4 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors h-full">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <client.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium text-foreground">{client.text}</span>
                 </div>
-                <span className="text-sm font-medium text-foreground">{client.text}</span>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* Services Overview */}
       <section className="section-padding bg-ocean-dark">
         <div className="container-custom">
-          <SectionHeader
-            badge="Услуги"
-            title="Ключевые направления"
-            description="Полный спектр услуг по судоподъёму и подготовке документации"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <AnimatedSection>
+            <SectionHeader
+              badge="Услуги"
+              title="Ключевые направления"
+              description="Полный спектр услуг по судоподъёму и подготовке документации"
+            />
+          </AnimatedSection>
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => (
-              <ServiceCard key={index} {...service} />
+              <StaggerItem key={index}>
+                <ServiceCard {...service} />
+              </StaggerItem>
             ))}
-          </div>
-          <div className="text-center mt-10">
+          </StaggerContainer>
+          <AnimatedSection delay={0.3} className="text-center mt-10">
             <Button variant="outline" size="lg" asChild>
               <Link to="/services">
                 Все услуги
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -204,7 +231,7 @@ const Index = () => {
       <section className="section-padding">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
+            <AnimatedSection animation="slideLeft">
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                 Этапы
               </span>
@@ -214,44 +241,56 @@ const Index = () => {
               <p className="text-muted-foreground mb-8">
                 Системный подход к выполнению работ — от первичного анализа до сдачи отчётной документации
               </p>
-              <div className="grid grid-cols-2 gap-4">
+              <StaggerContainer className="grid grid-cols-2 gap-4">
                 {workStages.map((stage, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary">
-                      {index + 1}
+                  <StaggerItem key={index}>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 text-sm font-bold text-primary">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground text-sm">{stage.title}</p>
+                        <p className="text-xs text-muted-foreground">{stage.description}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-foreground text-sm">{stage.title}</p>
-                      <p className="text-xs text-muted-foreground">{stage.description}</p>
-                    </div>
-                  </div>
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerContainer>
               <Button className="mt-8" asChild>
                 <Link to="/stages">
                   Подробнее об этапах
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>
-            </div>
-            <div className="relative">
-              <img 
-                src={divingImage} 
-                alt="Водолазное обследование" 
-                className="rounded-lg shadow-2xl"
-              />
-              <div className="absolute -bottom-6 -left-6 card-ocean p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-primary-foreground" />
+            </AnimatedSection>
+            <AnimatedSection animation="slideRight">
+              <div className="relative">
+                <motion.img 
+                  src={divingImage} 
+                  alt="Водолазное обследование" 
+                  className="rounded-lg shadow-2xl"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                />
+                <motion.div 
+                  className="absolute -bottom-6 -left-6 card-ocean p-4"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5, duration: 0.4 }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-foreground">24/7</p>
+                      <p className="text-sm text-muted-foreground">Аварийные работы</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-2xl font-bold text-foreground">24/7</p>
-                    <p className="text-sm text-muted-foreground">Аварийные работы</p>
-                  </div>
-                </div>
+                </motion.div>
               </div>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -259,29 +298,31 @@ const Index = () => {
       {/* CTA */}
       <section className="section-padding bg-primary/5">
         <div className="container-custom">
-          <div className="card-ocean p-8 md:p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Нужна консультация?
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Свяжитесь с нами для обсуждения вашего проекта. 
-              Мы подготовим индивидуальное решение с учётом всех нормативных требований.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button size="lg" className="btn-glow" asChild>
-                <Link to="/contacts">
-                  Оставить заявку
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <a href="https://t.me/morproekt" target="_blank" rel="noopener noreferrer">
-                  <Send className="w-5 h-5 mr-2" />
-                  Telegram
-                </a>
-              </Button>
+          <AnimatedSection animation="scale">
+            <div className="card-ocean p-8 md:p-12 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Нужна консультация?
+              </h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Свяжитесь с нами для обсуждения вашего проекта. 
+                Мы подготовим индивидуальное решение с учётом всех нормативных требований.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Button size="lg" className="btn-glow" asChild>
+                  <Link to="/contacts">
+                    Оставить заявку
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <a href="https://t.me/morproekt" target="_blank" rel="noopener noreferrer">
+                    <Send className="w-5 h-5 mr-2" />
+                    Telegram
+                  </a>
+                </Button>
+              </div>
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
     </Layout>

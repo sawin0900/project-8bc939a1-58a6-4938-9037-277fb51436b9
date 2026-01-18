@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import {
   Accordion,
   AccordionContent,
@@ -51,51 +52,58 @@ const FAQ = () => {
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
-          <SectionHeader
-            badge="FAQ"
-            title="Часто задаваемые вопросы"
-            description="Ответы на основные вопросы о судоподъёме, документации и организации работ"
-          />
+          <AnimatedSection>
+            <SectionHeader
+              badge="FAQ"
+              title="Часто задаваемые вопросы"
+              description="Ответы на основные вопросы о судоподъёме, документации и организации работ"
+            />
+          </AnimatedSection>
         </div>
       </section>
 
       {/* FAQ Accordion */}
       <section className="section-padding pt-0">
         <div className="container-custom max-w-3xl">
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqItems.map((item, index) => (
-              <AccordionItem 
-                key={index} 
-                value={`item-${index}`}
-                className="card-ocean px-6 border-border data-[state=open]:border-primary/50"
-              >
-                <AccordionTrigger className="text-left text-foreground hover:text-primary py-6">
-                  {item.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-6">
-                  {item.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <StaggerContainer staggerDelay={0.08}>
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqItems.map((item, index) => (
+                <StaggerItem key={index}>
+                  <AccordionItem 
+                    value={`item-${index}`}
+                    className="card-ocean px-6 border-border data-[state=open]:border-primary/50"
+                  >
+                    <AccordionTrigger className="text-left text-foreground hover:text-primary py-6">
+                      {item.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground pb-6">
+                      {item.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </StaggerItem>
+              ))}
+            </Accordion>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* CTA */}
       <section className="section-padding bg-ocean-dark">
         <div className="container-custom text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
-            Не нашли ответ на свой вопрос?
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Свяжитесь с нами — мы ответим на все ваши вопросы и поможем разобраться в деталях
-          </p>
-          <Button size="lg" className="btn-glow" asChild>
-            <Link to="/contacts">
-              Задать вопрос
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </Button>
+          <AnimatedSection animation="scale">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Не нашли ответ на свой вопрос?
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Свяжитесь с нами — мы ответим на все ваши вопросы и поможем разобраться в деталях
+            </p>
+            <Button size="lg" className="btn-glow" asChild>
+              <Link to="/contacts">
+                Задать вопрос
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+          </AnimatedSection>
         </div>
       </section>
     </Layout>

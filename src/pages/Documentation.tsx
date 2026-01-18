@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { FileText, Scale, Leaf, Building2, CheckCircle2, ArrowRight } from "lucide-react";
 
 const regulations = [
@@ -51,29 +52,35 @@ const Documentation = () => {
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
-          <SectionHeader
-            badge="Документация"
-            title="Нормативная база и документация"
-            description="Полное соответствие законодательству РФ и требованиям надзорных органов"
-          />
+          <AnimatedSection>
+            <SectionHeader
+              badge="Документация"
+              title="Нормативная база и документация"
+              description="Полное соответствие законодательству РФ и требованиям надзорных органов"
+            />
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Regulations */}
       <section className="section-padding pt-0">
         <div className="container-custom">
-          <h3 className="text-2xl font-bold text-foreground mb-8">Нормативная база</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatedSection>
+            <h3 className="text-2xl font-bold text-foreground mb-8">Нормативная база</h3>
+          </AnimatedSection>
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {regulations.map((reg, index) => (
-              <div key={index} className="card-ocean p-6">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <reg.icon className="w-6 h-6 text-primary" />
+              <StaggerItem key={index}>
+                <div className="card-ocean p-6 h-full">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <reg.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h4 className="font-semibold text-foreground mb-2">{reg.title}</h4>
+                  <p className="text-sm text-muted-foreground">{reg.description}</p>
                 </div>
-                <h4 className="font-semibold text-foreground mb-2">{reg.title}</h4>
-                <p className="text-sm text-muted-foreground">{reg.description}</p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -81,7 +88,7 @@ const Documentation = () => {
       <section className="section-padding bg-ocean-dark">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div>
+            <AnimatedSection animation="slideLeft">
               <h3 className="text-2xl font-bold text-foreground mb-4">
                 Документы, которые мы готовим
               </h3>
@@ -95,18 +102,17 @@ const Documentation = () => {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            </AnimatedSection>
+            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {documents.map((doc, index) => (
-                <div 
-                  key={index}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-muted/30"
-                >
-                  <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
-                  <span className="text-sm text-foreground">{doc}</span>
-                </div>
+                <StaggerItem key={index}>
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                    <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
+                    <span className="text-sm text-foreground">{doc}</span>
+                  </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </div>
       </section>
@@ -114,19 +120,21 @@ const Documentation = () => {
       {/* CTA */}
       <section className="section-padding">
         <div className="container-custom text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
-            Нужна помощь с документацией?
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Наши специалисты подготовят полный комплект документов в соответствии 
-            с требованиями законодательства и обеспечат их согласование в надзорных органах
-          </p>
-          <Button size="lg" className="btn-glow" asChild>
-            <Link to="/contacts">
-              Получить консультацию
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </Button>
+          <AnimatedSection animation="scale">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Нужна помощь с документацией?
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Наши специалисты подготовят полный комплект документов в соответствии 
+              с требованиями законодательства и обеспечат их согласование в надзорных органах
+            </p>
+            <Button size="lg" className="btn-glow" asChild>
+              <Link to="/contacts">
+                Получить консультацию
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+          </AnimatedSection>
         </div>
       </section>
     </Layout>

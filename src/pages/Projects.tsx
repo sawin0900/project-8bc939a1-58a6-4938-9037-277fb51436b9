@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { ArrowRight } from "lucide-react";
 import projectImage from "@/assets/project-salvage.jpg";
 import divingImage from "@/assets/diving-inspection.jpg";
@@ -44,40 +45,46 @@ const Projects = () => {
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
-          <SectionHeader
-            badge="Проекты"
-            title="Опыт выполненных работ"
-            description="Реализованные проекты по судоподъёму и водолазным обследованиям в акваториях Дальнего Востока"
-          />
+          <AnimatedSection>
+            <SectionHeader
+              badge="Проекты"
+              title="Опыт выполненных работ"
+              description="Реализованные проекты по судоподъёму и водолазным обследованиям в акваториях Дальнего Востока"
+            />
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Projects Grid */}
       <section className="section-padding pt-0">
         <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, index) => (
-              <ProjectCard key={index} {...project} />
+              <StaggerItem key={index}>
+                <ProjectCard {...project} />
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* CTA */}
       <section className="section-padding bg-ocean-dark">
         <div className="container-custom text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
-            Есть похожая задача?
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Расскажите о вашем проекте — мы подберём оптимальное решение на основе накопленного опыта
-          </p>
-          <Button size="lg" className="btn-glow" asChild>
-            <Link to="/contacts">
-              Обсудить проект
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </Button>
+          <AnimatedSection animation="scale">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Есть похожая задача?
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Расскажите о вашем проекте — мы подберём оптимальное решение на основе накопленного опыта
+            </p>
+            <Button size="lg" className="btn-glow" asChild>
+              <Link to="/contacts">
+                Обсудить проект
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+          </AnimatedSection>
         </div>
       </section>
     </Layout>
