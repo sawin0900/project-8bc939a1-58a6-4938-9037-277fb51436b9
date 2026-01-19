@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Anchor, Phone } from "lucide-react";
+import { Menu, X, Anchor, Phone, LogIn, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const navigation = [
   { name: "Главная", href: "/" },
@@ -18,6 +19,7 @@ const navigation = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, isAdmin, signOut } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -52,6 +54,27 @@ export function Header() {
 
         {/* CTA Button */}
         <div className="hidden lg:flex items-center gap-3">
+          {isAdmin && (
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/admin" className="flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                <span>Админ</span>
+              </Link>
+            </Button>
+          )}
+          {user ? (
+            <Button variant="outline" size="sm" onClick={signOut} className="flex items-center gap-2">
+              <LogOut className="w-4 h-4" />
+              <span>Выйти</span>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/auth" className="flex items-center gap-2">
+                <LogIn className="w-4 h-4" />
+                <span>Войти</span>
+              </Link>
+            </Button>
+          )}
           <Button variant="outline" size="sm" asChild>
             <a href="tel:+79991234567" className="flex items-center gap-2">
               <Phone className="w-4 h-4" />
@@ -92,6 +115,27 @@ export function Header() {
               </Link>
             ))}
             <div className="pt-4 flex flex-col gap-2">
+              {isAdmin && (
+                <Button variant="outline" asChild>
+                  <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
+                    <Settings className="w-4 h-4" />
+                    <span>Админ-панель</span>
+                  </Link>
+                </Button>
+              )}
+              {user ? (
+                <Button variant="outline" onClick={() => { signOut(); setMobileMenuOpen(false); }} className="flex items-center justify-center gap-2">
+                  <LogOut className="w-4 h-4" />
+                  <span>Выйти</span>
+                </Button>
+              ) : (
+                <Button variant="outline" asChild>
+                  <Link to="/auth" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
+                    <LogIn className="w-4 h-4" />
+                    <span>Войти</span>
+                  </Link>
+                </Button>
+              )}
               <Button variant="outline" asChild>
                 <a href="tel:+79991234567" className="flex items-center justify-center gap-2">
                   <Phone className="w-4 h-4" />

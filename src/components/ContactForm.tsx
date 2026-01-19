@@ -4,6 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Send, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(2, { message: "Имя должно быть не менее 2 символов" }).max(100),
+  phone: z.string().trim().min(6, { message: "Введите корректный номер телефона" }).max(20),
+  email: z.string().trim().email({ message: "Введите корректный email" }).max(255).optional().or(z.literal("")),
+  message: z.string().trim().max(2000).optional(),
+});
 
 export function ContactForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,21 +23,53 @@ export function ContactForm() {
     email: "",
     message: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrors({});
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Validate form data
+      contactSchema.parse(formData);
+      
+      const { error } = await supabase.from("contact_submissions").insert({
+        name: formData.name.trim(),
+        email: formData.email.trim() || "не указан",
+        phone: formData.phone.trim() || null,
+        message: formData.message.trim() || "Заявка с сайта",
+      });
 
-    toast({
-      title: "Заявка отправлена",
-      description: "Мы свяжемся с вами в ближайшее время",
-    });
+      if (error) {
+        throw error;
+      }
 
-    setFormData({ name: "", phone: "", email: "", message: "" });
-    setIsLoading(false);
+      toast({
+        title: "Заявка отправлена",
+        description: "Мы свяжемся с вами в ближайшее время",
+      });
+
+      setFormData({ name: "", phone: "", email: "", message: "" });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        err.errors.forEach((error) => {
+          if (error.path[0]) {
+            newErrors[error.path[0] as string] = error.message;
+          }
+        });
+        setErrors(newErrors);
+      } else {
+        toast({
+          title: "Ошибка",
+          description: "Не удалось отправить заявку. Попробуйте позже.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,6 +87,7 @@ export function ContactForm() {
             placeholder="Ваше имя"
             className="bg-muted border-border"
           />
+          {errors.name && <p className="text-destructive text-sm mt-1">{errors.name}</p>}
         </div>
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-2">
@@ -60,6 +102,7 @@ export function ContactForm() {
             placeholder="+7 (___) ___-__-__"
             className="bg-muted border-border"
           />
+          {errors.phone && <p className="text-destructive text-sm mt-1">{errors.phone}</p>}
         </div>
       </div>
       <div>
@@ -74,6 +117,7 @@ export function ContactForm() {
           placeholder="your@email.com"
           className="bg-muted border-border"
         />
+        {errors.email && <p className="text-destructive text-sm mt-1">{errors.email}</p>}
       </div>
       <div>
         <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
