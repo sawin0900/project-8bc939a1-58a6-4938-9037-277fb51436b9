@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 const navigation = [
   { name: "Главная", href: "/" },
   { name: "Услуги", href: "/services" },
+  { name: "Демонтаж и резка", href: "/services/dismantling-cutting" },
   { name: "Этапы работ", href: "/stages" },
   { name: "Документация", href: "/documentation" },
   { name: "Проекты", href: "/projects" },
