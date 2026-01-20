@@ -15,6 +15,7 @@ import FAQ from "./pages/FAQ";
 import Contacts from "./pages/Contacts";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import DismantlingCutting from "./pages/DismantlingCutting";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/services/dismantling-cutting" element={<DismantlingCutting />} />
             <Route path="/stages" element={<WorkStages />} />
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/projects" element={<Projects />} />
