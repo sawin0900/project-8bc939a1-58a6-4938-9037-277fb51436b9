@@ -19,7 +19,8 @@ import {
   Clock,
   Building2,
   Truck,
-  Scale
+  Scale,
+  Scissors
 } from "lucide-react";
 import heroImage from "@/assets/hero-salvage.jpg";
 import divingImage from "@/assets/diving-inspection.jpg";
@@ -45,6 +46,12 @@ const services = [
     icon: Ship,
     title: "Судоподъём затонувших судов",
     description: "Аварийный и плановый подъём затонувших судов в портовых и прибрежных акваториях с полным комплексом работ.",
+    href: "/services"
+  },
+  {
+    icon: Scissors,
+    title: "Демонтаж и резка",
+    description: "Подводная и надводная резка металлоконструкций, демонтаж затонувших судов и объектов на месте.",
     href: "/services"
   },
   {
@@ -108,7 +115,7 @@ const Index = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6"
             >
-              Судоподъём, водолазные обследования и проектная документация{" "}
+              Судоподъём, демонтаж, резка и водолазные работы{" "}
               <span className="text-gradient">под ключ</span>
             </motion.h1>
             <motion.p
@@ -117,8 +124,8 @@ const Index = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl"
             >
-              Работы в соответствии с требованиями надзорных органов. 
-              Полный цикл от обследования до сдачи отчётной документации.
+              Подводная и надводная резка металлоконструкций, демонтаж затонувших объектов. 
+              Полный цикл работ от обследования до сдачи отчётной документации.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -206,10 +213,10 @@ const Index = () => {
             <SectionHeader
               badge="Услуги"
               title="Ключевые направления"
-              description="Полный спектр услуг по судоподъёму и подготовке документации"
+              description="Полный спектр услуг по судоподъёму, демонтажу, резке и подготовке документации"
             />
           </AnimatedSection>
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {services.map((service, index) => (
               <StaggerItem key={index}>
                 <ServiceCard {...service} />
