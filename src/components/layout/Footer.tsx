@@ -92,11 +92,11 @@ export function Footer() {
             <h3 className="font-semibold text-foreground">Контакты</h3>
             <div className="space-y-3">
               <a 
-                href="tel:+79991234567"
+                href="tel:+79247301454"
                 className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <Phone className="w-4 h-4 text-primary" />
-                <span>+7 (999) 123-45-67</span>
+                <span>+7 (924) 730-14-54</span>
               </a>
               <a 
                 href="mailto:info@centr-prityazheniya.ru"
