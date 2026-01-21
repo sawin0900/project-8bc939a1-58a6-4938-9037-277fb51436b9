@@ -31,7 +31,7 @@ export function Header() {
             <Anchor className="w-5 h-5 text-primary" />
           </div>
           <div className="hidden sm:block">
-            <span className="font-bold text-lg text-foreground">МорПроект</span>
+            <span className="font-bold text-lg text-foreground">Центр Притяжения</span>
             <span className="block text-xs text-muted-foreground">Судоподъём • Водолазные работы</span>
           </div>
         </Link>
