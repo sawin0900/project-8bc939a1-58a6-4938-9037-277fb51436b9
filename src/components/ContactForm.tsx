@@ -45,6 +45,21 @@ export function ContactForm() {
         throw error;
       }
 
+      // Send Telegram notification
+      try {
+        await supabase.functions.invoke('send-telegram-notification', {
+          body: {
+            name: formData.name.trim(),
+            phone: formData.phone.trim(),
+            email: formData.email.trim() || null,
+            message: formData.message.trim() || null,
+          },
+        });
+      } catch (telegramError) {
+        console.error('Telegram notification failed:', telegramError);
+        // Don't fail the submission if Telegram notification fails
+      }
+
       toast({
         title: "Заявка отправлена",
         description: "Мы свяжемся с вами в ближайшее время",
