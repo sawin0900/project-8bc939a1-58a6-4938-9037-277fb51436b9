@@ -8,8 +8,8 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Телефон",
-    value: "+7 (999) 123-45-67",
-    href: "tel:+79991234567",
+    value: "+7 (924) 730-14-54",
+    href: "tel:+79247301454",
     description: "Круглосуточная линия",
   },
   {
