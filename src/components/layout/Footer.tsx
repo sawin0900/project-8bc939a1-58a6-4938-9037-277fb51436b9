@@ -35,11 +35,11 @@ export function Footer() {
                 <Anchor className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <span className="font-bold text-lg text-foreground">МорПроект</span>
+                <span className="font-bold text-lg text-foreground">Центр Притяжения</span>
               </div>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              ООО «МорПроект» — профессиональные услуги по судоподъёму, водолазным обследованиям 
+              «Центр Притяжения» — профессиональные услуги по судоподъёму, водолазным обследованиям 
               и подготовке проектной документации в соответствии с требованиями законодательства РФ.
             </p>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -126,7 +126,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} ООО «МорПроект». Все права защищены.
+            © {new Date().getFullYear()} «Центр Притяжения». Все права защищены.
           </p>
           <p className="text-xs text-muted-foreground">
             Работы выполняются в соответствии с Приказом Минтранса РФ №176
