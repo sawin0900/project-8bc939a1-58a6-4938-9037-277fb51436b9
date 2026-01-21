@@ -99,11 +99,11 @@ export function Footer() {
                 <span>+7 (999) 123-45-67</span>
               </a>
               <a 
-                href="mailto:info@morproekt.ru"
+                href="mailto:info@centr-prityazheniya.ru"
                 className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail className="w-4 h-4 text-primary" />
-                <span>info@morproekt.ru</span>
+                <span>info@centr-prityazheniya.ru</span>
               </a>
               <a 
                 href="https://t.me/morproekt"
