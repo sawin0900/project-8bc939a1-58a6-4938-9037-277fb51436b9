@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { 
   Scissors, 
   Flame, 
@@ -122,10 +123,23 @@ const workStages = [
 export default function DismantlingCutting() {
   return (
     <Layout>
+      <SEOHead
+        title="Демонтаж и резка металлоконструкций | Подводная резка"
+        description="Демонтаж затонувших судов, подводная и надводная резка металла. Газовая, плазменная, механическая резка. Работаем в Приморском крае."
+        keywords="демонтаж судов, подводная резка, резка металлоконструкций, газовая резка, плазменная резка, утилизация судов"
+        canonical="/services/dismantling-cutting"
+      />
+      <ServiceSchema
+        name="Демонтаж и резка металлоконструкций"
+        description="Профессиональный демонтаж затонувших судов, подводная и надводная резка металла всеми методами"
+        url="/services/dismantling-cutting"
+      />
+
       {/* Hero Section */}
       <section className="relative py-20 md:py-28 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
         <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-5 bg-cover bg-center" />
         <div className="container-custom relative z-10">
+          <Breadcrumbs />
           <AnimatedSection>
             <div className="max-w-4xl mx-auto text-center">
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">

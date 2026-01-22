@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, Breadcrumbs, FAQSchema } from "@/components/seo";
 import {
   Accordion,
   AccordionContent,
@@ -47,11 +48,25 @@ const faqItems = [
 ];
 
 const FAQ = () => {
+  const faqSchemaItems = faqItems.map(item => ({
+    question: item.question,
+    answer: item.answer
+  }));
+
   return (
     <Layout>
+      <SEOHead
+        title="FAQ — Вопросы о судоподъёме и документации"
+        description="Ответы на часто задаваемые вопросы о судоподъёме, Приказе Минтранса №176, согласованиях, сроках и стоимости работ."
+        keywords="вопросы судоподъём, FAQ водолазные работы, Приказ 176 вопросы, стоимость судоподъёма"
+        canonical="/faq"
+      />
+      <FAQSchema items={faqSchemaItems} />
+
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
+          <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="FAQ"

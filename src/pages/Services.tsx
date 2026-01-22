@@ -4,6 +4,7 @@ import { ServiceCard } from "@/components/ui/ServiceCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { 
   Ship, 
   Anchor, 
@@ -74,9 +75,22 @@ const services = [
 const Services = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Услуги судоподъёма и водолазных работ | Владивосток"
+        description="Полный спектр услуг: судоподъём затонувших судов, водолазные обследования акваторий, демонтаж и резка металлоконструкций, проектная документация по Приказу №176."
+        keywords="судоподъём услуги, водолазные работы Владивосток, демонтаж судов, подводная резка, обследование акватории, проектная документация"
+        canonical="/services"
+      />
+      <ServiceSchema
+        name="Судоподъём и водолазные работы"
+        description="Профессиональные услуги по судоподъёму, водолазным обследованиям, демонтажу и резке металлоконструкций в Приморском крае"
+        url="/services"
+      />
+      {/* Hero */}
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
+          <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="Услуги"

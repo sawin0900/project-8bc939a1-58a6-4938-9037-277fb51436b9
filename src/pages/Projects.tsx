@@ -4,6 +4,7 @@ import { ProjectCard } from "@/components/ui/ProjectCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight } from "lucide-react";
 import projectImage from "@/assets/project-salvage.jpg";
 import divingImage from "@/assets/diving-inspection.jpg";
@@ -42,9 +43,17 @@ const projects = [
 const Projects = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Проекты судоподъёма — выполненные работы"
+        description="Реализованные проекты по судоподъёму и водолазным обследованиям: подъём сейнеров, барж, обследование акваторий. Владивосток, Хабаровск, Дальний Восток."
+        keywords="проекты судоподъёма, кейсы водолазные работы, подъём судна Владивосток, обследование акватории"
+        canonical="/projects"
+      />
+
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
+          <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="Проекты"

@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ContactForm } from "@/components/ContactForm";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { Phone, Mail, Send, MapPin, Clock } from "lucide-react";
 
 const contactInfo = [
@@ -38,9 +39,17 @@ const contactInfo = [
 const Contacts = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Контакты — Центр Притяжения | Владивосток"
+        description="Свяжитесь с нами для заказа судоподъёма и водолазных работ. Телефон, email, Telegram. Владивосток, Приморский край. Круглосуточная аварийная служба."
+        keywords="контакты судоподъём, Владивосток, Центр Притяжения, заявка на судоподъём"
+        canonical="/contacts"
+      />
+
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
+          <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="Контакты"

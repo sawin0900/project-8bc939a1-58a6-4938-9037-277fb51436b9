@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, ServiceSchema } from "@/components/seo";
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, Shield, Phone, Send, ArrowRight } from "lucide-react";
 
@@ -27,6 +28,17 @@ const features = [
 const Emergency = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Аварийный судоподъём 24/7 | Срочные работы Владивосток"
+        description="Аварийный судоподъём и срочные водолазные работы круглосуточно. Выезд в течение 24 часов, работа в сложных условиях, минимизация экологического ущерба."
+        keywords="аварийный судоподъём, срочный судоподъём, экстренные водолазные работы, 24/7, Владивосток"
+        canonical="/emergency"
+      />
+      <ServiceSchema
+        name="Аварийный судоподъём"
+        description="Оперативное реагирование на аварийные ситуации, срочный подъём затонувших судов, минимизация ущерба"
+        url="/emergency"
+      />
       {/* Hero */}
       <section className="section-padding pt-32 bg-destructive/5">
         <div className="container-custom">
