@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 
 const articles = [
@@ -39,9 +40,17 @@ const articles = [
 const Articles = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Статьи о судоподъёме — экспертные материалы"
+        description="Полезные статьи о судоподъёме, Приказе Минтранса №176, типовых ошибках и подготовке документации. Экспертный опыт и практические рекомендации."
+        keywords="статьи судоподъём, проект подъёма судна, Приказ 176, ошибки судоподъёма, документация"
+        canonical="/articles"
+      />
+
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
+          <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="Полезные материалы"

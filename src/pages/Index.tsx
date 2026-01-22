@@ -4,6 +4,7 @@ import { Layout } from "@/components/layout/Layout";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, OrganizationSchema } from "@/components/seo";
 import { motion } from "framer-motion";
 import { 
   Ship, 
@@ -86,6 +87,13 @@ const workStages = [
 const Index = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Судоподъём и водолазные работы во Владивостоке | Центр Притяжения"
+        description="Профессиональный судоподъём затонувших судов, водолазные обследования акваторий, демонтаж и резка металлоконструкций в Приморском крае. Работаем по Приказу Минтранса РФ №176."
+        keywords="судоподъём, подъём затонувших судов, водолазные работы Владивосток, обследование акватории, проект подъёма судна, Приказ Минтранса 176, аварийный судоподъём, водолазное обследование"
+        canonical="/"
+      />
+      <OrganizationSchema />
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center">
         {/* Background */}

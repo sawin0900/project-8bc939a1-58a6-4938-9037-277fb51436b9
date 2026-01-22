@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { FileText, Scale, Leaf, Building2, CheckCircle2, ArrowRight } from "lucide-react";
 
 const regulations = [
@@ -49,9 +50,22 @@ const documents = [
 const Documentation = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Документация по судоподъёму | Приказ Минтранса №176"
+        description="Разработка проектной документации для судоподъёма: проект подъёма судна, ППР, технические отчёты. Полное соответствие Приказу Минтранса РФ №176, КТМ и КВВТ."
+        keywords="документация судоподъём, Приказ Минтранса 176, проект подъёма судна, ППР судоподъём, КТМ РФ, КВВТ, нормативная база"
+        canonical="/documentation"
+      />
+      <ServiceSchema
+        name="Разработка проектной документации для судоподъёма"
+        description="Подготовка полного комплекта документации по Приказу Минтранса РФ №176: проект подъёма судна, ППР, технические отчёты"
+        url="/documentation"
+      />
+
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
+          <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="Документация"

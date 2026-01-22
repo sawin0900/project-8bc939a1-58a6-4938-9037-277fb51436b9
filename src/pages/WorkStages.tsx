@@ -4,6 +4,7 @@ import { TimelineStep } from "@/components/ui/TimelineStep";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
+import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight } from "lucide-react";
 
 const stages = [
@@ -44,9 +45,17 @@ const stages = [
 const WorkStages = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Этапы судоподъёмных работ — от обследования до сдачи"
+        description="Пошаговый процесс выполнения судоподъёма: сбор данных, водолазное обследование, инженерные расчёты, проектная документация, согласования и подъём судна."
+        keywords="этапы судоподъёма, процесс подъёма судна, водолазное обследование, проект подъёма судна, согласования судоподъёма"
+        canonical="/stages"
+      />
+
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
+          <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="Этапы работ"
