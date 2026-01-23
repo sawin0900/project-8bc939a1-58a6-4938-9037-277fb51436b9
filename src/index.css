@@ -110,6 +110,8 @@
     --input: 215 20% 22%;
     --ring: 210 100% 52%;
 
+    --radius: 0.5rem;
+
     /* Custom tokens */
     --ocean-deep: 216 32% 8%;
     --ocean-dark: 216 28% 12%;
