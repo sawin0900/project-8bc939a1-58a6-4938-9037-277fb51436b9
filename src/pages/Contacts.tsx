@@ -3,7 +3,6 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ContactForm } from "@/components/ContactForm";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
-import { YandexMap } from "@/components/YandexMap";
 import { Phone, Mail, Send, MapPin, Clock } from "lucide-react";
 
 const contactInfo = [
@@ -123,18 +122,14 @@ const Contacts = () => {
                   </div>
                 </AnimatedSection>
 
-                {/* Yandex Map */}
+                {/* Map placeholder */}
                 <AnimatedSection delay={0.4}>
-                  <div className="card-ocean p-0 overflow-hidden">
-                    <YandexMap 
-                      center={[43.1155, 131.8855]} 
-                      zoom={13}
-                      address="г. Владивосток, Дальний Восток"
-                      className="aspect-video"
-                    />
-                    <div className="p-4 border-t border-border">
-                      <p className="text-sm text-muted-foreground text-center">
-                        Регион работы: Дальний Восток • Владивосток, Хабаровск, Сахалин
+                  <div className="card-ocean aspect-video flex items-center justify-center">
+                    <div className="text-center">
+                      <MapPin className="w-12 h-12 text-primary/30 mx-auto mb-4" />
+                      <p className="text-muted-foreground">
+                        Регион работы: Дальний Восток<br />
+                        Владивосток, Хабаровск, Сахалин
                       </p>
                     </div>
                   </div>

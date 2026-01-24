@@ -1,118 +1,73 @@
-# 🚢 Центр Притяжения — Сайт компании
+# Welcome to your Lovable project
 
-Профессиональный сайт компании "Центр Притяжения" — судоподъём затонувших судов, водолазные работы, проектная документация.
+## Project info
 
-## 🚀 Технологии
+**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-- **React 18** + **TypeScript**
-- **Vite** — быстрая сборка
-- **Tailwind CSS** — стилизация
-- **shadcn/ui** — UI компоненты
-- **React Router** — маршрутизация
-- **Supabase** — база данных и аутентификация
-- **Framer Motion** — анимации
-- **Zod** — валидация форм
+## How can I edit this code?
 
-## ✨ Особенности
+There are several ways of editing your application.
 
-- ✅ **Тёмная/светлая тема** — переключатель темы оформления
-- ✅ **Яндекс.Карты** — интерактивная карта на странице контактов
-- ✅ **Хлебные крошки** — навигация на всех страницах
-- ✅ **Безопасность** — защита от XSS, rate limiting, валидация
-- ✅ **SEO оптимизация** — мета-теги, Schema.org разметка
-- ✅ **Адаптивный дизайн** — работает на всех устройствах
-- ✅ **Админ-панель** — управление заявками и пользователями
+**Use Lovable**
 
-## 📦 Установка
+Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
 
-```bash
-# Клонировать репозиторий
-git clone https://github.com/YOUR_USERNAME/centr-prityazheniya.git
+Changes made via Lovable will be committed automatically to this repo.
 
-# Перейти в папку проекта
-cd centr-prityazheniya
+**Use your preferred IDE**
 
-# Установить зависимости
-npm install
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-# Создать файл .env
-cp .env.example .env
-# Заполнить переменные окружения (см. ниже)
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-# Запустить dev сервер
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
-## 🔐 Переменные окружения
+**Edit a file directly in GitHub**
 
-Создайте файл `.env` в корне проекта:
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_key
-```
+**Use GitHub Codespaces**
 
-## 🛠️ Команды
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-```bash
-# Разработка
-npm run dev
+## What technologies are used for this project?
 
-# Сборка для продакшена
-npm run build
+This project is built with:
 
-# Просмотр собранного проекта
-npm run preview
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-# Линтинг
-npm run lint
+## How can I deploy this project?
 
-# Тесты
-npm run test
-```
+Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
-## 📁 Структура проекта
+## Can I connect a custom domain to my Lovable project?
 
-```
-src/
-├── components/      # React компоненты
-│   ├── layout/     # Header, Footer, Layout
-│   ├── seo/        # SEO компоненты
-│   └── ui/         # UI компоненты
-├── pages/          # Страницы приложения
-├── hooks/          # React хуки
-├── lib/            # Утилиты и безопасность
-└── integrations/   # Интеграции (Supabase)
-```
+Yes, you can!
 
-## 🔒 Безопасность
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Проект включает комплексные меры безопасности:
-- Защита от XSS атак
-- Rate limiting для форм и аутентификации
-- Валидация и санитизация данных
-- Защита админ-панели
-- HTTP Security Headers
-
-Подробнее: [SECURITY.md](./SECURITY.md)
-
-## 📄 Лицензия
-
-Все права защищены © 2026 Центр Притяжения
-
-## 👨‍💻 Разработка
-
-Для разработки используйте:
-- **VSCode** или **Cursor**
-- **Node.js 18+**
-- **npm** или **bun**
-
-## 📞 Контакты
-
-- **Телефон**: +7 (924) 730-14-54
-- **Email**: info@centr-prityazheniya.ru
-- **Telegram**: @morproekt
-
----
-
-**Сделано с ❤️ для Центра Притяжения**
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

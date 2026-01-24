@@ -6,13 +6,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Send, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
-import { 
-  sanitizeString, 
-  sanitizeEmail, 
-  sanitizePhone, 
-  formRateLimiter,
-  isPotentiallyDangerous 
-} from "@/lib/security";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, { message: "Имя должно быть не менее 2 символов" }).max(100),
@@ -38,42 +31,15 @@ export function ContactForm() {
     setErrors({});
 
     try {
-      // Rate limiting - максимум 3 заявки в минуту с одного email
-      const rateLimitKey = formData.email.trim() || 'anonymous';
-      if (!formRateLimiter.checkLimit(rateLimitKey, 3, 60 * 1000)) {
-        toast({
-          title: "Слишком много запросов",
-          description: "Пожалуйста, подождите минуту перед отправкой следующей заявки",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // Проверка на опасный контент
-      const allFields = `${formData.name} ${formData.email} ${formData.phone} ${formData.message}`;
-      if (isPotentiallyDangerous(allFields)) {
-        toast({
-          title: "Ошибка",
-          description: "Обнаружен недопустимый контент в форме",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
       // Validate form data
       contactSchema.parse(formData);
       
-      // Санитизация данных перед отправкой
-      const sanitizedData = {
-        name: sanitizeString(formData.name.trim()),
-        email: sanitizeEmail(formData.email.trim()) || "не указан",
-        phone: sanitizePhone(formData.phone.trim()) || null,
-        message: sanitizeString(formData.message.trim()) || "Заявка с сайта",
-      };
-      
-      const { error } = await supabase.from("contact_submissions").insert(sanitizedData);
+      const { error } = await supabase.from("contact_submissions").insert({
+        name: formData.name.trim(),
+        email: formData.email.trim() || "не указан",
+        phone: formData.phone.trim() || null,
+        message: formData.message.trim() || "Заявка с сайта",
+      });
 
       if (error) {
         throw error;
@@ -83,10 +49,10 @@ export function ContactForm() {
       try {
         await supabase.functions.invoke('send-telegram-notification', {
           body: {
-            name: sanitizedData.name,
-            phone: sanitizedData.phone,
-            email: sanitizedData.email !== "не указан" ? sanitizedData.email : null,
-            message: sanitizedData.message !== "Заявка с сайта" ? sanitizedData.message : null,
+            name: formData.name.trim(),
+            phone: formData.phone.trim(),
+            email: formData.email.trim() || null,
+            message: formData.message.trim() || null,
           },
         });
       } catch (telegramError) {

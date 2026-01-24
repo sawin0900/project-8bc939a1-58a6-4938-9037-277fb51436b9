@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Anchor, Phone, LogIn, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navigation = [
   { name: "Главная", href: "/" },
@@ -56,7 +55,6 @@ export function Header() {
 
         {/* CTA Button */}
         <div className="hidden lg:flex items-center gap-3">
-          <ThemeToggle />
           {isAdmin && (
             <Button variant="outline" size="sm" asChild>
               <Link to="/admin" className="flex items-center gap-2">
@@ -79,7 +77,7 @@ export function Header() {
             </Button>
           )}
           <Button variant="outline" size="sm" asChild>
-            <a href="tel:+79247301454" className="flex items-center gap-2">
+            <a href="tel:+79991234567" className="flex items-center gap-2">
               <Phone className="w-4 h-4" />
               <span>Позвонить</span>
             </a>
@@ -118,9 +116,6 @@ export function Header() {
               </Link>
             ))}
             <div className="pt-4 flex flex-col gap-2">
-              <div className="flex items-center justify-center pb-2">
-                <ThemeToggle />
-              </div>
               {isAdmin && (
                 <Button variant="outline" asChild>
                   <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
@@ -143,7 +138,7 @@ export function Header() {
                 </Button>
               )}
               <Button variant="outline" asChild>
-                <a href="tel:+79247301454" className="flex items-center justify-center gap-2">
+                <a href="tel:+79991234567" className="flex items-center justify-center gap-2">
                   <Phone className="w-4 h-4" />
                   <span>Позвонить</span>
                 </a>

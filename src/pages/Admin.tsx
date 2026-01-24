@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { useAuth } from '@/hooks/useAuth';
@@ -31,15 +31,11 @@ import {
   RefreshCw,
   Trash2,
   Users,
-  MessageSquare,
-  Shield,
-  AlertTriangle
+  MessageSquare
 } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { SafeText } from '@/components/SafeContent';
-import { Breadcrumbs } from '@/components/seo';
 
 interface ContactSubmission {
   id: string;
@@ -71,53 +67,24 @@ export default function Admin() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Дополнительная проверка безопасности админ-панели
-  const verifyAdminAccess = useCallback(async () => {
-    if (!user) return false;
-    
-    try {
-      // Двойная проверка прав администратора на сервере
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
-
-      if (error || !data) {
-        console.error('Admin access verification failed:', error);
-        return false;
-      }
-      
-      return true;
-    } catch (err) {
-      console.error('Error verifying admin access:', err);
-      return false;
-    }
-  }, [user]);
-
   useEffect(() => {
     if (!authLoading) {
       if (!user) {
         navigate('/auth');
         return;
       }
-      
-      // Дополнительная проверка прав администратора
-      verifyAdminAccess().then((hasAccess) => {
-        if (!hasAccess || !isAdmin) {
-          toast({
-            title: 'Доступ запрещён',
-            description: 'У вас нет прав для просмотра этой страницы',
-            variant: 'destructive',
-          });
-          navigate('/');
-          return;
-        }
-        fetchData();
-      });
+      if (!isAdmin) {
+        toast({
+          title: 'Доступ запрещён',
+          description: 'У вас нет прав для просмотра этой страницы',
+          variant: 'destructive',
+        });
+        navigate('/');
+        return;
+      }
+      fetchData();
     }
-  }, [user, isAdmin, authLoading, navigate, verifyAdminAccess]);
+  }, [user, isAdmin, authLoading, navigate]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -157,28 +124,6 @@ export default function Admin() {
   };
 
   const updateSubmissionStatus = async (id: string, status: string) => {
-    // Валидация статуса - только разрешенные значения
-    const allowedStatuses = ['new', 'in_progress', 'completed'];
-    if (!allowedStatuses.includes(status)) {
-      toast({
-        title: 'Ошибка',
-        description: 'Недопустимый статус',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    // Валидация ID - должен быть UUID
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(id)) {
-      toast({
-        title: 'Ошибка безопасности',
-        description: 'Недопустимый идентификатор',
-        variant: 'destructive',
-      });
-      return;
-    }
-
     const { error } = await supabase
       .from('contact_submissions')
       .update({ status })
@@ -200,22 +145,6 @@ export default function Admin() {
   };
 
   const deleteSubmission = async (id: string) => {
-    // Валидация ID - должен быть UUID
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(id)) {
-      toast({
-        title: 'Ошибка безопасности',
-        description: 'Недопустимый идентификатор',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    // Подтверждение удаления
-    if (!confirm('Вы уверены, что хотите удалить эту заявку?')) {
-      return;
-    }
-
     const { error } = await supabase
       .from('contact_submissions')
       .delete()
@@ -263,18 +192,14 @@ export default function Admin() {
     <Layout>
       <section className="pt-32 pb-20 min-h-screen">
         <div className="container-custom">
-          <Breadcrumbs />
           <AnimatedSection animation="fadeUp">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h1 className="text-3xl font-bold flex items-center gap-3">
-                  <Shield className="w-8 h-8 text-primary" />
+                  <Settings className="w-8 h-8 text-primary" />
                   Панель администратора
                 </h1>
-                <p className="text-muted-foreground mt-1 flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-green-500" />
-                  Защищённый режим активен
-                </p>
+                <p className="text-muted-foreground mt-1">Управление заявками и пользователями</p>
               </div>
               <Button onClick={fetchData} variant="outline" size="sm">
                 <RefreshCw className="w-4 h-4 mr-2" />
@@ -339,27 +264,25 @@ export default function Admin() {
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <User className="w-4 h-4 text-muted-foreground" />
-                                <SafeText>{submission.name}</SafeText>
+                                {submission.name}
                               </div>
                             </TableCell>
                             <TableCell>
                               <div className="space-y-1">
                                 <div className="flex items-center gap-2 text-sm">
                                   <Mail className="w-3 h-3 text-muted-foreground" />
-                                  <SafeText>{submission.email}</SafeText>
+                                  {submission.email}
                                 </div>
                                 {submission.phone && (
                                   <div className="flex items-center gap-2 text-sm">
                                     <Phone className="w-3 h-3 text-muted-foreground" />
-                                    <SafeText>{submission.phone}</SafeText>
+                                    {submission.phone}
                                   </div>
                                 )}
                               </div>
                             </TableCell>
                             <TableCell className="max-w-xs">
-                              <p className="truncate text-sm">
-                                <SafeText>{submission.message}</SafeText>
-                              </p>
+                              <p className="truncate text-sm">{submission.message}</p>
                             </TableCell>
                             <TableCell>
                               <Select
@@ -424,13 +347,13 @@ export default function Admin() {
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <User className="w-4 h-4 text-muted-foreground" />
-                                <SafeText>{profile.full_name || '—'}</SafeText>
+                                {profile.full_name || '—'}
                               </div>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <Mail className="w-4 h-4 text-muted-foreground" />
-                                <SafeText>{profile.email || '—'}</SafeText>
+                                {profile.email || '—'}
                               </div>
                             </TableCell>
                           </TableRow>

@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, ServiceSchema, Breadcrumbs } from "@/components/seo";
+import { SEOHead, ServiceSchema } from "@/components/seo";
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, Shield, Phone, Send, ArrowRight } from "lucide-react";
 
@@ -42,7 +42,6 @@ const Emergency = () => {
       {/* Hero */}
       <section className="section-padding pt-32 bg-destructive/5">
         <div className="container-custom">
-          <Breadcrumbs />
           <div className="max-w-3xl mx-auto text-center">
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}

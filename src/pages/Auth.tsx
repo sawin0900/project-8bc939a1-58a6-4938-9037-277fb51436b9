@@ -5,15 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { Anchor, Loader2, Mail, Lock, User, AlertCircle } from 'lucide-react';
+import { Anchor, Loader2, Mail, Lock, User } from 'lucide-react';
 import { z } from 'zod';
-import { 
-  sanitizeEmail, 
-  sanitizeString, 
-  validatePasswordStrength, 
-  loginRateLimiter,
-  isPotentiallyDangerous 
-} from '@/lib/security';
 
 const loginSchema = z.object({
   email: z.string().trim().email({ message: 'Введите корректный email' }),
@@ -21,9 +14,9 @@ const loginSchema = z.object({
 });
 
 const signupSchema = z.object({
-  fullName: z.string().trim().min(2, { message: 'Имя должно быть не менее 2 символов' }).max(100),
+  fullName: z.string().trim().min(2, { message: 'Имя должно быть не менее 2 символов' }),
   email: z.string().trim().email({ message: 'Введите корректный email' }),
-  password: z.string().min(8, { message: 'Пароль должен быть не менее 8 символов' }),
+  password: z.string().min(6, { message: 'Пароль должен быть не менее 6 символов' }),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Пароли не совпадают',
@@ -40,8 +33,6 @@ export default function Auth() {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [passwordStrength, setPasswordStrength] = useState<{ score: number; feedback: string[] } | null>(null);
-  const [loginAttempts, setLoginAttempts] = useState(0);
   
   const { toast } = useToast();
   const { user, signIn, signUp } = useAuth();
@@ -59,18 +50,6 @@ export default function Auth() {
         loginSchema.parse({ email: formData.email, password: formData.password });
       } else {
         signupSchema.parse(formData);
-        
-        // Дополнительная проверка сложности пароля
-        const strength = validatePasswordStrength(formData.password);
-        setPasswordStrength(strength);
-        
-        if (!strength.isValid) {
-          setErrors(prev => ({
-            ...prev,
-            password: strength.feedback.join('. ') || 'Пароль недостаточно сложный'
-          }));
-          return false;
-        }
       }
       setErrors({});
       return true;
@@ -91,47 +70,18 @@ export default function Auth() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Проверка на опасный контент
-    const allFields = `${formData.fullName} ${formData.email} ${formData.password}`;
-    if (isPotentiallyDangerous(allFields)) {
-      toast({
-        title: 'Ошибка безопасности',
-        description: 'Обнаружен недопустимый контент',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
     if (!validateForm()) return;
-    
-    // Rate limiting для входа - максимум 5 попыток в 15 минут
-    if (isLogin) {
-      const rateLimitKey = sanitizeEmail(formData.email);
-      if (!loginRateLimiter.checkLimit(rateLimitKey, 5, 15 * 60 * 1000)) {
-        toast({
-          title: 'Слишком много попыток',
-          description: 'Пожалуйста, подождите 15 минут перед следующей попыткой входа',
-          variant: 'destructive',
-        });
-        setLoginAttempts(5);
-        return;
-      }
-    }
     
     setIsLoading(true);
 
     try {
       if (isLogin) {
-        // Санитизация перед отправкой
-        const sanitizedEmail = sanitizeEmail(formData.email);
-        
-        const { error } = await signIn(sanitizedEmail, formData.password);
+        const { error } = await signIn(formData.email, formData.password);
         
         if (error) {
           let errorMessage = 'Ошибка входа';
           if (error.message.includes('Invalid login credentials')) {
             errorMessage = 'Неверный email или пароль';
-            setLoginAttempts(prev => prev + 1);
           }
           toast({
             title: 'Ошибка',
@@ -139,9 +89,6 @@ export default function Auth() {
             variant: 'destructive',
           });
         } else {
-          // Успешный вход - сбрасываем счетчик
-          loginRateLimiter.reset(sanitizeEmail(formData.email));
-          setLoginAttempts(0);
           toast({
             title: 'Успешный вход',
             description: 'Добро пожаловать!',
@@ -149,15 +96,11 @@ export default function Auth() {
           navigate('/');
         }
       } else {
-        // Санитизация данных регистрации
-        const sanitizedEmail = sanitizeEmail(formData.email);
-        const sanitizedFullName = sanitizeString(formData.fullName);
-        
-        const { error } = await signUp(sanitizedEmail, formData.password, sanitizedFullName);
+        const { error } = await signUp(formData.email, formData.password, formData.fullName);
         
         if (error) {
           let errorMessage = 'Ошибка регистрации';
-          if (error.message.includes('already registered') || error.message.includes('already exists')) {
+          if (error.message.includes('already registered')) {
             errorMessage = 'Пользователь с таким email уже существует';
           }
           toast({
@@ -253,55 +196,11 @@ export default function Auth() {
                     type="password"
                     placeholder="••••••••"
                     value={formData.password}
-                    onChange={(e) => {
-                      setFormData({ ...formData, password: e.target.value });
-                      if (!isLogin && e.target.value.length > 0) {
-                        const strength = validatePasswordStrength(e.target.value);
-                        setPasswordStrength(strength);
-                      } else {
-                        setPasswordStrength(null);
-                      }
-                    }}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     className="pl-10 bg-muted border-border"
                   />
                 </div>
-                {errors.password && (
-                  <p className="text-destructive text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
-                    {errors.password}
-                  </p>
-                )}
-                {!isLogin && passwordStrength && (
-                  <div className="mt-2">
-                    <div className="flex gap-1 mb-1">
-                      {[1, 2, 3, 4].map((level) => (
-                        <div
-                          key={level}
-                          className={`h-1 flex-1 rounded ${
-                            level <= passwordStrength.score
-                              ? level <= 2
-                                ? 'bg-red-500'
-                                : level === 3
-                                ? 'bg-yellow-500'
-                                : 'bg-green-500'
-                              : 'bg-muted'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    {passwordStrength.feedback.length > 0 && (
-                      <p className="text-xs text-muted-foreground">
-                        {passwordStrength.feedback.join('. ')}
-                      </p>
-                    )}
-                  </div>
-                )}
-                {isLogin && loginAttempts >= 3 && (
-                  <p className="text-yellow-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
-                    Много неудачных попыток. Проверьте правильность данных.
-                  </p>
-                )}
+                {errors.password && <p className="text-destructive text-sm mt-1">{errors.password}</p>}
               </div>
 
               {!isLogin && (
