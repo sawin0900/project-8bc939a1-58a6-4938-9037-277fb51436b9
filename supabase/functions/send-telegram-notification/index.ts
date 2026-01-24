@@ -1,9 +1,97 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Simple in-memory rate limiting (per function instance)
+const rateLimitMap = new Map<string, number>();
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 3;
+
+function isRateLimited(identifier: string): boolean {
+  const now = Date.now();
+  const key = identifier.toLowerCase();
+  
+  // Clean up old entries
+  for (const [k, timestamp] of rateLimitMap.entries()) {
+    if (now - timestamp > RATE_LIMIT_WINDOW_MS) {
+      rateLimitMap.delete(k);
+    }
+  }
+  
+  const lastRequest = rateLimitMap.get(key);
+  if (lastRequest && now - lastRequest < RATE_LIMIT_WINDOW_MS / MAX_REQUESTS_PER_WINDOW) {
+    return true;
+  }
+  
+  rateLimitMap.set(key, now);
+  return false;
+}
+
+// Input validation schema
+function validateInput(data: Record<string, unknown>): { valid: boolean; error?: string } {
+  const { name, phone, email, message, latitude, longitude, photoUrl } = data;
+  
+  // Required fields
+  if (!name || typeof name !== 'string' || name.trim().length === 0) {
+    return { valid: false, error: 'Name is required' };
+  }
+  if (name.length > 100) {
+    return { valid: false, error: 'Name is too long (max 100 characters)' };
+  }
+  
+  if (!phone || typeof phone !== 'string' || phone.trim().length === 0) {
+    return { valid: false, error: 'Phone is required' };
+  }
+  if (phone.length > 30) {
+    return { valid: false, error: 'Phone is too long (max 30 characters)' };
+  }
+  
+  // Email validation
+  if (email && typeof email === 'string') {
+    if (email.length > 255) {
+      return { valid: false, error: 'Email is too long (max 255 characters)' };
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return { valid: false, error: 'Invalid email format' };
+    }
+  }
+  
+  // Message validation
+  if (message && typeof message === 'string' && message.length > 2000) {
+    return { valid: false, error: 'Message is too long (max 2000 characters)' };
+  }
+  
+  // Coordinates validation
+  if (latitude !== undefined && latitude !== null) {
+    if (typeof latitude !== 'number' || latitude < -90 || latitude > 90) {
+      return { valid: false, error: 'Invalid latitude' };
+    }
+  }
+  if (longitude !== undefined && longitude !== null) {
+    if (typeof longitude !== 'number' || longitude < -180 || longitude > 180) {
+      return { valid: false, error: 'Invalid longitude' };
+    }
+  }
+  
+  // Photo URL validation
+  if (photoUrl && typeof photoUrl === 'string') {
+    if (photoUrl.length > 2000) {
+      return { valid: false, error: 'Photo URL is too long' };
+    }
+    // Only allow URLs from our Supabase storage
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    if (!photoUrl.startsWith(supabaseUrl) && !photoUrl.startsWith('https://')) {
+      return { valid: false, error: 'Invalid photo URL' };
+    }
+  }
+  
+  return { valid: true };
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -11,7 +99,48 @@ serve(async (req) => {
   }
 
   try {
-    const { name, phone, email, message, latitude, longitude, photoUrl } = await req.json();
+    const data = await req.json();
+    const { name, phone, email, message, latitude, longitude, photoUrl, submissionId } = data;
+
+    // Validate input
+    const validation = validateInput(data);
+    if (!validation.valid) {
+      return new Response(
+        JSON.stringify({ error: validation.error }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Rate limiting by phone number
+    const rateLimitKey = phone || email || 'anonymous';
+    if (isRateLimited(rateLimitKey)) {
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please wait before trying again.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // If submissionId is provided, verify it exists in database
+    if (submissionId) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      
+      const supabaseClient = createClient(supabaseUrl, supabaseServiceKey);
+      
+      const { data: submission, error: fetchError } = await supabaseClient
+        .from('contact_submissions')
+        .select('id')
+        .eq('id', submissionId)
+        .single();
+      
+      if (fetchError || !submission) {
+        console.error('Submission not found:', submissionId);
+        return new Response(
+          JSON.stringify({ error: 'Invalid submission' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
 
     const botToken = Deno.env.get('TELEGRAM_BOT_TOKEN');
     const chatId = Deno.env.get('TELEGRAM_CHAT_ID');
@@ -59,7 +188,7 @@ ${photoUrl ? `📷 *Фото:* [Смотреть](${photoUrl})` : '📷 *Фот�
 
     if (!messageResult.ok) {
       console.error('Telegram API error:', messageResult);
-      throw new Error(`Telegram error: ${messageResult.description}`);
+      throw new Error('Failed to send notification');
     }
 
     // Send location if available
@@ -79,22 +208,26 @@ ${photoUrl ? `📷 *Фото:* [Смотреть](${photoUrl})` : '📷 *Фот�
       await locationResponse.json(); // Consume response
     }
 
-    // Send photo if available
+    // Send photo if available and from valid source
     if (photoUrl) {
-      const photoResponse = await fetch(
-        `https://api.telegram.org/bot${botToken}/sendPhoto`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: chatId,
-            photo: photoUrl,
-            caption: `📷 Фото от ${escapeMarkdown(name)} (${escapeMarkdown(phone)})`,
-            parse_mode: 'Markdown',
-          }),
-        }
-      );
-      await photoResponse.json(); // Consume response
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+      // Only send photos from our own storage
+      if (photoUrl.startsWith(supabaseUrl)) {
+        const photoResponse = await fetch(
+          `https://api.telegram.org/bot${botToken}/sendPhoto`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              photo: photoUrl,
+              caption: `📷 Фото от ${escapeMarkdown(name)} (${escapeMarkdown(phone)})`,
+              parse_mode: 'Markdown',
+            }),
+          }
+        );
+        await photoResponse.json(); // Consume response
+      }
     }
 
     return new Response(
@@ -102,10 +235,10 @@ ${photoUrl ? `📷 *Фото:* [Смотреть](${photoUrl})` : '📷 *Фот�
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    // Don't expose internal error details to client
     console.error('Error sending telegram notification:', error);
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: 'Failed to send notification' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
