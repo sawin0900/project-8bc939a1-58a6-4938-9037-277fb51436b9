@@ -23,18 +23,25 @@ const Admin = lazy(() => import("./pages/Admin"));
 const DismantlingCutting = lazy(() => import("./pages/DismantlingCutting"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 const App = () => (
   <HelmetProvider>
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
             <AuthProvider>
-              <Suspense fallback={<div style={{ padding: 20, textAlign: "center" }}>Загрузка...</div>}>
+              <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-background text-foreground text-xl">Загрузка...</div>}>
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/services" element={<Services />} />
