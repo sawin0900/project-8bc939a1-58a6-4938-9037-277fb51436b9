@@ -19,6 +19,12 @@ import Admin from "./pages/Admin";
 import DismantlingCutting from "./pages/DismantlingCutting";
 import NotFound from "./pages/NotFound";
 
+// Article pages
+import ChtoDelatEsliZatonuloSudno from "./pages/articles/ChtoDelatEsliZatonuloSudno";
+import OtvetstvennostZaZatonuvsheImuschestvo from "./pages/articles/OtvetstvennostZaZatonuvsheImuschestvo";
+import KakProhodyatSoglasovaniya from "./pages/articles/KakProhodyatSoglasovaniya";
+import KtoImeetPravoVypolnyatRaboty from "./pages/articles/KtoImeetPravoVypolnyatRaboty";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -38,6 +44,10 @@ const App = () => (
               <Route path="/projects" element={<Projects />} />
               <Route path="/emergency" element={<Emergency />} />
               <Route path="/articles" element={<Articles />} />
+              <Route path="/articles/chto-delat-esli-zatonulo-sudno" element={<ChtoDelatEsliZatonuloSudno />} />
+              <Route path="/articles/otvetstvennost-za-zatonuvshee-imuschestvo" element={<OtvetstvennostZaZatonuvsheImuschestvo />} />
+              <Route path="/articles/kak-prohodyat-soglasovaniya" element={<KakProhodyatSoglasovaniya />} />
+              <Route path="/articles/kto-imeet-pravo-vypolnyat-raboty" element={<KtoImeetPravoVypolnyatRaboty />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/auth" element={<Auth />} />

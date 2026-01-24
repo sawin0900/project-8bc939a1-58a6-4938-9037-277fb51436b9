@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, MapPin, Camera, X, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 
@@ -14,8 +14,20 @@ const contactSchema = z.object({
   message: z.string().trim().max(2000).optional(),
 });
 
+interface LocationData {
+  latitude: number;
+  longitude: number;
+}
+
 export function ContactForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [location, setLocation] = useState<LocationData | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -25,6 +37,113 @@ export function ContactForm() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const requestLocation = () => {
+    setIsGettingLocation(true);
+    setLocationError(null);
+
+    if (!navigator.geolocation) {
+      setLocationError("Геолокация не поддерживается вашим браузером");
+      setIsGettingLocation(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        setIsGettingLocation(false);
+        toast({
+          title: "Геолокация получена",
+          description: "Ваше местоположение будет отправлено с заявкой",
+        });
+      },
+      (error) => {
+        let errorMessage = "Не удалось определить местоположение";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Доступ к геолокации запрещён";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Информация о местоположении недоступна";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Время ожидания истекло";
+            break;
+        }
+        setLocationError(errorMessage);
+        setIsGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Неподдерживаемый формат",
+        description: "Разрешены только JPG, PNG, WEBP, HEIC",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Файл слишком большой",
+        description: "Максимальный размер файла — 5 МБ",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const removeFile = () => {
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const uploadPhoto = async (file: File): Promise<string | null> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const filePath = `submissions/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('contact-attachments')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      console.error('Upload error:', uploadError);
+      return null;
+    }
+
+    const { data } = supabase.storage
+      .from('contact-attachments')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -33,19 +152,35 @@ export function ContactForm() {
     try {
       // Validate form data
       contactSchema.parse(formData);
+
+      // Upload photo if selected
+      let photoUrl: string | null = null;
+      if (selectedFile) {
+        photoUrl = await uploadPhoto(selectedFile);
+        if (!photoUrl) {
+          toast({
+            title: "Ошибка загрузки фото",
+            description: "Заявка будет отправлена без фото",
+            variant: "destructive",
+          });
+        }
+      }
       
       const { error } = await supabase.from("contact_submissions").insert({
         name: formData.name.trim(),
         email: formData.email.trim() || "не указан",
         phone: formData.phone.trim() || null,
         message: formData.message.trim() || "Заявка с сайта",
+        latitude: location?.latitude || null,
+        longitude: location?.longitude || null,
+        photo_url: photoUrl,
       });
 
       if (error) {
         throw error;
       }
 
-      // Send Telegram notification
+      // Send Telegram notification with location and photo
       try {
         await supabase.functions.invoke('send-telegram-notification', {
           body: {
@@ -53,11 +188,13 @@ export function ContactForm() {
             phone: formData.phone.trim(),
             email: formData.email.trim() || null,
             message: formData.message.trim() || null,
+            latitude: location?.latitude || null,
+            longitude: location?.longitude || null,
+            photoUrl: photoUrl,
           },
         });
       } catch (telegramError) {
         console.error('Telegram notification failed:', telegramError);
-        // Don't fail the submission if Telegram notification fails
       }
 
       toast({
@@ -66,6 +203,8 @@ export function ContactForm() {
       });
 
       setFormData({ name: "", phone: "", email: "", message: "" });
+      setLocation(null);
+      removeFile();
     } catch (err) {
       if (err instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
@@ -147,6 +286,104 @@ export function ContactForm() {
           className="bg-muted border-border resize-none"
         />
       </div>
+
+      {/* Photo Upload */}
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">
+          Прикрепить фото
+        </label>
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/heic"
+            onChange={handleFileSelect}
+            className="hidden"
+            id="photo-upload"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+            className="flex items-center gap-2"
+          >
+            <Camera className="w-4 h-4" />
+            {selectedFile ? "Изменить фото" : "Выбрать фото"}
+          </Button>
+          {previewUrl && (
+            <div className="relative">
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="w-16 h-16 object-cover rounded-lg border border-border"
+              />
+              <button
+                type="button"
+                onClick={removeFile}
+                className="absolute -top-2 -right-2 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          JPG, PNG, WEBP до 5 МБ
+        </p>
+      </div>
+
+      {/* Geolocation */}
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">
+          Местоположение объекта
+        </label>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={requestLocation}
+            disabled={isGettingLocation || !!location}
+            className="flex items-center gap-2"
+          >
+            {isGettingLocation ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Определение...
+              </>
+            ) : location ? (
+              <>
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                Геолокация получена
+              </>
+            ) : (
+              <>
+                <MapPin className="w-4 h-4" />
+                Определить местоположение
+              </>
+            )}
+          </Button>
+          {location && (
+            <button
+              type="button"
+              onClick={() => setLocation(null)}
+              className="text-xs text-muted-foreground hover:text-foreground underline"
+            >
+              Сбросить
+            </button>
+          )}
+        </div>
+        {locationError && (
+          <p className="text-destructive text-sm mt-1">{locationError}</p>
+        )}
+        {location && (
+          <p className="text-xs text-muted-foreground mt-1">
+            📍 {location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}
+          </p>
+        )}
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-3">
         <Button type="submit" disabled={isLoading} className="flex-1 btn-glow">
           {isLoading ? (
