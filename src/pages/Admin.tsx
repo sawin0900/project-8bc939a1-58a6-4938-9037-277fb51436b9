@@ -99,7 +99,9 @@ export default function Admin() {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching submissions:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching submissions:', error);
+      }
       toast({
         title: 'Ошибка',
         description: 'Не удалось загрузить заявки',
@@ -117,7 +119,9 @@ export default function Admin() {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching users:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching users:', error);
+      }
     } else {
       setUsers(data || []);
     }
