@@ -130,12 +130,20 @@ export function ContactForm() {
 
     const { error: uploadError } = await supabase.storage
       .from('contact-attachments')
-      .upload(filePath, file);
+      .upload(filePath, file, {
+        contentType: file.type || 'application/octet-stream',
+        upsert: false,
+      });
 
     if (uploadError) {
       if (import.meta.env.DEV) {
         console.error('Upload error:', uploadError);
       }
+      toast({
+        title: 'Не удалось загрузить фото',
+        description: import.meta.env.DEV ? uploadError.message : 'Попробуйте другое фото или повторите позже.',
+        variant: 'destructive',
+      });
       return null;
     }
 
@@ -359,7 +367,7 @@ export function ContactForm() {
               </>
             ) : location ? (
               <>
-                <CheckCircle className="w-4 h-4 text-green-500" />
+                 <CheckCircle className="w-4 h-4 text-primary" />
                 Геолокация получена
               </>
             ) : (
