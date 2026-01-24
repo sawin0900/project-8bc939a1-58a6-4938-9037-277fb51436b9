@@ -19,27 +19,36 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          latitude: number | null
+          longitude: number | null
           message: string
           name: string
           phone: string | null
+          photo_url: string | null
           status: string
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           message: string
           name: string
           phone?: string | null
+          photo_url?: string | null
           status?: string
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           message?: string
           name?: string
           phone?: string | null
+          photo_url?: string | null
           status?: string
         }
         Relationships: []
