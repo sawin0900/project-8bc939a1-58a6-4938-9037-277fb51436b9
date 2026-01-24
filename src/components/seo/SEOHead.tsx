@@ -7,6 +7,7 @@ interface SEOHeadProps {
   canonical?: string;
   ogImage?: string;
   noindex?: boolean;
+  hreflang?: { lang: string; url: string }[];
 }
 
 export function SEOHead({
@@ -16,9 +17,18 @@ export function SEOHead({
   canonical,
   ogImage = '/og-image.jpg',
   noindex = false,
+  hreflang,
 }: SEOHeadProps) {
   const baseUrl = 'https://centr-prityazheniya.ru';
   const fullCanonical = canonical ? `${baseUrl}${canonical}` : baseUrl;
+  
+  // Default hreflang for Russian site
+  const defaultHreflang = [
+    { lang: 'ru', url: fullCanonical },
+    { lang: 'x-default', url: fullCanonical },
+  ];
+  
+  const hreflangTags = hreflang || defaultHreflang;
   
   return (
     <Helmet>
@@ -27,6 +37,11 @@ export function SEOHead({
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
       <link rel="canonical" href={fullCanonical} />
+      
+      {/* Hreflang Tags */}
+      {hreflangTags.map((tag) => (
+        <link key={tag.lang} rel="alternate" hrefLang={tag.lang} href={tag.url} />
+      ))}
       
       {/* Open Graph */}
       <meta property="og:title" content={title} />
