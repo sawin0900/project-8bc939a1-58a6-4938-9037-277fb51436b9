@@ -133,15 +133,18 @@ export function ContactForm() {
       .upload(filePath, file);
 
     if (uploadError) {
-      console.error('Upload error:', uploadError);
+      if (import.meta.env.DEV) {
+        console.error('Upload error:', uploadError);
+      }
       return null;
     }
 
-    const { data } = supabase.storage
+    // Generate signed URL for immediate use (1 hour expiry)
+    const { data: signedData } = await supabase.storage
       .from('contact-attachments')
-      .getPublicUrl(filePath);
+      .createSignedUrl(filePath, 3600);
 
-    return data.publicUrl;
+    return signedData?.signedUrl || null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -194,7 +197,9 @@ export function ContactForm() {
           },
         });
       } catch (telegramError) {
-        console.error('Telegram notification failed:', telegramError);
+        if (import.meta.env.DEV) {
+          console.error('Telegram notification failed:', telegramError);
+        }
       }
 
       toast({
