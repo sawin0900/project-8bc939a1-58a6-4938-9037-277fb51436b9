@@ -24,6 +24,16 @@ import ChtoDelatEsliZatonuloSudno from "./pages/articles/ChtoDelatEsliZatonuloSu
 import OtvetstvennostZaZatonuvsheImuschestvo from "./pages/articles/OtvetstvennostZaZatonuvsheImuschestvo";
 import KakProhodyatSoglasovaniya from "./pages/articles/KakProhodyatSoglasovaniya";
 import KtoImeetPravoVypolnyatRaboty from "./pages/articles/KtoImeetPravoVypolnyatRaboty";
+import MetodyPodemaZatonuvshihSudov from "./pages/articles/MetodyPodemaZatonuvshihSudov";
+import EkologicheskieRiskiZatonuvshihSudov from "./pages/articles/EkologicheskieRiskiZatonuvshihSudov";
+import StoimostSudopodemnyRabot from "./pages/articles/StoimostSudopodemnyRabot";
+import VodolaznoeObsledovanieSudov from "./pages/articles/VodolaznoeObsledovanieSudov";
+import SudopodaemVPrimorye from "./pages/articles/SudopodaemVPrimorye";
+import UtilizaciyaZatonuvshihSudov from "./pages/articles/UtilizaciyaZatonuvshihSudov";
+import StrahovanieSudopodemnyRabot from "./pages/articles/StrahovanieSudopodemnyRabot";
+import PodgotovkaProektaSudopodema from "./pages/articles/PodgotovkaProektaSudopodema";
+import BezopasnostVodolaznyRabot from "./pages/articles/BezopasnostVodolaznyRabot";
+import ChtoDelayutSZatonuvshimSudnomPoslePodema from "./pages/articles/ChtoDelayutSZatonuvshimSudnomPoslePodema";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +58,16 @@ const App = () => (
               <Route path="/articles/otvetstvennost-za-zatonuvshee-imuschestvo" element={<OtvetstvennostZaZatonuvsheImuschestvo />} />
               <Route path="/articles/kak-prohodyat-soglasovaniya" element={<KakProhodyatSoglasovaniya />} />
               <Route path="/articles/kto-imeet-pravo-vypolnyat-raboty" element={<KtoImeetPravoVypolnyatRaboty />} />
+              <Route path="/articles/metody-podema-zatonuvshih-sudov" element={<MetodyPodemaZatonuvshihSudov />} />
+              <Route path="/articles/ekologicheskie-riski-zatonuvshih-sudov" element={<EkologicheskieRiskiZatonuvshihSudov />} />
+              <Route path="/articles/stoimost-sudopodemnyx-rabot" element={<StoimostSudopodemnyRabot />} />
+              <Route path="/articles/vodolaznoye-obsledovanie-sudov" element={<VodolaznoeObsledovanieSudov />} />
+              <Route path="/articles/sudopodem-v-primorye" element={<SudopodaemVPrimorye />} />
+              <Route path="/articles/utilizaciya-zatonuvshih-sudov" element={<UtilizaciyaZatonuvshihSudov />} />
+              <Route path="/articles/strahovanie-sudopodemnyx-rabot" element={<StrahovanieSudopodemnyRabot />} />
+              <Route path="/articles/podgotovka-proekta-sudopodema" element={<PodgotovkaProektaSudopodema />} />
+              <Route path="/articles/bezopasnost-vodolaznyh-rabot" element={<BezopasnostVodolaznyRabot />} />
+              <Route path="/articles/chto-delayut-s-sudnom-posle-podema" element={<ChtoDelayutSZatonuvshimSudnomPoslePodema />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/auth" element={<Auth />} />
