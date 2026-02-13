@@ -18,6 +18,9 @@ import {
   HardHat,
   Zap
 } from "lucide-react";
+import metalCuttingImg from "@/assets/images/metal-cutting-sparks.jpg";
+import underwaterCuttingImg from "@/assets/images/underwater-cutting.jpg";
+import shipDemolitionImg from "@/assets/images/ship-demolition.jpg";
 
 const cuttingMethods = [
   {
@@ -160,6 +163,19 @@ export default function DismantlingCutting() {
                   <a href="tel:+79991234567">Получить консультацию</a>
                 </Button>
               </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Images Gallery */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <img src={metalCuttingImg} alt="Газовая резка металла" className="w-full h-48 object-cover rounded-xl shadow-lg" />
+              <img src={underwaterCuttingImg} alt="Подводная резка" className="w-full h-48 object-cover rounded-xl shadow-lg" />
+              <img src={shipDemolitionImg} alt="Демонтаж судна" className="w-full h-48 object-cover rounded-xl shadow-lg" />
             </div>
           </AnimatedSection>
         </div>

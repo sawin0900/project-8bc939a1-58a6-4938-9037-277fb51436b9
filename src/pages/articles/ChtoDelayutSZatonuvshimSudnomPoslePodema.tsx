@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, Wrench, Recycle, Ship, Anchor, FileText, CheckCircle, Scale } from "lucide-react";
+import demolitionImg from "@/assets/images/ship-demolition.jpg";
+import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
 
 const options = [
   {
@@ -134,6 +136,15 @@ export default function ChtoDelayutSZatonuvshimSudnomPoslePodema() {
         </div>
       </section>
 
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={demolitionImg} alt="Разделка и утилизация судна после подъёма" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Options */}
       <section className="section-padding pt-0">
         <div className="container-custom">
@@ -216,6 +227,15 @@ export default function ChtoDelayutSZatonuvshimSudnomPoslePodema() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={salvageImg} alt="Судоподъёмные работы" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

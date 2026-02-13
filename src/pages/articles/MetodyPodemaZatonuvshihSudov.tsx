@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, Anchor, Ship, Waves, Box, Settings, CheckCircle } from "lucide-react";
+import pontoonImg from "@/assets/images/pontoon-salvage.jpg";
+import craneImg from "@/assets/images/salvage-crane-operation.jpg";
 
 const methods = [
   {
@@ -111,6 +113,15 @@ export default function MetodyPodemaZatonuvshihSudov() {
         </div>
       </section>
 
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={pontoonImg} alt="Понтонный метод подъёма судна" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Methods */}
       <section className="section-padding pt-0">
         <div className="container-custom">
@@ -160,6 +171,15 @@ export default function MetodyPodemaZatonuvshihSudov() {
               </AnimatedSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={craneImg} alt="Крановый подъём судна" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

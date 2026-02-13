@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, FileText, Calculator, Compass, Ship, CheckCircle, AlertTriangle, Clock } from "lucide-react";
+import docsImg from "@/assets/images/documentation-blueprints.jpg";
+import pontoonImg from "@/assets/images/pontoon-salvage.jpg";
 
 const projectSections = [
   {
@@ -100,6 +102,15 @@ export default function PodgotovkaProektaSudopodema() {
                 и порядок согласования.
               </p>
             </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={docsImg} alt="Проектная документация судоподъёма" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
           </AnimatedSection>
         </div>
       </section>
@@ -253,6 +264,15 @@ export default function PodgotovkaProektaSudopodema() {
               </div>
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={pontoonImg} alt="Понтонные работы" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

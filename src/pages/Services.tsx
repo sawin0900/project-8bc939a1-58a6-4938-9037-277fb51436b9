@@ -18,6 +18,11 @@ import {
   Scissors,
   Flame
 } from "lucide-react";
+import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
+import diverImg from "@/assets/images/diver-underwater-inspection.jpg";
+import cuttingImg from "@/assets/images/metal-cutting-sparks.jpg";
+import docsImg from "@/assets/images/documentation-blueprints.jpg";
+import underwaterCuttingImg from "@/assets/images/underwater-cutting.jpg";
 
 const services = [
   {
@@ -101,6 +106,19 @@ const Services = () => {
         </div>
       </section>
 
+      {/* Service Images Gallery */}
+      <section className="section-padding pt-0 pb-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <img src={salvageImg} alt="Судоподъёмные работы" className="w-full h-48 object-cover rounded-xl shadow-lg" />
+              <img src={underwaterCuttingImg} alt="Подводная резка металла" className="w-full h-48 object-cover rounded-xl shadow-lg" />
+              <img src={diverImg} alt="Водолазное обследование" className="w-full h-48 object-cover rounded-xl shadow-lg" />
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Services Grid */}
       <section className="section-padding pt-0">
         <div className="container-custom">
@@ -111,6 +129,18 @@ const Services = () => {
               </StaggerItem>
             ))}
           </StaggerContainer>
+        </div>
+      </section>
+
+      {/* More Images */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <img src={cuttingImg} alt="Резка металлоконструкций" className="w-full h-56 object-cover rounded-xl shadow-lg" />
+              <img src={docsImg} alt="Проектная документация" className="w-full h-56 object-cover rounded-xl shadow-lg" />
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 

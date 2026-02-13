@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ArrowRight } from "lucide-react";
+import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
 
 const faqItems = [
   {
@@ -73,6 +74,15 @@ const FAQ = () => {
               title="Часто задаваемые вопросы"
               description="Ответы на основные вопросы о судоподъёме, документации и организации работ"
             />
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={salvageImg} alt="Судоподъёмные работы" className="w-full rounded-2xl shadow-lg max-h-[350px] object-cover" />
           </AnimatedSection>
         </div>
       </section>

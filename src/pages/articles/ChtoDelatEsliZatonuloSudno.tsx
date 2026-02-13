@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, AlertTriangle, Phone, FileText, Clock, CheckCircle, Ship, Users, Scale } from "lucide-react";
+import sunkenShipImg from "@/assets/images/sunken-ship-ecological.jpg";
+import emergencyImg from "@/assets/images/emergency-maritime.jpg";
 
 const steps = [
   {
@@ -80,6 +82,15 @@ export default function ChtoDelatEsliZatonuloSudno() {
         </div>
       </section>
 
+      {/* Image */}
+      <section className="section-padding pb-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={sunkenShipImg} alt="Затонувшее судно у берега" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Intro */}
       <section className="section-padding">
         <div className="container-custom">
@@ -131,6 +142,15 @@ export default function ChtoDelatEsliZatonuloSudno() {
               </AnimatedSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={emergencyImg} alt="Аварийное реагирование на море" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

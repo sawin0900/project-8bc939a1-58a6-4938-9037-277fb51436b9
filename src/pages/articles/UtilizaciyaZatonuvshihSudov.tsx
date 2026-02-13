@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, Recycle, Scissors, Truck, FileText, Ship, CheckCircle, AlertTriangle } from "lucide-react";
+import demolitionImg from "@/assets/images/ship-demolition.jpg";
+import cuttingImg from "@/assets/images/metal-cutting-sparks.jpg";
 
 const stages = [
   {
@@ -100,6 +102,15 @@ export default function UtilizaciyaZatonuvshihSudov() {
         </div>
       </section>
 
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={demolitionImg} alt="Демонтаж и утилизация судна" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Stages */}
       <section className="section-padding pt-0">
         <div className="container-custom">
@@ -187,6 +198,15 @@ export default function UtilizaciyaZatonuvshihSudov() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={cuttingImg} alt="Резка металлоконструкций при утилизации" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

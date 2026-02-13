@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, MapPin, Anchor, Ship, Waves, Wind, Thermometer, CheckCircle } from "lucide-react";
+import portImg from "@/assets/images/vladivostok-port.jpg";
+import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
 
 const ports = [
   {
@@ -88,6 +90,15 @@ export default function SudopodaemVPrimorye() {
                 климатических условиях.
               </p>
             </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={portImg} alt="Порт Владивостока — акватория работ" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
           </AnimatedSection>
         </div>
       </section>
@@ -180,6 +191,15 @@ export default function SudopodaemVPrimorye() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={salvageImg} alt="Судоподъёмные работы в Приморье" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

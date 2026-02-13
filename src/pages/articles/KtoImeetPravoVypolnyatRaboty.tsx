@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Award, Users, FileText, CheckCircle, Shield, AlertTriangle, Ship, Building2 } from "lucide-react";
+import divingTeamImg from "@/assets/images/diving-team-equipment.jpg";
+import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
 
 const requirements = [
   {
@@ -113,6 +115,15 @@ export default function KtoImeetPravoVypolnyatRaboty() {
                 Разбираем, какие требования предъявляются к организациям, и как выбрать надёжного подрядчика.
               </p>
             </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={divingTeamImg} alt="Профессиональная водолазная бригада" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
           </AnimatedSection>
         </div>
       </section>
@@ -300,6 +311,15 @@ export default function KtoImeetPravoVypolnyatRaboty() {
               </div>
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={salvageImg} alt="Судоподъёмная операция" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

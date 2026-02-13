@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, Shield, FileText, AlertTriangle, Ship, CheckCircle, Umbrella } from "lucide-react";
+import insuranceImg from "@/assets/images/insurance-documents.jpg";
+import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
 
 const insuranceTypes = [
   {
@@ -108,6 +110,15 @@ export default function StrahovanieSudopodemnyRabot() {
         </div>
       </section>
 
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={insuranceImg} alt="Страховые документы" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Insurance Types */}
       <section className="section-padding pt-0">
         <div className="container-custom">
@@ -193,6 +204,15 @@ export default function StrahovanieSudopodemnyRabot() {
               </div>
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={salvageImg} alt="Судоподъёмная операция" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 
