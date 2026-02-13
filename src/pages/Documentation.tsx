@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { FileText, Scale, Leaf, Building2, CheckCircle2, ArrowRight } from "lucide-react";
+import docsImg from "@/assets/images/documentation-blueprints.jpg";
 
 const regulations = [
   {
@@ -72,6 +73,15 @@ const Documentation = () => {
               title="Нормативная база и документация"
               description="Полное соответствие законодательству РФ и требованиям надзорных органов"
             />
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={docsImg} alt="Проектная документация и чертежи" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
           </AnimatedSection>
         </div>
       </section>

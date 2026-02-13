@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, FileText, Building2, Shield, CheckCircle, Clock, Users, Leaf, Ship, AlertTriangle } from "lucide-react";
+import docsImg from "@/assets/images/documentation-blueprints.jpg";
+import portImg from "@/assets/images/vladivostok-port.jpg";
 
 const agencies = [
   {
@@ -119,6 +121,15 @@ export default function KakProhodyatSoglasovaniya() {
                 какие документы подготовить, и сколько времени занимает каждый этап.
               </p>
             </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={docsImg} alt="Документы для согласования" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
           </AnimatedSection>
         </div>
       </section>
@@ -274,6 +285,15 @@ export default function KakProhodyatSoglasovaniya() {
               </div>
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={portImg} alt="Порт Владивостока" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

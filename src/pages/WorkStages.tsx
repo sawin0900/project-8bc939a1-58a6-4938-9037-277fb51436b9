@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight } from "lucide-react";
+import divingTeamImg from "@/assets/images/diving-team-equipment.jpg";
+import pontoonImg from "@/assets/images/pontoon-salvage.jpg";
 
 const stages = [
   {
@@ -66,6 +68,15 @@ const WorkStages = () => {
         </div>
       </section>
 
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={divingTeamImg} alt="Водолазная бригада готовится к работе" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Timeline */}
       <section className="section-padding pt-0">
         <div className="container-custom max-w-3xl">
@@ -81,6 +92,15 @@ const WorkStages = () => {
               </StaggerItem>
             ))}
           </StaggerContainer>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={pontoonImg} alt="Понтонный метод подъёма" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

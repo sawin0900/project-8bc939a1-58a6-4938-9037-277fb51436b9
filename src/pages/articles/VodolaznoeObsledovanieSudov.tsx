@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, Eye, Camera, FileText, Ruler, Ship, CheckCircle, Clock, AlertTriangle } from "lucide-react";
+import diverImg from "@/assets/images/diver-underwater-inspection.jpg";
+import divingTeamImg from "@/assets/images/diving-team-equipment.jpg";
 
 const stages = [
   {
@@ -87,6 +89,15 @@ export default function VodolaznoeObsledovanieSudov() {
                 диагностики зависит точность проекта, выбор метода и итоговая стоимость работ.
               </p>
             </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={diverImg} alt="Водолаз осматривает затонувший объект" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
           </AnimatedSection>
         </div>
       </section>
@@ -224,6 +235,15 @@ export default function VodolaznoeObsledovanieSudov() {
               </div>
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={divingTeamImg} alt="Водолазная команда с оборудованием" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

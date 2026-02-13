@@ -6,6 +6,8 @@ import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/
 import { SEOHead, ServiceSchema } from "@/components/seo";
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, Shield, Phone, Send, ArrowRight } from "lucide-react";
+import emergencyImg from "@/assets/images/emergency-maritime.jpg";
+import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
 
 const features = [
   {
@@ -99,6 +101,15 @@ const Emergency = () => {
         </div>
       </section>
 
+      {/* Hero Image */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={emergencyImg} alt="Аварийное реагирование на море" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Features */}
       <section className="section-padding">
         <div className="container-custom">
@@ -152,6 +163,15 @@ const Emergency = () => {
               </StaggerItem>
             ))}
           </StaggerContainer>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={salvageImg} alt="Судоподъёмная операция" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

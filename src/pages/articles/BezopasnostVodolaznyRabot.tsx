@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, Shield, Users, Radio, Heart, Ship, CheckCircle, AlertTriangle, Thermometer } from "lucide-react";
+import divingTeamImg from "@/assets/images/diving-team-equipment.jpg";
+import diverImg from "@/assets/images/diver-underwater-inspection.jpg";
 
 const safetyRules = [
   {
@@ -117,6 +119,15 @@ export default function BezopasnostVodolaznyRabot() {
         </div>
       </section>
 
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={divingTeamImg} alt="Водолазная бригада" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Safety Rules */}
       <section className="section-padding pt-0">
         <div className="container-custom">
@@ -204,6 +215,15 @@ export default function BezopasnostVodolaznyRabot() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={diverImg} alt="Водолаз под водой" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Scale, FileText, AlertTriangle, Shield, Gavel, Building2, Ship } from "lucide-react";
+import insuranceImg from "@/assets/images/insurance-documents.jpg";
+import sunkenShipImg from "@/assets/images/sunken-ship-ecological.jpg";
 
 const lawSources = [
   {
@@ -100,6 +102,15 @@ export default function OtvetstvennostZaZatonuvsheImuschestvo() {
                 какие санкции предусмотрены за бездействие, и как минимизировать правовые риски.
               </p>
             </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={insuranceImg} alt="Юридические документы и ответственность" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
           </AnimatedSection>
         </div>
       </section>
@@ -263,6 +274,15 @@ export default function OtvetstvennostZaZatonuvsheImuschestvo() {
               </div>
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={sunkenShipImg} alt="Затонувшее судно" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

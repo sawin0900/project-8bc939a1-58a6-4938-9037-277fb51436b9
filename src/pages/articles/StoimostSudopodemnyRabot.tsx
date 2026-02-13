@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Phone, Calculator, Ship, Ruler, Clock, MapPin, Wrench, FileText, CheckCircle } from "lucide-react";
+import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
+import pontoonImg from "@/assets/images/pontoon-salvage.jpg";
 
 const factors = [
   {
@@ -106,6 +108,15 @@ export default function StoimostSudopodemnyRabot() {
         </div>
       </section>
 
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={salvageImg} alt="Судоподъёмная операция" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Factors */}
       <section className="section-padding pt-0">
         <div className="container-custom">
@@ -134,6 +145,15 @@ export default function StoimostSudopodemnyRabot() {
               </AnimatedSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Image 2 */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={pontoonImg} alt="Понтоны для подъёма судна" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
+          </AnimatedSection>
         </div>
       </section>
 

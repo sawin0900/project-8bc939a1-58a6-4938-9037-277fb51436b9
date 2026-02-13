@@ -103,7 +103,7 @@ const Index = () => {
             alt="Судоподъёмные работы" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/70 to-background/40" />
         </div>
 
         {/* Content */}

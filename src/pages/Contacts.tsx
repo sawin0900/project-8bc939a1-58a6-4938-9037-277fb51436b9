@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { Phone, Mail, Send, MapPin, Clock } from "lucide-react";
+import portImg from "@/assets/images/vladivostok-port.jpg";
 
 const contactInfo = [
   {
@@ -56,6 +57,15 @@ const Contacts = () => {
               title="Свяжитесь с нами"
               description="Оставьте заявку или свяжитесь любым удобным способом — мы ответим в кратчайшие сроки"
             />
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Image */}
+      <section className="section-padding pb-0 pt-0">
+        <div className="container-custom">
+          <AnimatedSection>
+            <img src={portImg} alt="Владивосток — регион работы" className="w-full rounded-2xl shadow-lg max-h-[300px] object-cover" />
           </AnimatedSection>
         </div>
       </section>
