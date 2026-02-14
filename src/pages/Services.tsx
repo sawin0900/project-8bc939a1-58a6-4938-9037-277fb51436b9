@@ -16,13 +16,20 @@ import {
   Search,
   ArrowRight,
   Scissors,
-  Flame
+  Flame,
+  Shield,
+  Compass,
+  HardHat,
+  MapPin,
+  Wrench
 } from "lucide-react";
 import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
 import diverImg from "@/assets/images/diver-underwater-inspection.jpg";
 import cuttingImg from "@/assets/images/metal-cutting-sparks.jpg";
 import docsImg from "@/assets/images/documentation-blueprints.jpg";
 import underwaterCuttingImg from "@/assets/images/underwater-cutting.jpg";
+import pierImg from "@/assets/images/pier-inspection-divers.jpg";
+import oilSpillImg from "@/assets/images/oil-spill-containment.jpg";
 
 const services = [
   {
@@ -75,6 +82,31 @@ const services = [
     title: "Работы по федеральным программам",
     description: "Выполнение работ в рамках федеральных и муниципальных программ по очистке акваторий и обеспечению безопасности судоходства.",
   },
+  {
+    icon: Shield,
+    title: "Ликвидация разливов нефтепродуктов",
+    description: "Локализация и сбор разлившихся нефтепродуктов с акватории. Установка боновых заграждений, сорбентов. Составление актов и отчётов для надзорных органов.",
+  },
+  {
+    icon: Compass,
+    title: "Гидрографические работы",
+    description: "Промеры глубин, составление батиметрических карт, определение навигационных опасностей. Подготовка данных для проектирования дноуглубительных работ.",
+  },
+  {
+    icon: HardHat,
+    title: "Обследование причальных сооружений",
+    description: "Водолазное и инструментальное обследование причалов, пирсов, набережных. Оценка технического состояния подводной части гидротехнических сооружений.",
+  },
+  {
+    icon: MapPin,
+    title: "Поиск затонувших объектов",
+    description: "Поиск затонувших судов и предметов с применением гидролокаторов, магнитометров и водолазных спусков. Определение координат и нанесение на карту.",
+  },
+  {
+    icon: Wrench,
+    title: "Подводные технические работы",
+    description: "Заварка трещин и свищей корпуса, замена донной арматуры, очистка подводной части судна, установка заглушек и пластырей. Работы без докования.",
+  },
 ];
 
 const Services = () => {
@@ -91,7 +123,7 @@ const Services = () => {
         description="Профессиональные услуги по судоподъёму, водолазным обследованиям, демонтажу и резке металлоконструкций в Приморском крае"
         url="/services"
       />
-      {/* Hero */}
+
       {/* Hero */}
       <section className="section-padding pt-32">
         <div className="container-custom">
@@ -111,9 +143,15 @@ const Services = () => {
         <div className="container-custom">
           <AnimatedSection>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <img src={salvageImg} alt="Судоподъёмные работы" className="w-full h-48 object-cover rounded-xl shadow-lg" />
-              <img src={underwaterCuttingImg} alt="Подводная резка металла" className="w-full h-48 object-cover rounded-xl shadow-lg" />
-              <img src={diverImg} alt="Водолазное обследование" className="w-full h-48 object-cover rounded-xl shadow-lg" />
+              <div className="aspect-video overflow-hidden rounded-xl shadow-lg">
+                <img src={salvageImg} alt="Судоподъёмные работы" className="w-full h-full object-cover" />
+              </div>
+              <div className="aspect-video overflow-hidden rounded-xl shadow-lg">
+                <img src={underwaterCuttingImg} alt="Подводная резка металла" className="w-full h-full object-cover" />
+              </div>
+              <div className="aspect-video overflow-hidden rounded-xl shadow-lg">
+                <img src={diverImg} alt="Водолазное обследование" className="w-full h-full object-cover" />
+              </div>
             </div>
           </AnimatedSection>
         </div>
@@ -136,9 +174,27 @@ const Services = () => {
       <section className="py-8">
         <div className="container-custom">
           <AnimatedSection>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <img src={cuttingImg} alt="Резка металлоконструкций" className="w-full h-56 object-cover rounded-xl shadow-lg" />
-              <img src={docsImg} alt="Проектная документация" className="w-full h-56 object-cover rounded-xl shadow-lg" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="aspect-video overflow-hidden rounded-xl shadow-lg">
+                <img src={cuttingImg} alt="Резка металлоконструкций" className="w-full h-full object-cover" />
+              </div>
+              <div className="aspect-video overflow-hidden rounded-xl shadow-lg">
+                <img src={pierImg} alt="Обследование причальных сооружений" className="w-full h-full object-cover" />
+              </div>
+              <div className="aspect-video overflow-hidden rounded-xl shadow-lg">
+                <img src={oilSpillImg} alt="Ликвидация разливов нефтепродуктов" className="w-full h-full object-cover" />
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Documentation Image */}
+      <section className="py-8">
+        <div className="container-custom">
+          <AnimatedSection>
+            <div className="aspect-[21/9] overflow-hidden rounded-xl shadow-lg">
+              <img src={docsImg} alt="Проектная документация" className="w-full h-full object-cover" />
             </div>
           </AnimatedSection>
         </div>

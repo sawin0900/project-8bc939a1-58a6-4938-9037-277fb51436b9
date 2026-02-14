@@ -34,6 +34,12 @@ import StrahovanieSudopodemnyRabot from "./pages/articles/StrahovanieSudopodemny
 import PodgotovkaProektaSudopodema from "./pages/articles/PodgotovkaProektaSudopodema";
 import BezopasnostVodolaznyRabot from "./pages/articles/BezopasnostVodolaznyRabot";
 import ChtoDelayutSZatonuvshimSudnomPoslePodema from "./pages/articles/ChtoDelayutSZatonuvshimSudnomPoslePodema";
+import PravovoeRegulirovanieZatonuvshihSudov from "./pages/articles/PravovoeRegulirovanieZatonuvshihSudov";
+import OborudovanieDlyaSudopodema from "./pages/articles/OborudovanieDlyaSudopodema";
+import OchistkaAkvatoriyOtZatonuvshihSudov from "./pages/articles/OchistkaAkvatoriyOtZatonuvshihSudov";
+import ZimnieSudopodemnyyeRaboty from "./pages/articles/ZimnieSudopodemnyyeRaboty";
+import ObsledovaniePrichalov from "./pages/articles/ObsledovaniePrichalov";
+import LikvidaciyaRazlivovNefteproduktov from "./pages/articles/LikvidaciyaRazlivovNefteproduktov";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +74,12 @@ const App = () => (
               <Route path="/articles/podgotovka-proekta-sudopodema" element={<PodgotovkaProektaSudopodema />} />
               <Route path="/articles/bezopasnost-vodolaznyh-rabot" element={<BezopasnostVodolaznyRabot />} />
               <Route path="/articles/chto-delayut-s-sudnom-posle-podema" element={<ChtoDelayutSZatonuvshimSudnomPoslePodema />} />
+              <Route path="/articles/pravovoe-regulirovanie-zatonuvshih-sudov" element={<PravovoeRegulirovanieZatonuvshihSudov />} />
+              <Route path="/articles/oborudovanie-dlya-sudopodema" element={<OborudovanieDlyaSudopodema />} />
+              <Route path="/articles/ochistka-akvatoriy-ot-zatonuvshih-sudov" element={<OchistkaAkvatoriyOtZatonuvshihSudov />} />
+              <Route path="/articles/zimnie-sudopodemnye-raboty" element={<ZimnieSudopodemnyyeRaboty />} />
+              <Route path="/articles/obsledovanie-prichalov" element={<ObsledovaniePrichalov />} />
+              <Route path="/articles/likvidaciya-razlivov-nefteproduktov" element={<LikvidaciyaRazlivovNefteproduktov />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/auth" element={<Auth />} />
