@@ -18,6 +18,8 @@ import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import DismantlingCutting from "./pages/DismantlingCutting";
 import NotFound from "./pages/NotFound";
+import News from "./pages/News";
+import NewsDetail from "./pages/NewsDetail";
 
 // Article pages
 import ChtoDelatEsliZatonuloSudno from "./pages/articles/ChtoDelatEsliZatonuloSudno";
@@ -80,6 +82,8 @@ const App = () => (
               <Route path="/articles/zimnie-sudopodemnye-raboty" element={<ZimnieSudopodemnyyeRaboty />} />
               <Route path="/articles/obsledovanie-prichalov" element={<ObsledovaniePrichalov />} />
               <Route path="/articles/likvidaciya-razlivov-nefteproduktov" element={<LikvidaciyaRazlivovNefteproduktov />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/news/:slug" element={<NewsDetail />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/auth" element={<Auth />} />
