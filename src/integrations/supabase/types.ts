@@ -53,6 +53,57 @@ export type Database = {
         }
         Relationships: []
       }
+      news: {
+        Row: {
+          content: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          keywords: string[] | null
+          meta_description: string | null
+          meta_title: string | null
+          published: boolean
+          slug: string
+          source_title: string | null
+          source_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
+          published?: boolean
+          slug: string
+          source_title?: string | null
+          source_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
+          published?: boolean
+          slug?: string
+          source_title?: string | null
+          source_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

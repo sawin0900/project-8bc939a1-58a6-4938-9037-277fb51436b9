@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import heroImage from "@/assets/hero-salvage.jpg";
 import divingImage from "@/assets/diving-inspection.jpg";
+import { LatestNews } from "@/components/LatestNews";
 
 const whyTrustUs = [
   { icon: Shield, text: "Работа строго по нормативам РФ" },
@@ -309,6 +310,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Latest News */}
+      <LatestNews />
 
       {/* CTA */}
       <section className="section-padding bg-primary/5">

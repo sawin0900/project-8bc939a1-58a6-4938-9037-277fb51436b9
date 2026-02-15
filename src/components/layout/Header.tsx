@@ -12,6 +12,7 @@ const navigation = [
   { name: "Документация", href: "/documentation" },
   { name: "Проекты", href: "/projects" },
   { name: "Срочные работы", href: "/emergency" },
+  { name: "Новости", href: "/news" },
   { name: "Статьи", href: "/articles" },
   { name: "FAQ", href: "/faq" },
   { name: "Контакты", href: "/contacts" },
