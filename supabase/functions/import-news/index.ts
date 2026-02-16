@@ -46,7 +46,6 @@ async function fetchPortNews(): Promise<Array<{ title: string; link: string; des
       const description = getTag("description");
       const pubDate = getTag("pubDate");
 
-      // Try to extract image from enclosure or media:content
       let imageUrl: string | undefined;
       const encMatch = itemXml.match(/url="([^"]+\.(jpg|jpeg|png|gif|webp)[^"]*)"/i);
       if (encMatch) imageUrl = encMatch[1];
@@ -56,11 +55,47 @@ async function fetchPortNews(): Promise<Array<{ title: string; link: string; des
       }
     }
 
-    return items.slice(0, 10); // Process max 10 at a time
+    return items.slice(0, 10);
   } catch (error) {
     console.error("Error fetching RSS:", error);
     return [];
   }
+}
+
+async function scrapeImageFromPage(url: string): Promise<string | undefined> {
+  try {
+    const response = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)" },
+    });
+    const html = await response.text();
+
+    // Try og:image first
+    const ogMatch = html.match(/<meta\s+(?:property|name)="og:image"\s+content="([^"]+)"/i)
+      || html.match(/content="([^"]+)"\s+(?:property|name)="og:image"/i);
+    if (ogMatch?.[1]) {
+      const imgUrl = ogMatch[1];
+      return imgUrl.startsWith("http") ? imgUrl : `https://portnews.ru${imgUrl}`;
+    }
+
+    // Try article/news body image
+    const bodyImgMatch = html.match(/<div[^>]*class="[^"]*(?:news|article|content)[^"]*"[^>]*>[\s\S]*?<img[^>]+src="([^"]+\.(jpg|jpeg|png|webp))"/i);
+    if (bodyImgMatch?.[1]) {
+      const imgUrl = bodyImgMatch[1];
+      return imgUrl.startsWith("http") ? imgUrl : `https://portnews.ru${imgUrl}`;
+    }
+
+    // Try any large image in the page
+    const imgMatches = html.matchAll(/<img[^>]+src="([^"]+\.(jpg|jpeg|png|webp))"/gi);
+    for (const m of imgMatches) {
+      const src = m[1];
+      // Skip tiny icons, logos
+      if (src.includes("logo") || src.includes("icon") || src.includes("banner_ad")) continue;
+      return src.startsWith("http") ? src : `https://portnews.ru${src}`;
+    }
+  } catch (error) {
+    console.error("Error scraping image from", url, error);
+  }
+  return undefined;
 }
 
 async function rewriteWithAI(
@@ -97,7 +132,6 @@ async function rewriteWithAI(
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || "";
     
-    // Extract JSON from response
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
@@ -114,7 +148,6 @@ async function rewriteWithAI(
     console.error("AI rewrite error:", error);
   }
 
-  // Fallback if AI fails
   return {
     title,
     description,
@@ -137,7 +170,6 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch RSS
     const newsItems = await fetchPortNews();
     console.log(`Fetched ${newsItems.length} items from RSS`);
 
@@ -148,7 +180,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Check existing
     const sourceUrls = newsItems.map((n) => n.link);
     const { data: existing } = await supabase
       .from("news")
@@ -163,10 +194,20 @@ Deno.serve(async (req) => {
     let imported = 0;
     for (const item of newItems) {
       try {
+        // If no image from RSS, scrape the article page for an image
+        let imageUrl = item.imageUrl;
+        if (!imageUrl) {
+          console.log(`Scraping image from: ${item.link}`);
+          imageUrl = await scrapeImageFromPage(item.link);
+          if (imageUrl) {
+            console.log(`Found image: ${imageUrl}`);
+          }
+        }
+
         const rewritten = await rewriteWithAI(
           item.title,
           item.description,
-          item.description, // RSS usually has description only
+          item.description,
           lovableApiKey
         );
 
@@ -177,7 +218,7 @@ Deno.serve(async (req) => {
           slug,
           description: rewritten.description,
           content: rewritten.content,
-          image_url: item.imageUrl || null,
+          image_url: imageUrl || null,
           source_url: item.link,
           source_title: item.title,
           keywords: rewritten.keywords,
