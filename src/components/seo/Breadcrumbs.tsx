@@ -22,6 +22,7 @@ const routeNames: Record<string, string> = {
   '/articles': 'Статьи',
   '/faq': 'FAQ',
   '/contacts': 'Контакты',
+  '/news': 'Новости',
 };
 
 export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
