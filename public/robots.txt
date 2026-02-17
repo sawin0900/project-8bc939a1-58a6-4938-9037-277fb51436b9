@@ -19,5 +19,8 @@ Allow: /
 # Sitemap
 Sitemap: https://centr-prityazheniya.ru/sitemap.xml
 
+# Yandex Turbo Pages
+# Turbo RSS: https://centr-prityazheniya.ru/turbo.xml
+
 # Host
 Host: https://centr-prityazheniya.ru
