@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Loader2, Mail, Phone, Calendar, User, Settings, RefreshCw, Trash2, 
-  Users, MessageSquare, Newspaper, Plus, Download, Pencil
+  Users, MessageSquare, Newspaper, Plus, Download, Pencil, ExternalLink, Globe
 } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format } from 'date-fns';
@@ -262,6 +262,26 @@ export default function Admin() {
 
             {activeTab === 'news' && (
               <div>
+                {/* SEO Links */}
+                <div className="bg-card rounded-xl border border-border p-4 mb-4">
+                  <h3 className="text-sm font-semibold flex items-center gap-2 mb-3">
+                    <Globe className="w-4 h-4 text-primary" />
+                    SEO и индексация
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" asChild>
+                      <a href={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sitemap`} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="w-3 h-3 mr-2" />Sitemap.xml
+                      </a>
+                    </Button>
+                    <Button variant="outline" size="sm" asChild>
+                      <a href={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/turbo-rss`} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="w-3 h-3 mr-2" />Турбо-страницы (RSS)
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+
                 <div className="flex gap-2 mb-4">
                   <Button onClick={importNews} disabled={importing} variant="outline">
                     {importing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
