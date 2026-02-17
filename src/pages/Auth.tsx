@@ -23,6 +23,22 @@ const signupSchema = z.object({
   path: ['confirmPassword'],
 });
 
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_DURATION_MS = 5 * 60 * 1000; // 5 minutes
+
+function getLoginAttempts(): { count: number; lockedUntil: number | null } {
+  try {
+    const data = sessionStorage.getItem('login_attempts');
+    return data ? JSON.parse(data) : { count: 0, lockedUntil: null };
+  } catch {
+    return { count: 0, lockedUntil: null };
+  }
+}
+
+function setLoginAttempts(count: number, lockedUntil: number | null) {
+  sessionStorage.setItem('login_attempts', JSON.stringify({ count, lockedUntil }));
+}
+
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +49,24 @@ export default function Auth() {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [lockoutRemaining, setLockoutRemaining] = useState(0);
   
   const { toast } = useToast();
   const { user, signIn, signUp } = useAuth();
   const navigate = useNavigate();
+
+  // Check lockout timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const { lockedUntil } = getLoginAttempts();
+      if (lockedUntil && Date.now() < lockedUntil) {
+        setLockoutRemaining(Math.ceil((lockedUntil - Date.now()) / 1000));
+      } else {
+        setLockoutRemaining(0);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -71,6 +101,20 @@ export default function Auth() {
     e.preventDefault();
     
     if (!validateForm()) return;
+
+    // Brute-force protection for login
+    if (isLogin) {
+      const attempts = getLoginAttempts();
+      if (attempts.lockedUntil && Date.now() < attempts.lockedUntil) {
+        const remaining = Math.ceil((attempts.lockedUntil - Date.now()) / 1000);
+        toast({
+          title: 'Аккаунт временно заблокирован',
+          description: `Слишком много попыток. Попробуйте через ${remaining} сек.`,
+          variant: 'destructive',
+        });
+        return;
+      }
+    }
     
     setIsLoading(true);
 
@@ -79,16 +123,28 @@ export default function Auth() {
         const { error } = await signIn(formData.email, formData.password);
         
         if (error) {
-          let errorMessage = 'Ошибка входа';
-          if (error.message.includes('Invalid login credentials')) {
-            errorMessage = 'Неверный email или пароль';
+          // Track failed attempt
+          const attempts = getLoginAttempts();
+          const newCount = attempts.count + 1;
+          if (newCount >= MAX_LOGIN_ATTEMPTS) {
+            setLoginAttempts(0, Date.now() + LOCKOUT_DURATION_MS);
+            toast({
+              title: 'Аккаунт временно заблокирован',
+              description: 'Превышен лимит попыток входа. Попробуйте через 5 минут.',
+              variant: 'destructive',
+            });
+          } else {
+            setLoginAttempts(newCount, null);
+            const remaining = MAX_LOGIN_ATTEMPTS - newCount;
+            toast({
+              title: 'Ошибка',
+              description: `Неверный email или пароль. Осталось попыток: ${remaining}`,
+              variant: 'destructive',
+            });
           }
-          toast({
-            title: 'Ошибка',
-            description: errorMessage,
-            variant: 'destructive',
-          });
         } else {
+          // Reset on successful login
+          setLoginAttempts(0, null);
           toast({
             title: 'Успешный вход',
             description: 'Добро пожаловать!',
@@ -223,7 +279,13 @@ export default function Auth() {
                 </div>
               )}
 
-              <Button type="submit" disabled={isLoading} className="w-full btn-glow">
+              {lockoutRemaining > 0 && isLogin && (
+                <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 text-sm text-destructive text-center">
+                  🔒 Вход заблокирован. Попробуйте через {lockoutRemaining} сек.
+                </div>
+              )}
+
+              <Button type="submit" disabled={isLoading || (isLogin && lockoutRemaining > 0)} className="w-full btn-glow">
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
