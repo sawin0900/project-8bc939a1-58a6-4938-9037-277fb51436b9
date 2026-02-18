@@ -99,11 +99,11 @@ export function Footer() {
                 <span>+7 (924) 730-14-54</span>
               </a>
               <a 
-                href="mailto:info@centr-prityazheniya.ru"
+                href="mailto:info@centr-prityazheniya.store"
                 className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail className="w-4 h-4 text-primary" />
-                <span>info@centr-prityazheniya.ru</span>
+                <span>info@centr-prityazheniya.store</span>
               </a>
               <a 
                 href="https://t.me/morproekt"

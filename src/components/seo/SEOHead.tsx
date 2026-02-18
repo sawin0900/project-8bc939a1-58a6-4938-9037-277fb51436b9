@@ -19,7 +19,7 @@ export function SEOHead({
   noindex = false,
   hreflang,
 }: SEOHeadProps) {
-  const baseUrl = 'https://centr-prityazheniya.ru';
+  const baseUrl = 'https://centr-prityazheniya.store';
   const fullCanonical = canonical ? `${baseUrl}${canonical}` : baseUrl;
   
   // Default hreflang for Russian site
