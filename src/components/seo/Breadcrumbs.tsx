@@ -53,7 +53,7 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: `https://centr-prityazheniya.ru${item.href}`,
+      item: `https://centr-prityazheniya.store${item.href}`,
     })),
   };
 

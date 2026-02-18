@@ -17,8 +17,8 @@ const contactInfo = [
   {
     icon: Mail,
     title: "Email",
-    value: "info@centr-prityazheniya.ru",
-    href: "mailto:info@centr-prityazheniya.ru",
+    value: "info@centr-prityazheniya.store",
+    href: "mailto:info@centr-prityazheniya.store",
     description: "Ответ в течение 24 часов",
   },
   {

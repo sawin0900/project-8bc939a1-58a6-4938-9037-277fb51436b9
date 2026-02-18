@@ -6,7 +6,7 @@ const corsHeaders = {
   "Content-Type": "application/rss+xml; charset=utf-8",
 };
 
-const BASE_URL = "https://centr-prityazheniya.ru";
+const BASE_URL = "https://centr-prityazheniya.store";
 
 function escapeXml(str: string): string {
   return str

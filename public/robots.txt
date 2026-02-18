@@ -17,10 +17,10 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://centr-prityazheniya.ru/sitemap.xml
+Sitemap: https://centr-prityazheniya.store/sitemap.xml
 
 # Yandex Turbo Pages
-# Turbo RSS: https://centr-prityazheniya.ru/turbo.xml
+# Turbo RSS: https://centr-prityazheniya.store/turbo.xml
 
 # Host
-Host: https://centr-prityazheniya.ru
+Host: https://centr-prityazheniya.store

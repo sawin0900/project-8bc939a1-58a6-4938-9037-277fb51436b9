@@ -6,7 +6,7 @@ const corsHeaders = {
   "Content-Type": "application/xml; charset=utf-8",
 };
 
-const BASE_URL = "https://centr-prityazheniya.ru";
+const BASE_URL = "https://centr-prityazheniya.store";
 
 // Static pages with their priorities and changefreq
 const staticPages = [

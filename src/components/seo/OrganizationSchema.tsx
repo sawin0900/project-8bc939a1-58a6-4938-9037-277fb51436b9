@@ -4,8 +4,8 @@ export function OrganizationSchema() {
     '@type': 'Organization',
     name: 'Центр Притяжения',
     alternateName: 'ЦентрПритяжения',
-    url: 'https://centr-prityazheniya.ru',
-    logo: 'https://centr-prityazheniya.ru/favicon.ico',
+    url: 'https://centr-prityazheniya.store',
+    logo: 'https://centr-prityazheniya.store/favicon.ico',
     description: 'Профессиональный судоподъём затонувших судов, водолазные обследования акваторий и подготовка проектной документации по Приказу Минтранса РФ №176 в Приморском крае.',
     address: {
       '@type': 'PostalAddress',
