@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Loader2, Mail, Phone, Calendar, User, Settings, RefreshCw, Trash2, 
-  Users, MessageSquare, Newspaper, Plus, Download, Pencil, ExternalLink, Globe
+  Users, MessageSquare, Newspaper, Plus, Download, Pencil, ExternalLink, Globe, BarChart3
 } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format } from 'date-fns';
@@ -42,6 +42,15 @@ interface NewsItem {
 }
 
 type TabType = 'submissions' | 'users' | 'news';
+
+const AdminAnalyticsButton = () => {
+  const navigate = useNavigate();
+  return (
+    <Button variant="outline" size="sm" onClick={() => navigate('/admin/analytics')} className="flex items-center gap-2">
+      <BarChart3 className="w-4 h-4" />Статистика
+    </Button>
+  );
+};
 
 export default function Admin() {
   const { user, isAdmin, isLoading: authLoading } = useAuth();
@@ -185,6 +194,7 @@ export default function Admin() {
               <Button onClick={fetchData} variant="outline" size="sm">
                 <RefreshCw className="w-4 h-4 mr-2" />Обновить
               </Button>
+              <AdminAnalyticsButton />
             </div>
           </AnimatedSection>
 
