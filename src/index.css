@@ -111,6 +111,18 @@
   .btn-glow {
     box-shadow: var(--shadow-glow);
   }
+
+  /* Improve readability where article/news HTML has inline images near text */
+  .prose img,
+  .prose figure,
+  .prose video,
+  .prose iframe {
+    @apply my-6;
+  }
+
+  .prose figure > img {
+    @apply my-0;
+  }
 }
 
 @layer utilities {

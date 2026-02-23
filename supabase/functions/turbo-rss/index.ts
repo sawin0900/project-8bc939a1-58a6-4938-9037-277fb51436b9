@@ -28,7 +28,7 @@ function formatDate(dateStr: string): string {
 
 // Convert HTML content to Turbo-compatible format
 function toTurboContent(html: string, imageUrl: string | null, title: string): string {
-  let turbo = `<header>\n  <h1>${escapeXml(title)}</h1>\n</header>\n`;
+  let turbo = `<article>\n<header>\n  <h1>${escapeXml(title)}</h1>\n</header>\n`;
 
   if (imageUrl) {
     turbo += `<figure>\n  <img src="${escapeXml(imageUrl)}" />\n</figure>\n`;
@@ -36,6 +36,8 @@ function toTurboContent(html: string, imageUrl: string | null, title: string): s
 
   // Clean and wrap content
   turbo += html;
+
+  turbo += `\n</article>`;
 
   return turbo;
 }
@@ -68,7 +70,10 @@ Deno.serve(async (req) => {
     xml += `    <link>${BASE_URL}</link>\n`;
     xml += `    <description>Новости и статьи о судоподъёме, водолазных работах и утилизации судов во Владивостоке</description>\n`;
     xml += `    <language>ru</language>\n`;
-    xml += `    <turbo:analytics type="Yandex" id=""></turbo:analytics>\n`;
+    const metrikaId = Deno.env.get("YANDEX_METRIKA_ID")?.trim();
+    if (metrikaId) {
+      xml += `    <turbo:analytics type="Yandex" id="${escapeXml(metrikaId)}"></turbo:analytics>\n`;
+    }
 
     if (newsItems) {
       for (const news of newsItems) {
@@ -79,11 +84,12 @@ Deno.serve(async (req) => {
         xml += `    <item turbo="true">\n`;
         xml += `      <title>${escapeXml(news.title)}</title>\n`;
         xml += `      <link>${link}</link>\n`;
+        xml += `      <guid>${link}</guid>\n`;
         xml += `      <pubDate>${pubDate}</pubDate>\n`;
         if (news.description) {
           xml += `      <description>${escapeXml(news.description)}</description>\n`;
         }
-        if (news.meta_title) {
+        if (news.content) {
           xml += `      <yandex:full-text>${escapeXml(stripHtml(news.content).slice(0, 10000))}</yandex:full-text>\n`;
         }
         xml += `      <turbo:content><![CDATA[\n${turboContent}\n      ]]></turbo:content>\n`;
