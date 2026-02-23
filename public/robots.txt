@@ -20,7 +20,7 @@ Allow: /
 Sitemap: https://centr-prityazheniya.store/sitemap.xml
 
 # Yandex Turbo Pages
-# Turbo RSS: https://centr-prityazheniya.store/turbo.xml
+# Turbo RSS: https://ivrnoeomnbspvyxhhnwc.supabase.co/functions/v1/turbo-rss
 
 # Host
-Host: https://centr-prityazheniya.store
+Host: centr-prityazheniya.store
