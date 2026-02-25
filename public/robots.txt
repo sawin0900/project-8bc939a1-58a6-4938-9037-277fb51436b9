@@ -6,3 +6,4 @@ Disallow: /auth
 
 Host: centr-prityazheniya.store
 Sitemap: https://centr-prityazheniya.store/sitemap.xml
+Sitemap: https://ivrnoeomnbspvyxhhnwc.supabase.co/functions/v1/sitemap
