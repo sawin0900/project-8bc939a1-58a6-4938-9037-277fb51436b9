@@ -57,12 +57,28 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch all published news
-    const { data: newsItems } = await supabase
-      .from("news")
-      .select("slug, updated_at, created_at")
-      .eq("published", true)
-      .order("created_at", { ascending: false });
+    // Fetch all published news in batches (Supabase returns max 1000 rows per request)
+    const newsItems: Array<{ slug: string; updated_at: string | null; created_at: string }> = [];
+    const pageSize = 1000;
+    let from = 0;
+
+    while (true) {
+      const to = from + pageSize - 1;
+      const { data, error } = await supabase
+        .from("news")
+        .select("slug, updated_at, created_at")
+        .eq("published", true)
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
+      if (error) throw error;
+      if (!data || data.length === 0) break;
+
+      newsItems.push(...data);
+
+      if (data.length < pageSize) break;
+      from += pageSize;
+    }
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -90,16 +106,14 @@ Deno.serve(async (req) => {
     }
 
     // Dynamic news pages
-    if (newsItems) {
-      for (const news of newsItems) {
-        const lastmod = (news.updated_at || news.created_at).split("T")[0];
-        xml += `  <url>\n`;
-        xml += `    <loc>${BASE_URL}/news/${news.slug}</loc>\n`;
-        xml += `    <lastmod>${lastmod}</lastmod>\n`;
-        xml += `    <changefreq>daily</changefreq>\n`;
-        xml += `    <priority>0.7</priority>\n`;
-        xml += `  </url>\n`;
-      }
+    for (const news of newsItems) {
+      const lastmod = (news.updated_at || news.created_at).split("T")[0];
+      xml += `  <url>\n`;
+      xml += `    <loc>${BASE_URL}/news/${news.slug}</loc>\n`;
+      xml += `    <lastmod>${lastmod}</lastmod>\n`;
+      xml += `    <changefreq>daily</changefreq>\n`;
+      xml += `    <priority>0.7</priority>\n`;
+      xml += `  </url>\n`;
     }
 
     xml += `</urlset>`;
