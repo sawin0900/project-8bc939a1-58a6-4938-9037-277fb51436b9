@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { HelmetProvider } from "react-helmet-async";
@@ -47,15 +48,27 @@ import LikvidaciyaRazlivovNefteproduktov from "./pages/articles/LikvidaciyaRazli
 
 const queryClient = new QueryClient();
 
+function ScrollToTopOnRouteChange() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.pathname]);
+
+  return null;
+}
+
 function AppRoutes() {
   usePageTracking();
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/services" element={<Services />} />
-      <Route path="/services/dismantling-cutting" element={<DismantlingCutting />} />
-      <Route path="/stages" element={<WorkStages />} />
-      <Route path="/documentation" element={<Documentation />} />
+    <>
+      <ScrollToTopOnRouteChange />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/services/dismantling-cutting" element={<DismantlingCutting />} />
+        <Route path="/stages" element={<WorkStages />} />
+        <Route path="/documentation" element={<Documentation />} />
               <Route path="/" element={<Index />} />
               <Route path="/services" element={<Services />} />
               <Route path="/services/dismantling-cutting" element={<DismantlingCutting />} />
@@ -93,7 +106,8 @@ function AppRoutes() {
               <Route path="/admin/analytics" element={<AdminAnalytics />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
-            </Routes>
+      </Routes>
+    </>
   );
 }
 
