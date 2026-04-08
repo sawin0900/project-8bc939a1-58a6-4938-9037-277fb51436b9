@@ -78,7 +78,7 @@ const WorkStages = () => {
       </section>
 
       {/* Timeline */}
-      <section className="section-padding pt-0">
+      <section className="section-padding pt-8">
         <div className="container-custom max-w-3xl">
           <StaggerContainer staggerDelay={0.15}>
             {stages.map((stage, index) => (
