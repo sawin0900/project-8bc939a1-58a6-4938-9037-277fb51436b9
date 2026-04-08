@@ -64,7 +64,7 @@ const Documentation = () => {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="pt-16 md:pt-20 pb-4 md:pb-8">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>
