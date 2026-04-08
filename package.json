@@ -13,8 +13,6 @@
     "test:full": "vitest run",
     "test:watch": "vitest",
     "security:smoke": "bash ./scripts/security-smoke-check.sh",
-    "security:smoke:strict": "bash ./scripts/security-smoke-check-strict.sh",
-    "diagnose:registry": "bash ./scripts/diagnose-registry.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

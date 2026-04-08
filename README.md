@@ -87,16 +87,6 @@ To always require the full Vitest run (without fallback), use:
 ```sh
 npm run test:full
 ```
-
-If dependency install fails in your environment, run:
-
-```sh
-npm run diagnose:registry
-```
-
-This command helps distinguish infrastructure/proxy restrictions from project code issues.
-A `403` from npm registry affects CI/dependency installation, but does not directly change behavior of an already deployed website runtime.
-
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
