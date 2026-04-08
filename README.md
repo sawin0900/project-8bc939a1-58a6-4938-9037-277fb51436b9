@@ -60,6 +60,43 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Security smoke checks (works without `npm ci`)
+
+If your environment cannot install packages from npm (for example due to registry/network policy), you can still run basic security checks:
+
+```sh
+npm run security:smoke
+```
+
+This script validates anti-spam controls and basic hardening rules in key files without requiring Node dependencies.
+
+For stricter checks:
+
+```sh
+npm run security:smoke:strict
+```
+
+## Tests in restricted environments
+
+`npm run test` now uses a small wrapper script:
+- if `vitest` is available, it runs the full test suite;
+- if dependencies cannot be installed, it automatically falls back to `security:smoke`.
+
+To always require the full Vitest run (without fallback), use:
+
+```sh
+npm run test:full
+```
+
+If dependency install fails in your environment, run:
+
+```sh
+npm run diagnose:registry
+```
+
+This command helps distinguish infrastructure/proxy restrictions from project code issues.
+A `403` from npm registry affects CI/dependency installation, but does not directly change behavior of an already deployed website runtime.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.

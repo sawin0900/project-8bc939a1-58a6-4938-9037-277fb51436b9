@@ -1,10 +1,20 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const allowedOrigins = new Set([
+  "https://morproekt.com",
+  "https://www.morproekt.com",
+  "http://localhost:5173",
+]);
+
+function buildCorsHeaders(origin: string | null) {
+  const safeOrigin = origin && allowedOrigins.has(origin) ? origin : "https://morproekt.com";
+  return {
+    "Access-Control-Allow-Origin": safeOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Vary": "Origin",
+  };
+}
 
 // Simple in-memory rate limiting (per function instance)
 const rateLimitMap = new Map<string, number>();
@@ -33,7 +43,7 @@ function isRateLimited(identifier: string): boolean {
 
 // Input validation schema
 function validateInput(data: Record<string, unknown>): { valid: boolean; error?: string } {
-  const { name, phone, email, message, latitude, longitude, photoUrl } = data;
+  const { name, phone, email, message, latitude, longitude, photoUrl, submissionId } = data;
   
   // Required fields
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
@@ -85,8 +95,18 @@ function validateInput(data: Record<string, unknown>): { valid: boolean; error?:
     }
     // Only allow URLs from our Supabase storage
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-    if (!photoUrl.startsWith(supabaseUrl) && !photoUrl.startsWith('https://')) {
+    if (!supabaseUrl || !photoUrl.startsWith(supabaseUrl)) {
       return { valid: false, error: 'Invalid photo URL' };
+    }
+  }
+
+  if (submissionId !== undefined && submissionId !== null) {
+    if (typeof submissionId !== "string") {
+      return { valid: false, error: "Invalid submission ID" };
+    }
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(submissionId)) {
+      return { valid: false, error: "Invalid submission ID format" };
     }
   }
   
@@ -94,6 +114,7 @@ function validateInput(data: Record<string, unknown>): { valid: boolean; error?:
 }
 
 serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req.headers.get("origin"));
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }

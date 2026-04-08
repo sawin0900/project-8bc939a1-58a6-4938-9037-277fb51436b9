@@ -20,6 +20,7 @@ interface LocationData {
 }
 
 export function ContactForm() {
+  const formInitTimeRef = useRef<number>(Date.now());
   const [isLoading, setIsLoading] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [location, setLocation] = useState<LocationData | null>(null);
@@ -34,6 +35,7 @@ export function ContactForm() {
     phone: "",
     email: "",
     message: "",
+    website: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -161,6 +163,28 @@ export function ContactForm() {
     setErrors({});
 
     try {
+      // Honeypot anti-spam check (bots often fill hidden fields)
+      if (formData.website.trim()) {
+        toast({
+          title: "Заявка отправлена",
+          description: "Мы свяжемся с вами в ближайшее время",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Time-based anti-spam check (very fast submits are likely bots)
+      const secondsSinceFormOpen = (Date.now() - formInitTimeRef.current) / 1000;
+      if (secondsSinceFormOpen < 3) {
+        toast({
+          title: "Пожалуйста, проверьте форму",
+          description: "Отправка слишком быстрая. Попробуйте ещё раз.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
       // Validate form data
       contactSchema.parse(formData);
 
@@ -177,15 +201,19 @@ export function ContactForm() {
         }
       }
       
-      const { error } = await supabase.from("contact_submissions").insert({
-        name: formData.name.trim(),
-        email: formData.email.trim() || "не указан",
-        phone: formData.phone.trim() || null,
-        message: formData.message.trim() || "Заявка с сайта",
-        latitude: location?.latitude || null,
-        longitude: location?.longitude || null,
-        photo_url: photoUrl,
-      });
+      const { data: insertedSubmission, error } = await supabase
+        .from("contact_submissions")
+        .insert({
+          name: formData.name.trim(),
+          email: formData.email.trim() || "не указан",
+          phone: formData.phone.trim() || null,
+          message: formData.message.trim() || "Заявка с сайта",
+          latitude: location?.latitude || null,
+          longitude: location?.longitude || null,
+          photo_url: photoUrl,
+        })
+        .select("id")
+        .single();
 
       if (error) {
         throw error;
@@ -202,6 +230,7 @@ export function ContactForm() {
             latitude: location?.latitude || null,
             longitude: location?.longitude || null,
             photoUrl: photoUrl,
+            submissionId: insertedSubmission?.id || null,
           },
         });
       } catch (telegramError) {
@@ -215,7 +244,8 @@ export function ContactForm() {
         description: "Мы свяжемся с вами в ближайшее время",
       });
 
-      setFormData({ name: "", phone: "", email: "", message: "" });
+      setFormData({ name: "", phone: "", email: "", message: "", website: "" });
+      formInitTimeRef.current = Date.now();
       setLocation(null);
       removeFile();
     } catch (err) {
@@ -271,6 +301,18 @@ export function ContactForm() {
           />
           {errors.phone && <p className="text-destructive text-sm mt-1">{errors.phone}</p>}
         </div>
+      </div>
+      <div>
+        <Input
+          id="website"
+          type="text"
+          value={formData.website}
+          onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="hidden"
+        />
       </div>
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
