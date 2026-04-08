@@ -64,11 +64,6 @@ function AppRoutes() {
     <>
       <ScrollToTopOnRouteChange />
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/services/dismantling-cutting" element={<DismantlingCutting />} />
-        <Route path="/stages" element={<WorkStages />} />
-        <Route path="/documentation" element={<Documentation />} />
               <Route path="/" element={<Index />} />
               <Route path="/services" element={<Services />} />
               <Route path="/services/dismantling-cutting" element={<DismantlingCutting />} />

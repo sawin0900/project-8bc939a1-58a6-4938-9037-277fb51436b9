@@ -123,7 +123,7 @@ export default function MetodyPodemaZatonuvshihSudov() {
       </section>
 
       {/* Methods */}
-      <section className="section-padding pt-0">
+      <section className="section-padding pt-8">
         <div className="container-custom">
           <div className="space-y-8 max-w-5xl mx-auto">
             {methods.map((method, index) => (

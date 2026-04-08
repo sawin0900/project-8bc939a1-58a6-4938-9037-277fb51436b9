@@ -146,7 +146,7 @@ export default function ChtoDelayutSZatonuvshimSudnomPoslePodema() {
       </section>
 
       {/* Options */}
-      <section className="section-padding pt-0">
+      <section className="section-padding pt-8">
         <div className="container-custom">
           <AnimatedSection>
             <h2 className="text-3xl font-bold text-foreground mb-8 text-center">

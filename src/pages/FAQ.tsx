@@ -88,7 +88,7 @@ const FAQ = () => {
       </section>
 
       {/* FAQ Accordion */}
-      <section className="section-padding pt-0">
+      <section className="section-padding pt-8">
         <div className="container-custom max-w-3xl">
           <StaggerContainer staggerDelay={0.08}>
             <Accordion type="single" collapsible className="space-y-4">

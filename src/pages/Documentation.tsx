@@ -87,7 +87,7 @@ const Documentation = () => {
       </section>
 
       {/* Regulations */}
-      <section className="section-padding pt-0">
+      <section className="section-padding pt-8">
         <div className="container-custom">
           <AnimatedSection>
             <h3 className="text-2xl font-bold text-foreground mb-8">Нормативная база</h3>
