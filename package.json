@@ -9,8 +9,12 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "bash ./scripts/run-tests.sh",
+    "test:full": "vitest run",
+    "test:watch": "vitest",
+    "security:smoke": "bash ./scripts/security-smoke-check.sh",
+    "security:smoke:strict": "bash ./scripts/security-smoke-check-strict.sh",
+    "diagnose:registry": "bash ./scripts/diagnose-registry.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

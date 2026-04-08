@@ -1,10 +1,20 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Content-Type": "application/rss+xml; charset=utf-8",
-};
+const allowedOrigins = new Set([
+  "https://morproekt.com",
+  "https://www.morproekt.com",
+  "http://localhost:5173",
+]);
+
+function buildCorsHeaders(origin: string | null) {
+  const safeOrigin = origin && allowedOrigins.has(origin) ? origin : "https://morproekt.com";
+  return {
+    "Access-Control-Allow-Origin": safeOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Content-Type": "application/rss+xml; charset=utf-8",
+    "Vary": "Origin",
+  };
+}
 
 const BASE_URL = "https://centr-prityazheniya.store";
 
@@ -43,6 +53,7 @@ function toTurboContent(html: string, imageUrl: string | null, title: string): s
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req.headers.get("origin"));
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
