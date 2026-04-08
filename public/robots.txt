@@ -4,6 +4,19 @@ Disallow: /admin
 Disallow: /admin/
 Disallow: /auth
 
-Host: centr-prityazheniya.store
-Sitemap: https://centr-prityazheniya.store/sitemap.xml
-Sitemap: https://ivrnoeomnbspvyxhhnwc.supabase.co/functions/v1/sitemap
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /auth
+
+User-agent: Yandex
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /auth
+
+Host: centr-prityazheniya.ru
+Sitemap: https://centr-prityazheniya.ru/sitemap.xml
+Sitemap: https://centr-prityazheniya.ru/news-sitemap.xml
+Sitemap: https://centr-prityazheniya.ru/turbo-sitemap.xml
