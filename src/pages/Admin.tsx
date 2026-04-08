@@ -96,8 +96,37 @@ export default function Admin() {
   };
 
   const fetchNews = async () => {
-    const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
-    if (!error) setNews(data || []);
+    const pageSize = 1000;
+    const allNews: NewsItem[] = [];
+    let from = 0;
+
+    while (true) {
+      const to = from + pageSize - 1;
+      const { data, error } = await supabase
+        .from('news')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+      if (error) {
+        toast({ title: 'Ошибка', description: 'Не удалось загрузить новости', variant: 'destructive' });
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        break;
+      }
+
+      allNews.push(...(data as NewsItem[]));
+
+      if (data.length < pageSize) {
+        break;
+      }
+
+      from += pageSize;
+    }
+
+    setNews(allNews);
   };
 
   const updateSubmissionStatus = async (id: string, status: string) => {

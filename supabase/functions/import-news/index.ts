@@ -55,7 +55,7 @@ async function fetchPortNews(): Promise<Array<{ title: string; link: string; des
       }
     }
 
-    return items.slice(0, 10);
+    return items;
   } catch (error) {
     console.error("Error fetching RSS:", error);
     return [];
