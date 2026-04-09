@@ -12,7 +12,7 @@
     "test": "bash ./scripts/run-tests.sh",
     "test:full": "vitest run",
     "test:watch": "vitest",
-    "security:smoke": "bash ./scripts/security-smoke-check.sh",
+    "security:smoke": "bash ./scripts/security-smoke-check.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
