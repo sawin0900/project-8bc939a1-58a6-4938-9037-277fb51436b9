@@ -50,7 +50,7 @@ export default function NewsDetail() {
   }
 
   return (
-    <Layout>
+    <Layout pageClass="page-news-detail">
       <SEOHead
         title={news.meta_title || news.title}
         description={news.meta_description || news.description || ""}
@@ -77,7 +77,7 @@ export default function NewsDetail() {
         }}
       />
 
-      <section className="pt-32 pb-20">
+      <section className="pt-32 pb-20 hero relative overflow-hidden">
         <div className="container-custom max-w-4xl">
           <Breadcrumbs
             items={[

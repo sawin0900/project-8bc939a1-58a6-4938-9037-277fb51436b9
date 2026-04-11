@@ -9,14 +9,14 @@ import portImg from "@/assets/images/vladivostok-port.jpg";
 
 const ZimnieSudopodemnyyeRaboty = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Судоподъёмные работы зимой: особенности и сложности | Статья"
         description="Специфика проведения судоподъёмных и водолазных работ в зимний период: ледовые условия, низкие температуры, техника безопасности, выбор методов подъёма."
         keywords="судоподъём зимой, водолазные работы зимой, подъём судна подо льдом, ледовые условия"
         canonical="/articles/zimnie-sudopodemnye-raboty"
       />
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom max-w-4xl">
           <Breadcrumbs />
           <AnimatedSection>

@@ -90,7 +90,7 @@ const regulations = [
 
 export default function BezopasnostVodolaznyRabot() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Безопасность водолазных работ — правила и требования | Владивосток"
         description="Безопасность при водолазных работах: состав станции, связь, медицинское обеспечение, риски. Нормативные требования. Приморский край."
@@ -99,7 +99,7 @@ export default function BezopasnostVodolaznyRabot() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 bg-gradient-to-b from-destructive/5 to-background">
+      <section className="section-padding pt-32 bg-gradient-to-b from-destructive/5 to-background hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

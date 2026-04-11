@@ -55,7 +55,7 @@ const FAQ = () => {
   }));
 
   return (
-    <Layout>
+    <Layout pageClass="page-faq">
       <SEOHead
         title="FAQ — Вопросы о судоподъёме и документации"
         description="Ответы на часто задаваемые вопросы о судоподъёме, Приказе Минтранса №176, согласованиях, сроках и стоимости работ."
@@ -65,7 +65,7 @@ const FAQ = () => {
       <FAQSchema items={faqSchemaItems} />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

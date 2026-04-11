@@ -125,7 +125,7 @@ const workStages = [
 
 export default function DismantlingCutting() {
   return (
-    <Layout>
+    <Layout pageClass="page-demontazh">
       <SEOHead
         title="Демонтаж и резка металлоконструкций | Подводная резка"
         description="Демонтаж затонувших судов, подводная и надводная резка металла. Газовая, плазменная, механическая резка. Работаем в Приморском крае."
@@ -139,8 +139,7 @@ export default function DismantlingCutting() {
       />
 
       {/* Hero Section */}
-      <section className="relative py-20 md:py-28 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-5 bg-cover bg-center" />
+      <section className="hero relative py-20 md:py-28 overflow-hidden">
         <div className="container-custom relative z-10">
           <Breadcrumbs />
           <AnimatedSection>

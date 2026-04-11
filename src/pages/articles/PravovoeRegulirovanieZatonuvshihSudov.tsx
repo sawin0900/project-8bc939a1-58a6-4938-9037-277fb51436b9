@@ -9,14 +9,14 @@ import insuranceImg from "@/assets/images/insurance-documents.jpg";
 
 const PravovoeRegulirovanieZatonuvshihSudov = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Правовое регулирование затонувших судов в РФ | Статья"
         description="Анализ законодательной базы: КТМ, КВВТ, ФЗ «О транспортной безопасности», Приказ Минтранса №176. Обязанности судовладельца и ответственность за бездействие."
         keywords="КТМ затонувшее судно, правовое регулирование судоподъём, обязанности судовладельца, Приказ 176"
         canonical="/articles/pravovoe-regulirovanie-zatonuvshih-sudov"
       />
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom max-w-4xl">
           <Breadcrumbs />
           <AnimatedSection>

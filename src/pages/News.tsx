@@ -78,14 +78,14 @@ export default function News() {
   };
 
   return (
-    <Layout>
+    <Layout pageClass="page-news">
       <SEOHead
         title="Новости морской отрасли | Центр Притяжения"
         description="Актуальные новости судоподъёма, морских перевозок и портовой инфраструктуры."
         keywords="морские новости, судоподъём новости, порт новости, морская отрасль"
         canonical="/news"
       />
-      <section className="pt-32 pb-20">
+      <section className="pt-32 pb-20 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs items={[{ name: "Главная", href: "/" }, { name: "Новости", href: "/news" }]} />
           <AnimatedSection>

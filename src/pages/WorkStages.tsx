@@ -46,7 +46,7 @@ const stages = [
 
 const WorkStages = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-etapy">
       <SEOHead
         title="Этапы судоподъёмных работ — от обследования до сдачи"
         description="Пошаговый процесс выполнения судоподъёма: сбор данных, водолазное обследование, инженерные расчёты, проектная документация, согласования и подъём судна."
@@ -55,7 +55,7 @@ const WorkStages = () => {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

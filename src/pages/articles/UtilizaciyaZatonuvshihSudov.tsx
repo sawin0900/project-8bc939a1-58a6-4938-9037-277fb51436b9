@@ -73,7 +73,7 @@ const advantages = [
 
 export default function UtilizaciyaZatonuvshihSudov() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Утилизация затонувших судов — полный цикл работ | Владивосток"
         description="Утилизация затонувших судов в Приморском крае: подъём, демонтаж, резка, переработка. Документальное оформление, экологические требования."
@@ -82,7 +82,7 @@ export default function UtilizaciyaZatonuvshihSudov() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

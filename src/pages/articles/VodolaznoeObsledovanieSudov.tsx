@@ -64,7 +64,7 @@ const documents = [
 
 export default function VodolaznoeObsledovanieSudov() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Водолазное обследование затонувших судов — диагностика | Владивосток"
         description="Водолазное обследование затонувших судов: этапы, что проверяем, какие документы получаете. Профессиональная диагностика в Приморском крае."
@@ -73,7 +73,7 @@ export default function VodolaznoeObsledovanieSudov() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

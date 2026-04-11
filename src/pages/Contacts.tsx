@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { SEOHead, Breadcrumbs } from "@/components/seo";
 import { Phone, Mail, Send, MapPin, Clock } from "lucide-react";
+import { MessengerAvailability } from "@/components/MessengerAvailability";
 import portImg from "@/assets/images/tugboat-salvage-operation.jpg";
 
 const contactInfo = [
@@ -39,16 +40,16 @@ const contactInfo = [
 
 const Contacts = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-contacts">
       <SEOHead
         title="Контакты — Центр Притяжения | Владивосток"
-        description="Свяжитесь с нами для заказа судоподъёма и водолазных работ. Телефон, email, Telegram. Владивосток, Приморский край. Круглосуточная аварийная служба."
+        description="Свяжитесь с нами для заказа судоподъёма и водолазных работ. Телефон, email, Telegram, Max, WhatsApp, Viber. Владивосток, Приморский край. Круглосуточная аварийная служба."
         keywords="контакты судоподъём, Владивосток, Центр Притяжения, заявка на судоподъём"
         canonical="/contacts"
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>
@@ -117,6 +118,12 @@ const Contacts = () => {
                     </StaggerItem>
                   ))}
                 </StaggerContainer>
+
+                <AnimatedSection delay={0.25}>
+                  <div className="card-ocean p-6">
+                    <MessengerAvailability />
+                  </div>
+                </AnimatedSection>
 
                 {/* Additional Info */}
                 <AnimatedSection delay={0.3}>

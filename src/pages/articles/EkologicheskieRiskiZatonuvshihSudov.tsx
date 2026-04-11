@@ -70,7 +70,7 @@ const measures = [
 
 export default function EkologicheskieRiskiZatonuvshihSudov() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Экологические риски затонувших судов — охрана среды | Владивосток"
         description="Экологические угрозы затонувших судов: разливы нефтепродуктов, гибель фауны, загрязнение. Меры предотвращения и законодательство РФ. Приморский край."
@@ -79,7 +79,7 @@ export default function EkologicheskieRiskiZatonuvshihSudov() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 bg-gradient-to-b from-green-500/5 to-background">
+      <section className="section-padding pt-32 bg-gradient-to-b from-green-500/5 to-background hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

@@ -107,7 +107,7 @@ const factors = [
 
 export default function ChtoDelayutSZatonuvshimSudnomPoslePodema() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Что делают с судном после подъёма — варианты дальнейшей судьбы | Владивосток"
         description="Варианты использования поднятого судна: ремонт, продажа, утилизация, создание рифа. Как выбрать оптимальное решение. Приморский край."
@@ -116,7 +116,7 @@ export default function ChtoDelayutSZatonuvshimSudnomPoslePodema() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

@@ -9,14 +9,14 @@ import floatingCraneImg from "@/assets/images/floating-crane-salvage.jpg";
 
 const OborudovanieDlyaSudopodema = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Оборудование для судоподъёма: плавкраны, понтоны, помпы | Статья"
         description="Обзор специализированной техники для судоподъёмных работ: плавучие краны, мягкие и жёсткие понтоны, насосное оборудование, грузозахватные устройства."
         keywords="оборудование судоподъём, плавкран, понтоны для подъёма, помпы водолазные, грузозахватные устройства"
         canonical="/articles/oborudovanie-dlya-sudopodema"
       />
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom max-w-4xl">
           <Breadcrumbs />
           <AnimatedSection>

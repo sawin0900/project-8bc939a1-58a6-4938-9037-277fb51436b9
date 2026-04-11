@@ -9,14 +9,14 @@ import portImg from "@/assets/images/vladivostok-port.jpg";
 
 const OchistkaAkvatoriyOtZatonuvshihSudov = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Очистка акваторий от затонувших судов: программы и опыт | Статья"
         description="Федеральные и муниципальные программы очистки акваторий от затонувших судов. Опыт реализации, финансирование, критерии отбора объектов."
         keywords="очистка акватории, затонувшие суда федеральная программа, подъём брошенных судов, экология акватории"
         canonical="/articles/ochistka-akvatoriy-ot-zatonuvshih-sudov"
       />
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom max-w-4xl">
           <Breadcrumbs />
           <AnimatedSection>

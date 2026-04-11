@@ -81,7 +81,7 @@ const tips = [
 
 export default function StrahovanieSudopodemnyRabot() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Страхование судоподъёмных работ — P&I, КАСКО | Владивосток"
         description="Страхование при подъёме затонувших судов: P&I клубы, КАСКО, ответственность подрядчика. Как получить страховое возмещение. Приморский край."
@@ -90,7 +90,7 @@ export default function StrahovanieSudopodemnyRabot() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

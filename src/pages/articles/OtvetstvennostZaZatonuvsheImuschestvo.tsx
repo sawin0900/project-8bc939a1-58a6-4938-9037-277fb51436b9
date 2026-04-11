@@ -77,7 +77,7 @@ const whoIsResponsible = [
 
 export default function OtvetstvennostZaZatonuvsheImuschestvo() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Ответственность за затонувшее имущество — законодательство РФ"
         description="Кто несёт ответственность за затонувшее судно: КТМ, КВВТ, Приказ Минтранса 176. Виды ответственности судовладельца, штрафы, сроки подъёма. Консультация юриста."
@@ -86,7 +86,7 @@ export default function OtvetstvennostZaZatonuvsheImuschestvo() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 bg-gradient-to-b from-primary/5 to-background">
+      <section className="section-padding pt-32 bg-gradient-to-b from-primary/5 to-background hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

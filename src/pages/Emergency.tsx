@@ -6,6 +6,7 @@ import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/
 import { SEOHead, ServiceSchema } from "@/components/seo";
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, Shield, Phone, Send, ArrowRight } from "lucide-react";
+import { MessengerAvailability } from "@/components/MessengerAvailability";
 import emergencyImg from "@/assets/images/emergency-maritime.jpg";
 import salvageImg from "@/assets/images/salvage-crane-operation.jpg";
 
@@ -29,7 +30,7 @@ const features = [
 
 const Emergency = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-emergency">
       <SEOHead
         title="Аварийный судоподъём 24/7 | Срочные работы Владивосток"
         description="Аварийный судоподъём и срочные водолазные работы круглосуточно. Выезд в течение 24 часов, работа в сложных условиях, минимизация экологического ущерба."
@@ -42,7 +43,7 @@ const Emergency = () => {
         url="/emergency"
       />
       {/* Hero */}
-      <section className="section-padding pt-32 bg-destructive/5">
+      <section className="section-padding pt-32 bg-destructive/5 hero relative overflow-hidden">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
             <motion.div
@@ -97,6 +98,7 @@ const Emergency = () => {
                 </a>
               </Button>
             </motion.div>
+            <MessengerAvailability compact className="mt-8 max-w-lg mx-auto" />
           </div>
         </div>
       </section>

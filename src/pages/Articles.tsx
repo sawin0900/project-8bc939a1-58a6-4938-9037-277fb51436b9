@@ -171,7 +171,7 @@ const articles = [
 
 const Articles = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-articles">
       <SEOHead
         title="Статьи о судоподъёме — экспертные материалы | Владивосток"
         description="Полезные статьи о судоподъёме: что делать при затоплении судна, ответственность, согласования, выбор подрядчика. Экспертный опыт для судовладельцев Приморского края."
@@ -180,7 +180,7 @@ const Articles = () => {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

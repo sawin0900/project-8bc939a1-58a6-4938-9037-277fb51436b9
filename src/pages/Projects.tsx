@@ -92,7 +92,7 @@ const projects = [
 
 const Projects = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-projects">
       <SEOHead
         title="Проекты судоподъёма — выполненные работы"
         description="Реализованные проекты по судоподъёму и водолазным обследованиям: подъём танкеров, траулеров, барж, обследование причалов. Владивосток, Находка, Сахалин."
@@ -101,7 +101,7 @@ const Projects = () => {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

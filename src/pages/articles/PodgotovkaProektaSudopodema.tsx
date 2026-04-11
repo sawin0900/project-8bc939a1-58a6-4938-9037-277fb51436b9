@@ -76,7 +76,7 @@ const approvals = [
 
 export default function PodgotovkaProektaSudopodema() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Подготовка проекта судоподъёма — Приказ Минтранса №176 | Владивосток"
         description="Разработка проекта подъёма затонувшего судна по Приказу Минтранса №176: состав, расчёты, согласования. Приморский край."
@@ -85,7 +85,7 @@ export default function PodgotovkaProektaSudopodema() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

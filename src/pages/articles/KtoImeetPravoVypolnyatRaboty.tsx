@@ -90,7 +90,7 @@ const checklistItems = [
 
 export default function KtoImeetPravoVypolnyatRaboty() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Кто имеет право выполнять судоподъёмные работы — требования к подрядчикам"
         description="Требования к организациям, выполняющим судоподъём: лицензии, квалификация водолазов, страхование. Как проверить подрядчика и избежать мошенников."
@@ -99,7 +99,7 @@ export default function KtoImeetPravoVypolnyatRaboty() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 bg-gradient-to-b from-primary/5 to-background">
+      <section className="section-padding pt-32 bg-gradient-to-b from-primary/5 to-background hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

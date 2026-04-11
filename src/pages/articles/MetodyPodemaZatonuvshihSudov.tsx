@@ -83,7 +83,7 @@ const factors = [
 
 export default function MetodyPodemaZatonuvshihSudov() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Методы подъёма затонувших судов — технологии судоподъёма | Владивосток"
         description="Обзор методов подъёма затонувших судов: понтонный, крановый, комбинированный, герметизация. Выбор оптимальной технологии для Приморского края."
@@ -92,7 +92,7 @@ export default function MetodyPodemaZatonuvshihSudov() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

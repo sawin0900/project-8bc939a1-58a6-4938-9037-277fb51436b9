@@ -50,7 +50,7 @@ const documents = [
 
 const Documentation = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-documentation">
       <SEOHead
         title="Документация по судоподъёму | Приказ Минтранса №176"
         description="Разработка проектной документации для судоподъёма: проект подъёма судна, ППР, технические отчёты. Полное соответствие Приказу Минтранса РФ №176, КТМ и КВВТ."
@@ -64,7 +64,7 @@ const Documentation = () => {
       />
 
       {/* Hero */}
-      <section className="pt-16 md:pt-20 pb-4 md:pb-8">
+      <section className="pt-16 md:pt-20 pb-4 md:pb-8 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

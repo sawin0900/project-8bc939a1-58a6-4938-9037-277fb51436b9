@@ -165,3 +165,135 @@
     }
   }
 }
+
+/**
+ * Hero backgrounds per page (WebP in /public/images/heroes/). Rebuild: npm run build:heroes
+ * Placed after Tailwind layers so these trump utility background-* on the same node.
+ */
+main.page-services .hero,
+main.page-demontazh .hero,
+main.page-etapy .hero,
+main.page-documentation .hero,
+main.page-projects .hero,
+main.page-news .hero,
+main.page-articles .hero,
+main.page-contacts .hero,
+main.page-article .hero,
+main.page-news-detail .hero,
+main.page-emergency .hero,
+main.page-faq .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: hsl(var(--background));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: clamp(200px, 36vh, 480px);
+}
+
+main.page-services .hero::before,
+main.page-demontazh .hero::before,
+main.page-etapy .hero::before,
+main.page-documentation .hero::before,
+main.page-projects .hero::before,
+main.page-news .hero::before,
+main.page-articles .hero::before,
+main.page-contacts .hero::before,
+main.page-article .hero::before,
+main.page-news-detail .hero::before,
+main.page-emergency .hero::before,
+main.page-faq .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    hsl(var(--background) / 0.88),
+    hsl(var(--background) / 0.72),
+    hsl(var(--background) / 0.45)
+  );
+}
+
+main.page-services .hero > *,
+main.page-demontazh .hero > *,
+main.page-etapy .hero > *,
+main.page-documentation .hero > *,
+main.page-projects .hero > *,
+main.page-news .hero > *,
+main.page-articles .hero > *,
+main.page-contacts .hero > *,
+main.page-article .hero > *,
+main.page-news-detail .hero > *,
+main.page-emergency .hero > *,
+main.page-faq .hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+main.page-services .hero {
+  background-image: url("/images/heroes/services.webp");
+}
+
+main.page-demontazh .hero {
+  background-image: url("/images/heroes/demontazh.webp");
+}
+
+main.page-etapy .hero {
+  background-image: url("/images/heroes/etapy.webp");
+}
+
+main.page-documentation .hero {
+  background-image: url("/images/heroes/documentation.webp");
+}
+
+main.page-projects .hero {
+  background-image: url("/images/heroes/projects.webp");
+}
+
+main.page-news .hero {
+  background-image: url("/images/heroes/news.webp");
+}
+
+main.page-articles .hero {
+  background-image: url("/images/heroes/articles.webp");
+}
+
+main.page-contacts .hero {
+  background-image: url("/images/heroes/contacts.webp");
+}
+
+main.page-article .hero {
+  background-image: url("/images/heroes/article.webp");
+}
+
+main.page-news-detail .hero {
+  background-image: url("/images/heroes/news-detail.webp");
+}
+
+main.page-emergency .hero {
+  background-image: url("/images/heroes/emergency.webp");
+}
+
+main.page-faq .hero {
+  background-image: url("/images/heroes/faq.webp");
+}
+
+@media (max-width: 640px) {
+  main.page-services .hero,
+  main.page-demontazh .hero,
+  main.page-etapy .hero,
+  main.page-documentation .hero,
+  main.page-projects .hero,
+  main.page-news .hero,
+  main.page-articles .hero,
+  main.page-contacts .hero,
+  main.page-article .hero,
+  main.page-news-detail .hero,
+  main.page-emergency .hero,
+  main.page-faq .hero {
+    min-height: clamp(180px, 32vh, 360px);
+  }
+}

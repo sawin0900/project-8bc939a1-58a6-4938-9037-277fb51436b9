@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Anchor, Mail, Phone, MapPin, Send } from "lucide-react";
+import { MessengerAvailability } from "@/components/MessengerAvailability";
 
 const services = [
   "Судоподъём затонувших судов",
@@ -114,6 +115,7 @@ export function Footer() {
                 <Send className="w-4 h-4 text-primary" />
                 <span>@morproekt</span>
               </a>
+              <MessengerAvailability compact className="pt-2 border-t border-border/60 mt-3" />
             </div>
             <div className="pt-4">
               <p className="text-xs text-muted-foreground">

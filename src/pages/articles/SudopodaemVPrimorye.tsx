@@ -64,7 +64,7 @@ const advantages = [
 
 export default function SudopodaemVPrimorye() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Судоподъём в Приморском крае — особенности региона | Владивосток"
         description="Особенности судоподъёмных работ в Приморье: порты Владивостока, Находки, Восточного. Региональная специфика, климат, требования. Местная компания."
@@ -73,7 +73,7 @@ export default function SudopodaemVPrimorye() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 bg-gradient-to-b from-primary/5 to-background">
+      <section className="section-padding pt-32 bg-gradient-to-b from-primary/5 to-background hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

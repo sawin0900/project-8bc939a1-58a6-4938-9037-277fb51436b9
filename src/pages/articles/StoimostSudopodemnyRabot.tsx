@@ -79,7 +79,7 @@ const tips = [
 
 export default function StoimostSudopodemnyRabot() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Стоимость судоподъёмных работ — ценообразование | Владивосток"
         description="Из чего складывается стоимость подъёма затонувшего судна: факторы ценообразования, этапы работ, ориентировочные цены. Приморский край."
@@ -88,7 +88,7 @@ export default function StoimostSudopodemnyRabot() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

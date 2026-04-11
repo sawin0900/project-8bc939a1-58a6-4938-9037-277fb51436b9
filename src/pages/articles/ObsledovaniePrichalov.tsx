@@ -9,14 +9,14 @@ import diverImg from "@/assets/images/diver-underwater-inspection.jpg";
 
 const ObsledovaniePrichalov = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Обследование причальных сооружений: методы и нормативы | Статья"
         description="Виды обследований причалов и набережных: водолазное, инструментальное, геодезическое. Нормативная база, периодичность, состав отчётных документов."
         keywords="обследование причалов, водолазное обследование причальных сооружений, техническое состояние причал"
         canonical="/articles/obsledovanie-prichalov"
       />
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom max-w-4xl">
           <Breadcrumbs />
           <AnimatedSection>

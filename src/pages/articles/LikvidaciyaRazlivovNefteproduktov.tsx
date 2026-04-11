@@ -9,14 +9,14 @@ import sunkenImg from "@/assets/images/sunken-ship-ecological.jpg";
 
 const LikvidaciyaRazlivovNefteproduktov = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Ликвидация разливов нефтепродуктов при судоподъёме | Статья"
         description="Методы локализации и сбора нефтепродуктов при судоподъёмных работах: боновые заграждения, сорбенты, нефтесборщики. Экологические требования и документация."
         keywords="разлив нефтепродуктов судоподъём, боновые заграждения, ликвидация разлива, экология судоподъём"
         canonical="/articles/likvidaciya-razlivov-nefteproduktov"
       />
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom max-w-4xl">
           <Breadcrumbs />
           <AnimatedSection>

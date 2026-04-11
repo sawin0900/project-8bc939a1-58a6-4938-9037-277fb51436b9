@@ -41,7 +41,7 @@ const requirements = [
 
 export default function ChtoDelatEsliZatonuloSudno() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Что делать если затонуло судно — пошаговая инструкция | Владивосток"
         description="Подробная инструкция: что делать при затоплении судна, кого уведомлять, какие документы готовить. Порядок действий согласно законодательству РФ. Помощь в судоподъёме."
@@ -50,7 +50,7 @@ export default function ChtoDelatEsliZatonuloSudno() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 bg-gradient-to-b from-destructive/5 to-background">
+      <section className="section-padding pt-32 bg-gradient-to-b from-destructive/5 to-background hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

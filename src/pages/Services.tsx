@@ -111,7 +111,7 @@ const services = [
 
 const Services = () => {
   return (
-    <Layout>
+    <Layout pageClass="page-services">
       <SEOHead
         title="Услуги судоподъёма и водолазных работ | Владивосток"
         description="Полный спектр услуг: судоподъём затонувших судов, водолазные обследования акваторий, демонтаж и резка металлоконструкций, проектная документация по Приказу №176."
@@ -125,7 +125,7 @@ const Services = () => {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32">
+      <section className="section-padding pt-32 hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>

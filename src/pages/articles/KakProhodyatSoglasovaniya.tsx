@@ -96,7 +96,7 @@ const commonIssues = [
 
 export default function KakProhodyatSoglasovaniya() {
   return (
-    <Layout>
+    <Layout pageClass="page-article">
       <SEOHead
         title="Как проходят согласования судоподъёма — полный гид по инстанциям"
         description="Пошаговый процесс согласования судоподъёмных работ: Росморречфлот, МЧС, Росприроднадзор, капитания порта. Сроки, документы, типичные ошибки и как их избежать."
@@ -105,7 +105,7 @@ export default function KakProhodyatSoglasovaniya() {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 bg-gradient-to-b from-primary/5 to-background">
+      <section className="section-padding pt-32 bg-gradient-to-b from-primary/5 to-background hero relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>
