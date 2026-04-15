@@ -1,0 +1,15 @@
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+
+# Existing files/directories are served as-is
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# SPA routes that should render React app
+RewriteRule ^$ /index.html [L]
+RewriteRule ^(services|stages|documentation|projects|emergency|articles|news|faq|contacts|auth|admin)(/.*)?$ /index.html [L]
+
+# Any other unknown route must return real 404 status
+RewriteRule ^ - [R=404,L]
