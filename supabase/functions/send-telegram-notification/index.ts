@@ -2,13 +2,13 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const allowedOrigins = new Set([
-  "https://morproekt.com",
-  "https://www.morproekt.com",
+  "https://centr-prityazheniya.ru",
+  "https://www.centr-prityazheniya.ru",
   "http://localhost:5173",
 ]);
 
 function buildCorsHeaders(origin: string | null) {
-  const safeOrigin = origin && allowedOrigins.has(origin) ? origin : "https://morproekt.com";
+  const safeOrigin = origin && allowedOrigins.has(origin) ? origin : "https://centr-prityazheniya.ru";
   return {
     "Access-Control-Allow-Origin": safeOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",

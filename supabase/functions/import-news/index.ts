@@ -1,13 +1,13 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const allowedOrigins = new Set([
-  "https://morproekt.com",
-  "https://www.morproekt.com",
+  "https://centr-prityazheniya.ru",
+  "https://www.centr-prityazheniya.ru",
   "http://localhost:5173",
 ]);
 
 function buildCorsHeaders(origin: string | null) {
-  const safeOrigin = origin && allowedOrigins.has(origin) ? origin : "https://morproekt.com";
+  const safeOrigin = origin && allowedOrigins.has(origin) ? origin : "https://centr-prityazheniya.ru";
   return {
     "Access-Control-Allow-Origin": safeOrigin,
     "Access-Control-Allow-Headers":
@@ -197,7 +197,7 @@ Deno.serve(async (req) => {
       .select("source_url")
       .in("source_url", sourceUrls);
 
-    const existingUrls = new Set((existing || []).map((e: any) => e.source_url));
+    const existingUrls = new Set((existing || []).map((e: { source_url: string }) => e.source_url));
     const newItems = newsItems.filter((n) => !existingUrls.has(n.link));
 
     console.log(`${newItems.length} new items to import`);
