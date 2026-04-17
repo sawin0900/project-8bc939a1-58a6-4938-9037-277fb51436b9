@@ -1,13 +1,13 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const allowedOrigins = new Set([
-  "https://morproekt.com",
-  "https://www.morproekt.com",
+  "https://centr-prityazheniya.ru",
+  "https://www.centr-prityazheniya.ru",
   "http://localhost:5173",
 ]);
 
 function buildCorsHeaders(origin: string | null) {
-  const safeOrigin = origin && allowedOrigins.has(origin) ? origin : "https://morproekt.com";
+  const safeOrigin = origin && allowedOrigins.has(origin) ? origin : "https://centr-prityazheniya.ru";
   return {
     "Access-Control-Allow-Origin": safeOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -16,7 +16,7 @@ function buildCorsHeaders(origin: string | null) {
   };
 }
 
-const BASE_URL = "https://centr-prityazheniya.store";
+const BASE_URL = "https://centr-prityazheniya.ru";
 
 function escapeXml(str: string): string {
   return str
