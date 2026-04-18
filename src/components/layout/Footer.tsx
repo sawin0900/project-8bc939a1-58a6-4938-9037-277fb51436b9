@@ -127,15 +127,7 @@ export function Footer() {
               Политика конфиденциальности
             </Link>
           </div>
-        </div>
 
-        <div className="pt-4 text-center">
-          <Link
-            to="/privacy-policy"
-            className="inline-flex text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
-          >
-            Политика конфиденциальности (ФЗ-152)
-          </Link>
         </div>
       </div>
     </footer>
