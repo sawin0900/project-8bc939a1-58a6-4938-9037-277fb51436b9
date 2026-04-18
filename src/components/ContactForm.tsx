@@ -478,6 +478,13 @@ export function ContactForm() {
           </a>
         </Button>
       </div>
+
+      <p className="text-xs text-muted-foreground text-center">
+        Подробнее:{" "}
+        <Link to="/privacy-policy" className="text-primary underline underline-offset-2">
+          Политика конфиденциальности
+        </Link>
+      </p>
     </form>
   );
 }
