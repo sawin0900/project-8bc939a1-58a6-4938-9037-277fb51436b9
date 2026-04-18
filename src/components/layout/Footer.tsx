@@ -122,6 +122,9 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <p>{t("footer.compliance")}</p>
+            <Link to="/privacy-policy" className="hover:text-primary transition-colors underline underline-offset-2">
+              Политика конфиденциальности
+            </Link>
           </div>
         </div>
 
