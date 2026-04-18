@@ -91,6 +91,7 @@ export default function News() {
           <AnimatedSection>
             <SectionHeader
               badge="Новости"
+              headingLevel="h1"
               title="Новости морской отрасли"
               description="Актуальные события в сфере судоподъёма и морских работ"
             />

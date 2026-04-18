@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Send, Loader2, MapPin, Camera, X, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -437,6 +438,18 @@ export function ContactForm() {
             📍 {location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}
           </p>
         )}
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3">
+        <label className="flex items-start gap-2 text-sm text-muted-foreground">
+          <input type="checkbox" required className="mt-1 h-4 w-4" />
+          <span>
+            Я соглашаюсь с{" "}
+            <Link to="/privacy-policy" className="text-primary underline underline-offset-2">
+              политикой конфиденциальности
+            </Link>
+          </span>
+        </label>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">

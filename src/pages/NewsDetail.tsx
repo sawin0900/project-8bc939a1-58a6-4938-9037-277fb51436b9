@@ -56,6 +56,7 @@ export default function NewsDetail() {
         description={news.meta_description || news.description || ""}
         keywords={(news.keywords || []).join(", ")}
         canonical={`/news/${news.slug}`}
+        ogImage={news.image_url || "/images/heroes/news-detail.webp"}
       />
       {/* JSON-LD */}
       <script
