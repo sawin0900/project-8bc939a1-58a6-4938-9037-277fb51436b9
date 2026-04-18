@@ -127,7 +127,6 @@ export function Footer() {
               Политика конфиденциальности
             </Link>
           </div>
-
         </div>
       </div>
     </footer>
