@@ -23,6 +23,7 @@ const quickLinks = [
   { key: "navigation.documentation", href: "/documentation" },
   { key: "navigation.faq", href: "/faq" },
   { key: "navigation.contacts", href: "/contacts" },
+  { key: "Политика конфиденциальности", href: "/privacy-policy" },
 ];
 
 export function Footer() {
@@ -72,9 +73,9 @@ export function Footer() {
               <h4 className="font-medium text-foreground mb-2">{t("footer.navigation")}</h4>
               <ul className="space-y-2">
                 {quickLinks.map((link) => (
-                  <li key={link.key}>
+                  <li key={link.href}>
                     <Link to={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                      {t(link.key)}
+                      {link.key.startsWith("navigation.") ? t(link.key) : link.key}
                     </Link>
                   </li>
                 ))}
@@ -126,6 +127,7 @@ export function Footer() {
               Политика конфиденциальности
             </Link>
           </div>
+
         </div>
       </div>
     </footer>
