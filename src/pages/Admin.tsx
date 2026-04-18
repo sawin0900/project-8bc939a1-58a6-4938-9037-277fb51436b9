@@ -56,6 +56,7 @@ export default function Admin() {
   const { user, isAdmin, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const siteBaseUrl = window.location.origin;
   
   const [activeTab, setActiveTab] = useState<TabType>('submissions');
   const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
@@ -309,12 +310,12 @@ export default function Admin() {
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <a href={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sitemap`} target="_blank" rel="noopener noreferrer">
+                      <a href={`${siteBaseUrl}/sitemap.xml`} target="_blank" rel="noopener noreferrer">
                         <ExternalLink className="w-3 h-3 mr-2" />Sitemap.xml
                       </a>
                     </Button>
                     <Button variant="outline" size="sm" asChild>
-                      <a href={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/turbo-rss`} target="_blank" rel="noopener noreferrer">
+                      <a href={`${siteBaseUrl}/turbo-sitemap.xml`} target="_blank" rel="noopener noreferrer">
                         <ExternalLink className="w-3 h-3 mr-2" />Турбо-страницы (RSS)
                       </a>
                     </Button>
