@@ -23,6 +23,7 @@ import DismantlingCutting from "./pages/DismantlingCutting";
 import NotFound from "./pages/NotFound";
 import News from "./pages/News";
 import NewsDetail from "./pages/NewsDetail";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { I18nProvider, useI18n } from "@/i18n";
 
 // Article pages
@@ -114,6 +115,7 @@ function AppRoutes() {
               <Route path="/articles/likvidaciya-razlivov-nefteproduktov" element={<LikvidaciyaRazlivovNefteproduktov />} />
               <Route path="/news" element={<News />} />
               <Route path="/news/:slug" element={<NewsDetail />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/auth" element={<Auth />} />
