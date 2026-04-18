@@ -136,7 +136,7 @@ export function Footer() {
             to="/privacy-policy#consent"
             className="inline-flex text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
           >
-            Согласие на обработку персональных данных
+            Согласие на обработку персональных данных (ФЗ-152)
           </Link>
         </div>
       </div>
