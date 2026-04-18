@@ -23,6 +23,7 @@ const quickLinks = [
   { key: "navigation.documentation", href: "/documentation" },
   { key: "navigation.faq", href: "/faq" },
   { key: "navigation.contacts", href: "/contacts" },
+  { key: "Политика конфиденциальности", href: "/privacy-policy" },
 ];
 
 export function Footer() {
@@ -74,7 +75,7 @@ export function Footer() {
                 {quickLinks.map((link) => (
                   <li key={link.href}>
                     <Link to={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                      {t(link.key)}
+                      {link.key.startsWith("navigation.") ? t(link.key) : link.key}
                     </Link>
                   </li>
                 ))}
@@ -126,21 +127,6 @@ export function Footer() {
               Политика конфиденциальности
             </Link>
           </div>
-        </div>
-
-        <div className="pt-4 text-center flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
-          <Link
-            to="/privacy-policy"
-            className="inline-flex text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
-          >
-            Политика конфиденциальности (ФЗ-152)
-          </Link>
-          <Link
-            to="/privacy-policy#consent"
-            className="inline-flex text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
-          >
-            Согласие на обработку персональных данных (ФЗ-152)
-          </Link>
         </div>
       </div>
     </footer>
