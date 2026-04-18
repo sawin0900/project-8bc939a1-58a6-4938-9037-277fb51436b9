@@ -54,6 +54,11 @@ const CHART_COLORS = [
   'hsl(60, 70%, 50%)',
 ];
 
+const ANALYTICS_RETENTION_DAYS = 90;
+const FETCH_BATCH_SIZE = 500;
+const MAX_FETCH_ROWS = 20000;
+const RECENT_VISITS_PAGE_SIZE = 25;
+
 export default function AdminAnalytics() {
   const { user, isAdmin, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -61,9 +66,10 @@ export default function AdminAnalytics() {
 
   const [visits, setVisits] = useState<PageVisit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [dateRange, setDateRange] = useState('30');
+  const [dateRange, setDateRange] = useState('90');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [recentPage, setRecentPage] = useState(1);
 
   useEffect(() => {
     if (!authLoading) {
@@ -76,29 +82,65 @@ export default function AdminAnalytics() {
     if (isAdmin) fetchVisits();
   }, [isAdmin, dateRange, dateFrom, dateTo]);
 
+  useEffect(() => {
+    setRecentPage(1);
+  }, [visits]);
+
   const fetchVisits = async () => {
     setIsLoading(true);
-    let query = supabase
-      .from('page_visits')
-      .select('*')
-      .order('created_at', { ascending: false });
+    let sinceISO: string | null = null;
+    let untilISO: string | null = null;
 
     if (dateFrom && dateTo) {
-      query = query.gte('created_at', dateFrom).lte('created_at', dateTo + 'T23:59:59');
-    } else if (dateRange !== 'all') {
-      const days = parseInt(dateRange);
-      const since = subDays(new Date(), days).toISOString();
-      query = query.gte('created_at', since);
-    }
-
-    query = query.limit(1000);
-
-    const { data, error } = await query;
-    if (error) {
-      toast({ title: 'Ошибка загрузки', variant: 'destructive' });
+      sinceISO = `${dateFrom}T00:00:00`;
+      untilISO = `${dateTo}T23:59:59`;
     } else {
-      setVisits(data || []);
+      const days = Number.isNaN(parseInt(dateRange, 10))
+        ? ANALYTICS_RETENTION_DAYS
+        : parseInt(dateRange, 10);
+      const boundedDays = Math.min(days, ANALYTICS_RETENTION_DAYS);
+      sinceISO = subDays(new Date(), boundedDays).toISOString();
     }
+
+    const collected: PageVisit[] = [];
+    let page = 0;
+
+    while (true) {
+      const from = page * FETCH_BATCH_SIZE;
+      const to = from + FETCH_BATCH_SIZE - 1;
+
+      let query = supabase
+        .from('page_visits')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+      if (sinceISO) query = query.gte('created_at', sinceISO);
+      if (untilISO) query = query.lte('created_at', untilISO);
+
+      const { data, error } = await query;
+      if (error) {
+        toast({ title: 'Ошибка загрузки', description: 'Не удалось загрузить данные аналитики', variant: 'destructive' });
+        break;
+      }
+
+      const chunk = (data || []) as PageVisit[];
+      collected.push(...chunk);
+
+      if (chunk.length < FETCH_BATCH_SIZE || collected.length >= MAX_FETCH_ROWS) {
+        if (collected.length >= MAX_FETCH_ROWS) {
+          toast({
+            title: 'Показана часть данных',
+            description: `Загружено ${MAX_FETCH_ROWS} записей. Сузьте период для более точной аналитики.`,
+            variant: 'destructive',
+          });
+        }
+        break;
+      }
+      page += 1;
+    }
+
+    setVisits(collected.slice(0, MAX_FETCH_ROWS));
     setIsLoading(false);
   };
 
@@ -244,6 +286,10 @@ export default function AdminAnalytics() {
     return `${Math.floor(s / 60)} мин ${s % 60} сек`;
   };
 
+  const totalRecentPages = Math.max(1, Math.ceil(visits.length / RECENT_VISITS_PAGE_SIZE));
+  const recentStart = (recentPage - 1) * RECENT_VISITS_PAGE_SIZE;
+  const recentRows = visits.slice(recentStart, recentStart + RECENT_VISITS_PAGE_SIZE);
+
   return (
     <Layout>
       <SEOHead
@@ -291,7 +337,6 @@ export default function AdminAnalytics() {
                     <SelectItem value="7">7 дней</SelectItem>
                     <SelectItem value="30">30 дней</SelectItem>
                     <SelectItem value="90">90 дней</SelectItem>
-                    <SelectItem value="all">Всё время</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -304,6 +349,9 @@ export default function AdminAnalytics() {
                 <Input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setDateRange('custom'); }} className="w-40" />
               </div>
             </div>
+            <p className="text-xs text-muted-foreground mb-6">
+              Аналитика хранится и отображается за последние {ANALYTICS_RETENTION_DAYS} дней (≈3 месяца).
+            </p>
           </AnimatedSection>
 
           {/* Summary Cards */}
@@ -481,7 +529,7 @@ export default function AdminAnalytics() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {visits.slice(0, 50).map(v => (
+                    {recentRows.map(v => (
                       <TableRow key={v.id}>
                         <TableCell className="whitespace-nowrap text-xs">
                           {format(new Date(v.created_at), 'dd.MM.yy HH:mm', { locale: ru })}
@@ -499,6 +547,32 @@ export default function AdminAnalytics() {
                     ))}
                   </TableBody>
                 </Table>
+              </div>
+              <div className="p-4 border-t border-border flex items-center justify-between gap-3 flex-wrap">
+                <p className="text-xs text-muted-foreground">
+                  Показаны записи {Math.min(recentStart + 1, visits.length)}–{Math.min(recentStart + RECENT_VISITS_PAGE_SIZE, visits.length)} из {visits.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={recentPage <= 1}
+                    onClick={() => setRecentPage((p) => Math.max(1, p - 1))}
+                  >
+                    Назад
+                  </Button>
+                  <span className="text-xs text-muted-foreground">
+                    Страница {recentPage} / {totalRecentPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={recentPage >= totalRecentPages}
+                    onClick={() => setRecentPage((p) => Math.min(totalRecentPages, p + 1))}
+                  >
+                    Вперёд
+                  </Button>
+                </div>
               </div>
             </Card>
           </AnimatedSection>

@@ -64,7 +64,7 @@ const Documentation = () => {
       />
 
       {/* Hero */}
-      <section className="pt-16 md:pt-20 pb-4 md:pb-8 hero relative overflow-hidden">
+      <section className="pt-16 md:pt-20 pb-4 md:pb-8 hero hero-compact relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>
@@ -79,7 +79,7 @@ const Documentation = () => {
       </section>
 
       {/* Image */}
-      <section className="section-padding pb-0 pt-0">
+      <section className="section-padding pb-0 pt-6 md:pt-8">
         <div className="container-custom">
           <AnimatedSection>
             <img src={docsImg} alt="Проектная документация и чертежи" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />
