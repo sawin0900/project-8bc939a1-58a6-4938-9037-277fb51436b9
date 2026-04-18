@@ -3,25 +3,28 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Anchor, Phone, LogIn, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-
-const navigation = [
-  { name: "Главная", href: "/" },
-  { name: "Услуги", href: "/services" },
-  { name: "Демонтаж и резка", href: "/services/dismantling-cutting" },
-  { name: "Этапы работ", href: "/stages" },
-  { name: "Документация", href: "/documentation" },
-  { name: "Проекты", href: "/projects" },
-  { name: "Срочные работы", href: "/emergency" },
-  { name: "Новости", href: "/news" },
-  { name: "Статьи", href: "/articles" },
-  { name: "FAQ", href: "/faq" },
-  { name: "Контакты", href: "/contacts" },
-];
+import { useI18n } from "@/i18n";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { user, isAdmin, signOut } = useAuth();
+  const { t } = useI18n();
+
+  const navigation = [
+    { key: "navigation.home", href: "/" },
+    { key: "navigation.services", href: "/services" },
+    { key: "navigation.dismantling", href: "/services/dismantling-cutting" },
+    { key: "navigation.stages", href: "/stages" },
+    { key: "navigation.documentation", href: "/documentation" },
+    { key: "navigation.projects", href: "/projects" },
+    { key: "navigation.emergency", href: "/emergency" },
+    { key: "navigation.news", href: "/news" },
+    { key: "navigation.articles", href: "/articles" },
+    { key: "navigation.faq", href: "/faq" },
+    { key: "navigation.contacts", href: "/contacts" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -32,8 +35,8 @@ export function Header() {
             <Anchor className="w-5 h-5 text-primary" />
           </div>
           <div className="hidden sm:block">
-            <span className="font-bold text-lg text-foreground">Центр Притяжения</span>
-            <span className="block text-xs text-muted-foreground">Судоподъём • Водолазные работы</span>
+            <span className="font-bold text-lg text-foreground">{t("brand.name")}</span>
+            <span className="block text-xs text-muted-foreground">{t("brand.tagline")}</span>
           </div>
         </Link>
 
@@ -41,7 +44,7 @@ export function Header() {
         <div className="hidden lg:flex items-center gap-1">
           {navigation.map((item) => (
             <Link
-              key={item.name}
+              key={item.key}
               to={item.href}
               className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 location.pathname === item.href
@@ -49,42 +52,43 @@ export function Header() {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
-              {item.name}
+              {t(item.key)}
             </Link>
           ))}
         </div>
 
         {/* CTA Button */}
         <div className="hidden lg:flex items-center gap-3">
+          <LanguageSwitcher />
           {isAdmin && (
             <Button variant="outline" size="sm" asChild>
               <Link to="/admin" className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
-                <span>Админ</span>
+                <span>{t("header.admin")}</span>
               </Link>
             </Button>
           )}
           {user ? (
             <Button variant="outline" size="sm" onClick={signOut} className="flex items-center gap-2">
               <LogOut className="w-4 h-4" />
-              <span>Выйти</span>
+              <span>{t("header.signOut")}</span>
             </Button>
           ) : (
             <Button variant="outline" size="sm" asChild>
               <Link to="/auth" className="flex items-center gap-2">
                 <LogIn className="w-4 h-4" />
-                <span>Войти</span>
+                <span>{t("header.signIn")}</span>
               </Link>
             </Button>
           )}
           <Button variant="outline" size="sm" asChild>
             <a href="tel:+79991234567" className="flex items-center gap-2">
               <Phone className="w-4 h-4" />
-              <span>Позвонить</span>
+              <span>{t("header.call")}</span>
             </a>
           </Button>
           <Button size="sm" className="btn-glow" asChild>
-            <Link to="/contacts">Оставить заявку</Link>
+            <Link to="/contacts">{t("header.request")}</Link>
           </Button>
         </div>
 
@@ -104,7 +108,7 @@ export function Header() {
           <div className="container-custom py-4 space-y-1">
             {navigation.map((item) => (
               <Link
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block px-4 py-3 text-sm font-medium rounded-md transition-colors ${
@@ -113,40 +117,41 @@ export function Header() {
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
-                {item.name}
+                {t(item.key)}
               </Link>
             ))}
             <div className="pt-4 flex flex-col gap-2">
+              <LanguageSwitcher />
               {isAdmin && (
                 <Button variant="outline" asChild>
                   <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
                     <Settings className="w-4 h-4" />
-                    <span>Админ-панель</span>
+                    <span>{t("header.adminPanel")}</span>
                   </Link>
                 </Button>
               )}
               {user ? (
                 <Button variant="outline" onClick={() => { signOut(); setMobileMenuOpen(false); }} className="flex items-center justify-center gap-2">
                   <LogOut className="w-4 h-4" />
-                  <span>Выйти</span>
+                  <span>{t("header.signOut")}</span>
                 </Button>
               ) : (
                 <Button variant="outline" asChild>
                   <Link to="/auth" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
                     <LogIn className="w-4 h-4" />
-                    <span>Войти</span>
+                    <span>{t("header.signIn")}</span>
                   </Link>
                 </Button>
               )}
               <Button variant="outline" asChild>
                 <a href="tel:+79991234567" className="flex items-center justify-center gap-2">
                   <Phone className="w-4 h-4" />
-                  <span>Позвонить</span>
+                  <span>{t("header.call")}</span>
                 </a>
               </Button>
               <Button className="btn-glow" asChild>
                 <Link to="/contacts" onClick={() => setMobileMenuOpen(false)}>
-                  Оставить заявку
+                  {t("header.request")}
                 </Link>
               </Button>
             </div>

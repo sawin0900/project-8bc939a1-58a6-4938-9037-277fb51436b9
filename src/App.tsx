@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { usePageTracking } from "@/hooks/usePageTracking";
-import { HelmetProvider } from "react-helmet-async";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import WorkStages from "./pages/WorkStages";
@@ -23,6 +23,7 @@ import DismantlingCutting from "./pages/DismantlingCutting";
 import NotFound from "./pages/NotFound";
 import News from "./pages/News";
 import NewsDetail from "./pages/NewsDetail";
+import { I18nProvider, useI18n } from "@/i18n";
 
 // Article pages
 import ChtoDelatEsliZatonuloSudno from "./pages/articles/ChtoDelatEsliZatonuloSudno";
@@ -46,6 +47,24 @@ import ZimnieSudopodemnyyeRaboty from "./pages/articles/ZimnieSudopodemnyyeRabot
 import ObsledovaniePrichalov from "./pages/articles/ObsledovaniePrichalov";
 import LikvidaciyaRazlivovNefteproduktov from "./pages/articles/LikvidaciyaRazlivovNefteproduktov";
 
+
+
+function LanguageSEO() {
+  const { language } = useI18n();
+  const location = useLocation();
+  const baseUrl = "https://centr-prityazheniya.ru";
+  const cleanPath = `${location.pathname}${location.search ? location.search : ""}`;
+
+  return (
+    <Helmet>
+      <link rel="alternate" hrefLang="en" href={`${baseUrl}${cleanPath}${location.search ? "&" : "?"}lang=en`} />
+      <link rel="alternate" hrefLang="zh" href={`${baseUrl}${cleanPath}${location.search ? "&" : "?"}lang=zh`} />
+      <link rel="alternate" hrefLang="x-default" href={`${baseUrl}${cleanPath}${location.search ? "&" : "?"}lang=en`} />
+      <meta property="og:locale" content={language === "zh" ? "zh_CN" : "en_US"} />
+    </Helmet>
+  );
+}
+
 const queryClient = new QueryClient();
 
 function ScrollToTopOnRouteChange() {
@@ -63,6 +82,7 @@ function AppRoutes() {
   return (
     <>
       <ScrollToTopOnRouteChange />
+      <LanguageSEO />
       <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/services" element={<Services />} />
@@ -112,11 +132,13 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-        </BrowserRouter>
+        <I18nProvider>
+          <BrowserRouter>
+            <AuthProvider>
+              <AppRoutes />
+            </AuthProvider>
+          </BrowserRouter>
+        </I18nProvider>
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>
