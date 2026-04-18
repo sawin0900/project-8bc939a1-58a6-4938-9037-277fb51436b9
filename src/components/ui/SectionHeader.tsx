@@ -3,9 +3,18 @@ interface SectionHeaderProps {
   title: string;
   description?: string;
   centered?: boolean;
+  headingLevel?: "h1" | "h2" | "h3";
 }
 
-export function SectionHeader({ badge, title, description, centered = true }: SectionHeaderProps) {
+export function SectionHeader({
+  badge,
+  title,
+  description,
+  centered = true,
+  headingLevel = "h2",
+}: SectionHeaderProps) {
+  const HeadingTag = headingLevel;
+
   return (
     <div className={`max-w-3xl ${centered ? "mx-auto text-center" : ""} mb-12`}>
       {badge && (
@@ -13,7 +22,7 @@ export function SectionHeader({ badge, title, description, centered = true }: Se
           {badge}
         </span>
       )}
-      <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{title}</h2>
+      <HeadingTag className="text-3xl md:text-4xl font-bold text-foreground mb-4">{title}</HeadingTag>
       {description && (
         <p className="text-lg text-muted-foreground leading-relaxed">{description}</p>
       )}

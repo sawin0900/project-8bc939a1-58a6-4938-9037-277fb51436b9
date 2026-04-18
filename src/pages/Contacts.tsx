@@ -55,6 +55,7 @@ const Contacts = () => {
           <AnimatedSection>
             <SectionHeader
               badge="Контакты"
+              headingLevel="h1"
               title="Свяжитесь с нами"
               description="Оставьте заявку или свяжитесь любым удобным способом — мы ответим в кратчайшие сроки"
             />

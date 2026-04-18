@@ -15,12 +15,15 @@ export function SEOHead({
   description,
   keywords,
   canonical,
-  ogImage = '/og-image.jpg',
+  ogImage = '/images/heroes/services.webp',
   noindex = false,
   hreflang,
 }: SEOHeadProps) {
   const baseUrl = 'https://centr-prityazheniya.ru';
   const fullCanonical = canonical ? `${baseUrl}${canonical}` : baseUrl;
+  const fullOgImage = ogImage.startsWith("http://") || ogImage.startsWith("https://")
+    ? ogImage
+    : `${baseUrl}${ogImage}`;
 
   const defaultHreflang = [
     { lang: 'en', url: `${fullCanonical}?lang=en` },
@@ -46,7 +49,7 @@ export function SEOHead({
       <meta property="og:description" content={description} />
       <meta property="og:url" content={fullCanonical} />
       <meta property="og:type" content="website" />
-      <meta property="og:image" content={`${baseUrl}${ogImage}`} />
+      <meta property="og:image" content={fullOgImage} />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />

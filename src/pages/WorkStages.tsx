@@ -61,6 +61,7 @@ const WorkStages = () => {
           <AnimatedSection>
             <SectionHeader
               badge="Этапы работ"
+              headingLevel="h1"
               title="Пошаговый процесс выполнения работ"
               description="Системный подход к каждому проекту — от первичного анализа до сдачи готовой документации"
             />

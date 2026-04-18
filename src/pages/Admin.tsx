@@ -24,6 +24,7 @@ import {
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { SEOHead } from '@/components/seo';
 
 interface ContactSubmission {
   id: string; name: string; email: string; phone: string | null;
@@ -210,6 +211,12 @@ export default function Admin() {
 
   return (
     <Layout>
+      <SEOHead
+        title="Панель администратора | Центр Притяжения"
+        description="Служебная страница администрирования заявок и новостей."
+        canonical="/admin"
+        noindex
+      />
       <section className="pt-32 pb-20 min-h-screen">
         <div className="container-custom">
           <AnimatedSection animation="fadeUp">
