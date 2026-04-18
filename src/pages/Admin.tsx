@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow 
 } from '@/components/ui/table';
@@ -68,6 +69,9 @@ export default function Admin() {
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
   const [newsForm, setNewsForm] = useState({ title: '', description: '', content: '', image_url: '' });
   const [showAddNews, setShowAddNews] = useState(false);
+  const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0 });
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
+  const [dataWarnings, setDataWarnings] = useState<string[]>([]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -76,6 +80,7 @@ export default function Admin() {
         toast({ title: 'Доступ запрещён', description: 'У вас нет прав для просмотра этой страницы', variant: 'destructive' });
         navigate('/'); return;
       }
+      fetchCounts();
       fetchData('submissions');
     }
   }, [user, isAdmin, authLoading, navigate, toast]);
@@ -95,6 +100,7 @@ export default function Admin() {
 
   const fetchData = async (tab: TabType = activeTab) => {
     setIsLoading(true);
+    setDataWarnings([]);
     if (tab === 'submissions') {
       await fetchSubmissions();
     } else if (tab === 'users') {
@@ -102,7 +108,30 @@ export default function Admin() {
     } else {
       await fetchNews();
     }
+    await fetchCounts();
+    setLastUpdatedAt(new Date().toISOString());
     setIsLoading(false);
+  };
+
+  const fetchCounts = async () => {
+    const warnings: string[] = [];
+
+    const [submissionsResult, usersResult, newsResult] = await Promise.all([
+      supabase.from('contact_submissions').select('*', { count: 'exact', head: true }),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }),
+      supabase.from('news').select('*', { count: 'exact', head: true }),
+    ]);
+
+    if (submissionsResult.error) warnings.push('Не удалось получить количество заявок.');
+    if (usersResult.error) warnings.push('Не удалось получить количество пользователей.');
+    if (newsResult.error) warnings.push('Не удалось получить количество новостей.');
+
+    setCounts({
+      submissions: submissionsResult.count ?? 0,
+      users: usersResult.count ?? 0,
+      news: newsResult.count ?? 0,
+    });
+    setDataWarnings(warnings);
   };
 
   const fetchSubmissions = async () => {
@@ -113,7 +142,11 @@ export default function Admin() {
 
   const fetchUsers = async () => {
     const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
-    if (!error) setUsers(data || []);
+    if (error) {
+      toast({ title: 'Ошибка', description: 'Не удалось загрузить пользователей', variant: 'destructive' });
+      return;
+    }
+    setUsers(data || []);
   };
 
   const fetchNews = async () => {
@@ -233,16 +266,61 @@ export default function Admin() {
             </div>
           </AnimatedSection>
 
+          <AnimatedSection animation="fadeUp" delay={0.05}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" />Заявки
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-semibold">{counts.submissions}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Users className="w-4 h-4" />Пользователи
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-semibold">{counts.users}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Newspaper className="w-4 h-4" />Новости
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-semibold">{counts.news}</p>
+                </CardContent>
+              </Card>
+            </div>
+            {(lastUpdatedAt || dataWarnings.length > 0) && (
+              <div className="mb-6 text-sm text-muted-foreground">
+                {lastUpdatedAt && <p>Последнее обновление: {format(new Date(lastUpdatedAt), 'dd.MM.yyyy HH:mm')}</p>}
+                {dataWarnings.length > 0 && (
+                  <ul className="list-disc pl-5 mt-1 text-amber-500">
+                    {dataWarnings.map((warning) => <li key={warning}>{warning}</li>)}
+                  </ul>
+                )}
+              </div>
+            )}
+          </AnimatedSection>
+
           <AnimatedSection animation="fadeUp" delay={0.1}>
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-2 mb-6 flex-wrap">
               <Button variant={activeTab === 'submissions' ? 'default' : 'outline'} onClick={() => setActiveTab('submissions')} className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" />Заявки ({submissions.length})
+                <MessageSquare className="w-4 h-4" />Заявки ({counts.submissions})
               </Button>
               <Button variant={activeTab === 'users' ? 'default' : 'outline'} onClick={() => setActiveTab('users')} className="flex items-center gap-2">
-                <Users className="w-4 h-4" />Пользователи ({users.length})
+                <Users className="w-4 h-4" />Пользователи ({counts.users})
               </Button>
               <Button variant={activeTab === 'news' ? 'default' : 'outline'} onClick={() => setActiveTab('news')} className="flex items-center gap-2">
-                <Newspaper className="w-4 h-4" />Новости ({news.length})
+                <Newspaper className="w-4 h-4" />Новости ({counts.news})
               </Button>
             </div>
           </AnimatedSection>
