@@ -70,6 +70,7 @@ const Documentation = () => {
           <AnimatedSection>
             <SectionHeader
               badge="Документация"
+              headingLevel="h1"
               title="Нормативная база и документация"
               description="Полное соответствие законодательству РФ и требованиям надзорных органов"
             />

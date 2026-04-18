@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { Anchor, Loader2, Mail, Lock, User } from 'lucide-react';
 import { z } from 'zod';
+import { SEOHead } from '@/components/seo';
 
 const loginSchema = z.object({
   email: z.string().trim().email({ message: 'Введите корректный email' }),
@@ -185,6 +186,12 @@ export default function Auth() {
 
   return (
     <Layout>
+      <SEOHead
+        title={isLogin ? 'Вход в личный кабинет | Центр Притяжения' : 'Регистрация | Центр Притяжения'}
+        description="Авторизация и регистрация в личном кабинете Центра Притяжения."
+        canonical="/auth"
+        noindex
+      />
       <section className="pt-32 pb-20 min-h-screen bg-gradient-to-b from-background to-muted/30">
         <div className="container-custom max-w-md">
           <div className="bg-card rounded-2xl border border-border p-8 shadow-elegant">

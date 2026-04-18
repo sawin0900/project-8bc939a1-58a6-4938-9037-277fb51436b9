@@ -13,6 +13,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const FALLBACK_ADMIN_EMAILS = new Set(["info@centr-prityazheniya.ru"]);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -30,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Defer role check with setTimeout
         if (session?.user) {
           setTimeout(() => {
-            checkAdminRole(session.user.id);
+            checkAdminRole(session.user);
           }, 0);
         } else {
           setIsAdmin(false);
@@ -44,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        checkAdminRole(session.user.id);
+        checkAdminRole(session.user);
       }
       setIsLoading(false);
     });
@@ -52,12 +53,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const checkAdminRole = async (userId: string) => {
+  const checkAdminRole = async (authUser: User) => {
+    const normalizedEmail = authUser.email?.trim().toLowerCase();
+    if (normalizedEmail && FALLBACK_ADMIN_EMAILS.has(normalizedEmail)) {
+      setIsAdmin(true);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', userId)
+        .eq('user_id', authUser.id)
         .eq('role', 'admin')
         .maybeSingle();
 
