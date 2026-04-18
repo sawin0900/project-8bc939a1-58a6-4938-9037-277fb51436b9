@@ -73,23 +73,6 @@ export default function Admin() {
   const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0 });
   const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
   const [dataWarnings, setDataWarnings] = useState<string[]>([]);
-  const [messengerLinks, setMessengerLinks] = useState({
-    max: '',
-    whatsapp: '',
-    viber: '',
-  });
-
-  useEffect(() => {
-    const raw = localStorage.getItem(MESSENGER_SETTINGS_STORAGE_KEY);
-    if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw) as typeof messengerLinks;
-      setMessengerLinks(parsed);
-    } catch {
-      // ignore broken local storage payload
-    }
-  }, []);
-
   useEffect(() => {
     if (!authLoading) {
       if (!user) { navigate('/auth'); return; }
@@ -332,37 +315,7 @@ export default function Admin() {
               </div>
             )}
           </AnimatedSection>
-
-          <AnimatedSection animation="fadeUp" delay={0.1}>
-            <Card className="mb-6">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">Связь в мессенджерах</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  Укажите ссылки для кнопок связи (Max, WhatsApp, Viber). Можно вставлять `https://`, `wa.me`, `viber://` и т.п.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <Input
-                    placeholder="Max (ссылка)"
-                    value={messengerLinks.max}
-                    onChange={(e) => setMessengerLinks((prev) => ({ ...prev, max: e.target.value }))}
-                  />
-                  <Input
-                    placeholder="WhatsApp (ссылка)"
-                    value={messengerLinks.whatsapp}
-                    onChange={(e) => setMessengerLinks((prev) => ({ ...prev, whatsapp: e.target.value }))}
-                  />
-                  <Input
-                    placeholder="Viber (ссылка)"
-                    value={messengerLinks.viber}
-                    onChange={(e) => setMessengerLinks((prev) => ({ ...prev, viber: e.target.value }))}
-                  />
-                </div>
-                <Button size="sm" onClick={saveMessengerLinks}>Сохранить мессенджеры</Button>
-              </CardContent>
-            </Card>
-
+          <AnimatedSection animation="fadeUp" delay={0.1}
             <div className="flex gap-2 mb-6 flex-wrap">
               <Button variant={activeTab === 'submissions' ? 'default' : 'outline'} onClick={() => setActiveTab('submissions')} className="flex items-center gap-2">
                 <MessageSquare className="w-4 h-4" />Заявки ({counts.submissions})
