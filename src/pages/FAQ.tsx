@@ -71,6 +71,7 @@ const FAQ = () => {
           <AnimatedSection>
             <SectionHeader
               badge="FAQ"
+              headingLevel="h1"
               title="Часто задаваемые вопросы"
               description="Ответы на основные вопросы о судоподъёме, документации и организации работ"
             />
