@@ -1,0 +1,55 @@
+{
+  "language": {
+    "label": "Language",
+    "en": "EN",
+    "zh": "中文"
+  },
+  "brand": {
+    "name": "Center of Gravity",
+    "tagline": "Ship lifting • Diving works"
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "dismantling": "Dismantling & Cutting",
+    "stages": "Work stages",
+    "documentation": "Documentation",
+    "projects": "Projects",
+    "emergency": "Emergency",
+    "news": "News",
+    "articles": "Articles",
+    "faq": "FAQ",
+    "contacts": "Contacts"
+  },
+  "header": {
+    "admin": "Admin",
+    "adminPanel": "Admin panel",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "call": "Call",
+    "request": "Request quote"
+  },
+  "footer": {
+    "description": "Center of Gravity provides ship raising, diving surveys, and project documentation services in compliance with Russian maritime regulations.",
+    "location": "Vladivostok, Russian Far East",
+    "activity": "Activity areas",
+    "regulations": "Regulatory framework",
+    "navigation": "Navigation",
+    "contacts": "Contacts",
+    "region": "Service region: Russian Federation, coastal and port waters",
+    "rights": "All rights reserved.",
+    "compliance": "Works are performed in accordance with the Ministry of Transport Order No. 176",
+    "services": {
+      "shipRaising": "Sunken vessel recovery",
+      "diving": "Diving inspections",
+      "designDocs": "Design documentation",
+      "permits": "Permitting documentation",
+      "emergency": "Emergency works"
+    },
+    "regulationItems": {
+      "order176": "Order of the Ministry of Transport No. 176",
+      "merchantCode": "Merchant Shipping Code of the Russian Federation",
+      "kvvt": "Inland Water Transport Code of the Russian Federation"
+    }
+  }
+}

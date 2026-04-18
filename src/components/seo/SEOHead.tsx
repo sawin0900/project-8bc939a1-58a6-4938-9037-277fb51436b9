@@ -21,15 +21,15 @@ export function SEOHead({
 }: SEOHeadProps) {
   const baseUrl = 'https://centr-prityazheniya.ru';
   const fullCanonical = canonical ? `${baseUrl}${canonical}` : baseUrl;
-  
-  // Default hreflang for Russian site
+
   const defaultHreflang = [
-    { lang: 'ru', url: fullCanonical },
-    { lang: 'x-default', url: fullCanonical },
+    { lang: 'en', url: `${fullCanonical}?lang=en` },
+    { lang: 'zh', url: `${fullCanonical}?lang=zh` },
+    { lang: 'x-default', url: `${fullCanonical}?lang=en` },
   ];
-  
+
   const hreflangTags = hreflang || defaultHreflang;
-  
+
   return (
     <Helmet>
       <title>{title}</title>
@@ -37,21 +37,17 @@ export function SEOHead({
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
       <link rel="canonical" href={fullCanonical} />
-      
-      {/* Hreflang Tags */}
+
       {hreflangTags.map((tag) => (
         <link key={tag.lang} rel="alternate" hrefLang={tag.lang} href={tag.url} />
       ))}
-      
-      {/* Open Graph */}
+
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={fullCanonical} />
       <meta property="og:type" content="website" />
-      <meta property="og:locale" content="ru_RU" />
       <meta property="og:image" content={`${baseUrl}${ogImage}`} />
-      
-      {/* Twitter Card */}
+
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
