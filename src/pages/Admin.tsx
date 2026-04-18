@@ -24,6 +24,7 @@ import {
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { SEOHead } from '@/components/seo';
 
 interface ContactSubmission {
   id: string; name: string; email: string; phone: string | null;
@@ -75,13 +76,32 @@ export default function Admin() {
         toast({ title: 'Доступ запрещён', description: 'У вас нет прав для просмотра этой страницы', variant: 'destructive' });
         navigate('/'); return;
       }
-      fetchData();
+      fetchData('submissions');
     }
-  }, [user, isAdmin, authLoading, navigate]);
+  }, [user, isAdmin, authLoading, navigate, toast]);
 
-  const fetchData = async () => {
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    if (activeTab === 'users' && users.length === 0) {
+      fetchUsers();
+      return;
+    }
+
+    if (activeTab === 'news' && news.length === 0) {
+      fetchNews();
+    }
+  }, [activeTab, isAdmin, users.length, news.length]);
+
+  const fetchData = async (tab: TabType = activeTab) => {
     setIsLoading(true);
-    await Promise.all([fetchSubmissions(), fetchUsers(), fetchNews()]);
+    if (tab === 'submissions') {
+      await fetchSubmissions();
+    } else if (tab === 'users') {
+      await fetchUsers();
+    } else {
+      await fetchNews();
+    }
     setIsLoading(false);
   };
 
@@ -97,37 +117,16 @@ export default function Admin() {
   };
 
   const fetchNews = async () => {
-    const pageSize = 1000;
-    const allNews: NewsItem[] = [];
-    let from = 0;
-
-    while (true) {
-      const to = from + pageSize - 1;
-      const { data, error } = await supabase
-        .from('news')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .range(from, to);
-
-      if (error) {
-        toast({ title: 'Ошибка', description: 'Не удалось загрузить новости', variant: 'destructive' });
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        break;
-      }
-
-      allNews.push(...(data as NewsItem[]));
-
-      if (data.length < pageSize) {
-        break;
-      }
-
-      from += pageSize;
+    const { data, error } = await supabase
+      .from('news')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    if (error) {
+      toast({ title: 'Ошибка', description: 'Не удалось загрузить новости', variant: 'destructive' });
+      return;
     }
-
-    setNews(allNews);
+    setNews((data as NewsItem[]) || []);
   };
 
   const updateSubmissionStatus = async (id: string, status: string) => {
@@ -210,6 +209,12 @@ export default function Admin() {
 
   return (
     <Layout>
+      <SEOHead
+        title="Панель администратора | Центр Притяжения"
+        description="Служебная страница администрирования заявок и новостей."
+        canonical="/admin"
+        noindex
+      />
       <section className="pt-32 pb-20 min-h-screen">
         <div className="container-custom">
           <AnimatedSection animation="fadeUp">
@@ -221,7 +226,7 @@ export default function Admin() {
                 </h1>
                 <p className="text-muted-foreground mt-1">Управление заявками, пользователями и новостями</p>
               </div>
-              <Button onClick={fetchData} variant="outline" size="sm">
+              <Button onClick={() => fetchData()} variant="outline" size="sm">
                 <RefreshCw className="w-4 h-4 mr-2" />Обновить
               </Button>
               <AdminAnalyticsButton />

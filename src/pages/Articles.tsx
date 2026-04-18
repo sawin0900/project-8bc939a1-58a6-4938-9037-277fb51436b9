@@ -186,6 +186,7 @@ const Articles = () => {
           <AnimatedSection>
             <SectionHeader
               badge="Блог"
+              headingLevel="h1"
               title="Экспертные статьи о судоподъёме"
               description="Делимся опытом и разбираем важные вопросы: от первых действий при затоплении до выбора подрядчика"
             />

@@ -107,6 +107,7 @@ const Projects = () => {
           <AnimatedSection>
             <SectionHeader
               badge="Проекты"
+              headingLevel="h1"
               title="Опыт выполненных работ"
               description="Реализованные проекты по судоподъёму и водолазным обследованиям в акваториях Дальнего Востока"
             />
