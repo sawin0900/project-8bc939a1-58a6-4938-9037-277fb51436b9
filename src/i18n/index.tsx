@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import en from "../../locales/en.json";
+import ru from "../../locales/ru.json";
 import zh from "../../locales/zh.json";
 import { DEFAULT_LANGUAGE, LANGUAGE_STORAGE_KEY, type Language } from "./types";
 
@@ -7,6 +8,7 @@ type TranslationValue = string | Record<string, unknown>;
 type Dictionary = Record<string, TranslationValue>;
 
 const dictionaries: Record<Language, Dictionary> = {
+  ru: ru as Dictionary,
   en: en as Dictionary,
   zh: zh as Dictionary,
 };
@@ -44,6 +46,10 @@ function normalizeBrowserLanguage(): Language {
     return "zh";
   }
 
+  if (rawLanguage.startsWith("ru")) {
+    return "ru";
+  }
+
   return DEFAULT_LANGUAGE;
 }
 
@@ -53,12 +59,12 @@ function getInitialLanguage(): Language {
   }
 
   const langFromQuery = new URLSearchParams(window.location.search).get("lang");
-  if (langFromQuery === "en" || langFromQuery === "zh") {
+  if (langFromQuery === "ru" || langFromQuery === "en" || langFromQuery === "zh") {
     return langFromQuery;
   }
 
   const persisted = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  if (persisted === "en" || persisted === "zh") {
+  if (persisted === "ru" || persisted === "en" || persisted === "zh") {
     return persisted;
   }
 
