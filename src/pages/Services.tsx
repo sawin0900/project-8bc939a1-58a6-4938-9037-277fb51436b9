@@ -125,7 +125,7 @@ const Services = () => {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 hero relative overflow-hidden">
+      <section className="section-padding pt-32 pb-6 md:pb-10 hero hero-compact relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>
@@ -140,7 +140,7 @@ const Services = () => {
       </section>
 
       {/* Service Images Gallery */}
-      <section className="section-padding pt-0 pb-8">
+      <section className="section-padding pt-6 md:pt-8 pb-8">
         <div className="container-custom">
           <AnimatedSection>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

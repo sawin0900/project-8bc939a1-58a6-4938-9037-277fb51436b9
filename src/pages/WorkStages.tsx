@@ -125,7 +125,7 @@ const WorkStages = () => {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 pb-6 md:pb-10 hero relative overflow-hidden">
+      <section className="section-padding pt-32 pb-6 md:pb-10 hero hero-compact relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>
