@@ -33,7 +33,7 @@ export function OrganizationSchema() {
     ],
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+7-999-123-45-67',
+      telephone: '+7-924-730-14-54',
       contactType: 'customer service',
       availableLanguage: 'Russian',
     },
