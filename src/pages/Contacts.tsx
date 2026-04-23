@@ -73,7 +73,7 @@ const Contacts = () => {
       </section>
 
       {/* Image */}
-      <section className="section-padding pb-0 pt-0">
+      <section className="section-padding pb-0 pt-8 md:pt-12">
         <div className="container-custom">
           <AnimatedSection>
             <img
