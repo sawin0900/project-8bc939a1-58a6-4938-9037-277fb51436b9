@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420" fill="none">
+  <rect width="920" height="420" rx="24" fill="#E2F2FF"/>
+  <path d="M0 280C140 240 240 350 390 300C520 256 650 220 920 300V420H0V280Z" fill="#B9E0FF"/>
+  <path d="M0 320C150 280 260 380 410 340C560 300 700 280 920 340V420H0V320Z" fill="#8CC9F3"/>
+  <circle cx="170" cy="120" r="26" fill="#FFE08A"/>
+  <path d="M535 210H690" stroke="#1D4ED8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M535 210V160H665V210" stroke="#1D4ED8" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="500" y="210" width="220" height="90" rx="14" fill="#1D4ED8"/>
+  <circle cx="550" cy="255" r="14" fill="#E2F2FF"/>
+  <circle cx="615" cy="255" r="14" fill="#E2F2FF"/>
+  <circle cx="680" cy="255" r="14" fill="#E2F2FF"/>
+  <text x="120" y="210" fill="#0F172A" font-family="Arial, sans-serif" font-size="72" font-weight="700">404</text>
+  <text x="120" y="250" fill="#334155" font-family="Arial, sans-serif" font-size="24">Страница ушла на дно</text>
+</svg>

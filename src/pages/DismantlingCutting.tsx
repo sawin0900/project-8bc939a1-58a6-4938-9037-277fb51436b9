@@ -159,7 +159,7 @@ export default function DismantlingCutting() {
                   <Link to="/contacts">Заказать услугу</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <a href="tel:+79991234567">Получить консультацию</a>
+                  <a href="tel:+79247301454">Получить консультацию</a>
                 </Button>
               </div>
             </div>
