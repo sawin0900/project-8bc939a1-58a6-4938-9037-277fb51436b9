@@ -54,13 +54,15 @@ function LanguageSEO() {
   const { language } = useI18n();
   const location = useLocation();
   const baseUrl = "https://centr-prityazheniya.ru";
-  const cleanPath = `${location.pathname}${location.search ? location.search : ""}`;
+  const normalizedPath = location.pathname !== "/" && location.pathname.endsWith("/")
+    ? location.pathname.slice(0, -1)
+    : location.pathname;
 
   return (
     <Helmet>
-      <link rel="alternate" hrefLang="en" href={`${baseUrl}${cleanPath}${location.search ? "&" : "?"}lang=en`} />
-      <link rel="alternate" hrefLang="zh" href={`${baseUrl}${cleanPath}${location.search ? "&" : "?"}lang=zh`} />
-      <link rel="alternate" hrefLang="x-default" href={`${baseUrl}${cleanPath}${location.search ? "&" : "?"}lang=en`} />
+      <link rel="alternate" hrefLang="en" href={`${baseUrl}${normalizedPath}?lang=en`} />
+      <link rel="alternate" hrefLang="zh" href={`${baseUrl}${normalizedPath}?lang=zh`} />
+      <link rel="alternate" hrefLang="x-default" href={`${baseUrl}${normalizedPath}?lang=en`} />
       <meta property="og:locale" content={language === "zh" ? "zh_CN" : "en_US"} />
     </Helmet>
   );
