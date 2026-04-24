@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>https://centr-prityazheniya.ru/page-sitemap.xml</loc>
-  </sitemap>
-  <sitemap>
-    <loc>https://centr-prityazheniya.ru/news-sitemap.xml</loc>
-  </sitemap>
-  <sitemap>
-    <loc>https://centr-prityazheniya.ru/turbo-sitemap.xml</loc>
-  </sitemap>
-</sitemapindex>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://centr-prityazheniya.ru/</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/services</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/services/dismantling-cutting</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/stages</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/documentation</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/projects</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/emergency</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/chto-delat-esli-zatonulo-sudno</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/otvetstvennost-za-zatonuvshee-imuschestvo</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/kak-prohodyat-soglasovaniya</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/kto-imeet-pravo-vypolnyat-raboty</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/metody-podema-zatonuvshih-sudov</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/ekologicheskie-riski-zatonuvshih-sudov</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/stoimost-sudopodemnyx-rabot</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/vodolaznoye-obsledovanie-sudov</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/sudopodem-v-primorye</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/utilizaciya-zatonuvshih-sudov</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/strahovanie-sudopodemnyx-rabot</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/podgotovka-proekta-sudopodema</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/bezopasnost-vodolaznyh-rabot</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/chto-delayut-s-sudnom-posle-podema</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/pravovoe-regulirovanie-zatonuvshih-sudov</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/oborudovanie-dlya-sudopodema</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/ochistka-akvatoriy-ot-zatonuvshih-sudov</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/zimnie-sudopodemnye-raboty</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/obsledovanie-prichalov</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/articles/likvidaciya-razlivov-nefteproduktov</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/news</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/faq</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/contacts</loc></url>
+  <url><loc>https://centr-prityazheniya.ru/privacy-policy</loc></url>
+</urlset>

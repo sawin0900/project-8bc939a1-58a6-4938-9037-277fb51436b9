@@ -1,7 +1,6 @@
 User-agent: *
-Disallow:
+Allow: /
 
-Host: centr-prityazheniya.ru
 Sitemap: https://centr-prityazheniya.ru/sitemap.xml
 Sitemap: https://centr-prityazheniya.ru/news-sitemap.xml
 Sitemap: https://centr-prityazheniya.ru/turbo-sitemap.xml

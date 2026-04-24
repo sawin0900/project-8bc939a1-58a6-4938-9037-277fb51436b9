@@ -10,6 +10,12 @@ interface SEOHeadProps {
   hreflang?: { lang: string; url: string }[];
 }
 
+function normalizeCanonicalPath(path: string) {
+  const withoutQuery = path.split('?')[0].split('#')[0] || '/';
+  if (withoutQuery === '/') return '/';
+  return withoutQuery.endsWith('/') ? withoutQuery.slice(0, -1) : withoutQuery;
+}
+
 export function SEOHead({
   title,
   description,
@@ -20,7 +26,8 @@ export function SEOHead({
   hreflang,
 }: SEOHeadProps) {
   const baseUrl = 'https://centr-prityazheniya.ru';
-  const fullCanonical = canonical ? `${baseUrl}${canonical}` : baseUrl;
+  const normalizedCanonical = canonical ? normalizeCanonicalPath(canonical) : '/';
+  const fullCanonical = `${baseUrl}${normalizedCanonical}`;
   const fullOgImage = ogImage.startsWith("http://") || ogImage.startsWith("https://")
     ? ogImage
     : `${baseUrl}${ogImage}`;
