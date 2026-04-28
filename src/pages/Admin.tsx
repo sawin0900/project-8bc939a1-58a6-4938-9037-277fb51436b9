@@ -86,6 +86,7 @@ export default function Admin() {
     slug: '',
     meta_title: '',
     meta_description: '',
+    manual_related_slugs: '',
   });
   const [showAddNews, setShowAddNews] = useState(false);
   const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0 });
@@ -330,7 +331,23 @@ export default function Admin() {
         meta_title: metaTitle,
         meta_description: metaDescription,
       }).eq('id', editingNews.id);
-      if (!error) { toast({ title: 'Сохранено' }); setEditingNews(null); fetchNews(); }
+      if (!error) {
+        const manualSlugs = newsForm.manual_related_slugs
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean);
+        const { error: manualError } = await supabase.rpc('set_manual_related_news', {
+          p_news_id: editingNews.id,
+          p_related_slugs: manualSlugs,
+        });
+        if (manualError) {
+          toast({ title: 'Сохранено', description: `Но не удалось обновить ручные связи: ${manualError.message}` });
+        } else {
+          toast({ title: 'Сохранено' });
+        }
+        setEditingNews(null);
+        fetchNews();
+      }
       else toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
     }
   };
@@ -349,16 +366,29 @@ export default function Admin() {
       return;
     }
 
-    const { error } = await supabase.from('news').insert({
+    const { data, error } = await supabase.from('news').insert({
       title: newsForm.title, slug, description: newsForm.description,
       content: newsForm.content, image_url: newsForm.image_url || null, published: true,
       meta_title: metaTitle,
       meta_description: metaDescription,
-    });
+    }).select('id').single();
     if (!error) {
+      const manualSlugs = newsForm.manual_related_slugs
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+      if (data?.id && manualSlugs.length > 0) {
+        const { error: manualError } = await supabase.rpc('set_manual_related_news', {
+          p_news_id: data.id,
+          p_related_slugs: manualSlugs,
+        });
+        if (manualError) {
+          toast({ title: 'Новость добавлена', description: `Но не удалось сохранить ручные связи: ${manualError.message}` });
+        }
+      }
       toast({ title: 'Новость добавлена' });
       setShowAddNews(false);
-      setNewsForm({ title: '', description: '', content: '', image_url: '', slug: '', meta_title: '', meta_description: '' });
+      setNewsForm({ title: '', description: '', content: '', image_url: '', slug: '', meta_title: '', meta_description: '', manual_related_slugs: '' });
       fetchNews();
     }
     else toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
@@ -386,6 +416,11 @@ export default function Admin() {
       <Textarea placeholder="Полный текст (HTML)" value={newsForm.content} onChange={e => setNewsForm(f => ({ ...f, content: e.target.value }))} rows={8} />
       <Input placeholder="Meta Title (если пусто — автогенерация)" value={newsForm.meta_title} onChange={e => setNewsForm(f => ({ ...f, meta_title: e.target.value }))} />
       <Textarea placeholder="Meta Description (если пусто — автогенерация из описания/текста)" value={newsForm.meta_description} onChange={e => setNewsForm(f => ({ ...f, meta_description: e.target.value }))} rows={3} />
+      <Input
+        placeholder="Ручные похожие новости (slug через запятую, приоритет выше авто)"
+        value={newsForm.manual_related_slugs}
+        onChange={e => setNewsForm(f => ({ ...f, manual_related_slugs: e.target.value }))}
+      />
     </div>
   );
 
@@ -564,7 +599,7 @@ export default function Admin() {
                   </Button>
                   <Dialog open={showAddNews} onOpenChange={setShowAddNews}>
                     <DialogTrigger asChild>
-                      <Button onClick={() => setNewsForm({ title: '', description: '', content: '', image_url: '', slug: '', meta_title: '', meta_description: '' })}>
+                      <Button onClick={() => setNewsForm({ title: '', description: '', content: '', image_url: '', slug: '', meta_title: '', meta_description: '', manual_related_slugs: '' })}>
                         <Plus className="w-4 h-4 mr-2" />Добавить вручную
                       </Button>
                     </DialogTrigger>
@@ -598,7 +633,20 @@ export default function Admin() {
                               <TableCell className="text-right flex gap-1 justify-end">
                                 <Dialog open={editingNews?.id === n.id} onOpenChange={open => { if (!open) setEditingNews(null); }}>
                                   <DialogTrigger asChild>
-                                    <Button variant="ghost" size="sm" onClick={() => { setEditingNews(n); setNewsForm({ title: n.title, description: n.description || '', content: n.content, image_url: n.image_url || '', slug: n.slug, meta_title: n.meta_title || '', meta_description: n.meta_description || '' }); }}>
+                                    <Button variant="ghost" size="sm" onClick={async () => {
+                                      setEditingNews(n);
+                                      const { data } = await supabase.rpc('get_manual_related_news_slugs', { p_news_id: n.id });
+                                      setNewsForm({
+                                        title: n.title,
+                                        description: n.description || '',
+                                        content: n.content,
+                                        image_url: n.image_url || '',
+                                        slug: n.slug,
+                                        meta_title: n.meta_title || '',
+                                        meta_description: n.meta_description || '',
+                                        manual_related_slugs: (data || []).join(', '),
+                                      });
+                                    }}>
                                       <Pencil className="w-4 h-4" />
                                     </Button>
                                   </DialogTrigger>

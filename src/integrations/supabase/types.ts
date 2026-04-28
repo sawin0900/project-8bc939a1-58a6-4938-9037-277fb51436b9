@@ -113,6 +113,30 @@ export type Database = {
         }
         Relationships: []
       }
+      news_related_links: {
+        Row: {
+          created_at: string
+          news_id: string
+          related_news_id: string
+          score: number
+          source_type: string
+        }
+        Insert: {
+          created_at?: string
+          news_id: string
+          related_news_id: string
+          score?: number
+          source_type?: string
+        }
+        Update: {
+          created_at?: string
+          news_id?: string
+          related_news_id?: string
+          score?: number
+          source_type?: string
+        }
+        Relationships: []
+      }
       menu_page_seo: {
         Row: {
           created_at: string
@@ -256,12 +280,44 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_manual_related_news_slugs: {
+        Args: {
+          p_news_id: string
+        }
+        Returns: string[]
+      }
+      get_related_news: {
+        Args: {
+          p_limit?: number
+          p_news_id: string
+        }
+        Returns: {
+          created_at: string
+          id: string
+          image_url: string | null
+          slug: string
+          title: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      refresh_related_news_links: {
+        Args: {
+          p_news_id: string
+        }
+        Returns: undefined
+      }
+      set_manual_related_news: {
+        Args: {
+          p_news_id: string
+          p_related_slugs: string[]
+        }
+        Returns: undefined
       }
     }
     Enums: {
