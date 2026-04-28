@@ -8,6 +8,7 @@ interface SEOHeadProps {
   ogImage?: string;
   noindex?: boolean;
   hreflang?: { lang: string; url: string }[];
+  ogType?: "website" | "article";
 }
 
 function normalizeCanonicalPath(path: string) {
@@ -24,6 +25,7 @@ export function SEOHead({
   ogImage = '/images/heroes/services.webp',
   noindex = false,
   hreflang,
+  ogType = "website",
 }: SEOHeadProps) {
   const baseUrl = 'https://centr-prityazheniya.ru';
   const normalizedCanonical = canonical ? normalizeCanonicalPath(canonical) : '/';
@@ -55,7 +57,7 @@ export function SEOHead({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={fullCanonical} />
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={ogType} />
       <meta property="og:image" content={fullOgImage} />
 
       <meta name="twitter:card" content="summary_large_image" />

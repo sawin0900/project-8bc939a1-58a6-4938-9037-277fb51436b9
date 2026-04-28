@@ -26,6 +26,7 @@ import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { SEOHead } from '@/components/seo';
+import { generateNewsMetaDescription, generateNewsMetaTitle, generateNewsSlug } from '@/lib/newsSeo';
 
 interface ContactSubmission {
   id: string; name: string; email: string; phone: string | null;
@@ -41,6 +42,7 @@ interface NewsItem {
   id: string; title: string; slug: string; description: string | null;
   content: string; image_url: string | null; source_url: string | null;
   published: boolean; created_at: string;
+  meta_title: string | null; meta_description: string | null;
 }
 
 type TabType = 'submissions' | 'users' | 'news';
@@ -67,7 +69,15 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(true);
   const [importing, setImporting] = useState(false);
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
-  const [newsForm, setNewsForm] = useState({ title: '', description: '', content: '', image_url: '' });
+  const [newsForm, setNewsForm] = useState({
+    title: '',
+    description: '',
+    content: '',
+    image_url: '',
+    slug: '',
+    meta_title: '',
+    meta_description: '',
+  });
   const [showAddNews, setShowAddNews] = useState(false);
   const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0 });
   const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
@@ -198,23 +208,71 @@ export default function Admin() {
     if (!error) fetchNews();
   };
 
+  const hasDuplicateMeta = (metaTitle: string, metaDescription: string, excludedId?: string) => {
+    const normalizedTitle = metaTitle.trim().toLowerCase();
+    const normalizedDescription = metaDescription.trim().toLowerCase();
+    return news.some((item) => {
+      if (excludedId && item.id === excludedId) return false;
+      return (
+        (item.meta_title || '').trim().toLowerCase() === normalizedTitle ||
+        (item.meta_description || '').trim().toLowerCase() === normalizedDescription
+      );
+    });
+  };
+
   const saveNews = async () => {
     if (editingNews) {
+      const slug = newsForm.slug.trim() || generateNewsSlug(newsForm.title);
+      const metaTitle = newsForm.meta_title.trim() || generateNewsMetaTitle(newsForm.title);
+      const metaDescription = newsForm.meta_description.trim() || generateNewsMetaDescription({
+        description: newsForm.description,
+        content: newsForm.content,
+        fallbackTitle: newsForm.title,
+      });
+
+      if (hasDuplicateMeta(metaTitle, metaDescription, editingNews.id)) {
+        toast({ title: 'Ошибка', description: 'Найдены дублирующиеся meta title/meta description.', variant: 'destructive' });
+        return;
+      }
+
       const { error } = await supabase.from('news').update({
         title: newsForm.title, description: newsForm.description,
         content: newsForm.content, image_url: newsForm.image_url || null,
+        slug,
+        meta_title: metaTitle,
+        meta_description: metaDescription,
       }).eq('id', editingNews.id);
       if (!error) { toast({ title: 'Сохранено' }); setEditingNews(null); fetchNews(); }
+      else toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
     }
   };
 
   const addNews = async () => {
-    const slug = newsForm.title.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, '-').slice(0, 80) + '-' + Date.now().toString(36);
+    const slug = newsForm.slug.trim() || generateNewsSlug(newsForm.title);
+    const metaTitle = newsForm.meta_title.trim() || generateNewsMetaTitle(newsForm.title);
+    const metaDescription = newsForm.meta_description.trim() || generateNewsMetaDescription({
+      description: newsForm.description,
+      content: newsForm.content,
+      fallbackTitle: newsForm.title,
+    });
+
+    if (hasDuplicateMeta(metaTitle, metaDescription)) {
+      toast({ title: 'Ошибка', description: 'Найдены дублирующиеся meta title/meta description.', variant: 'destructive' });
+      return;
+    }
+
     const { error } = await supabase.from('news').insert({
       title: newsForm.title, slug, description: newsForm.description,
       content: newsForm.content, image_url: newsForm.image_url || null, published: true,
+      meta_title: metaTitle,
+      meta_description: metaDescription,
     });
-    if (!error) { toast({ title: 'Новость добавлена' }); setShowAddNews(false); setNewsForm({ title: '', description: '', content: '', image_url: '' }); fetchNews(); }
+    if (!error) {
+      toast({ title: 'Новость добавлена' });
+      setShowAddNews(false);
+      setNewsForm({ title: '', description: '', content: '', image_url: '', slug: '', meta_title: '', meta_description: '' });
+      fetchNews();
+    }
     else toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
   };
 
@@ -234,9 +292,12 @@ export default function Admin() {
   const newsFormDialog = (
     <div className="space-y-4">
       <Input placeholder="Заголовок" value={newsForm.title} onChange={e => setNewsForm(f => ({ ...f, title: e.target.value }))} />
+      <Input placeholder="Slug (ЧПУ URL), можно оставить пустым для авто" value={newsForm.slug} onChange={e => setNewsForm(f => ({ ...f, slug: e.target.value }))} />
       <Input placeholder="URL изображения" value={newsForm.image_url} onChange={e => setNewsForm(f => ({ ...f, image_url: e.target.value }))} />
       <Textarea placeholder="Краткое описание" value={newsForm.description} onChange={e => setNewsForm(f => ({ ...f, description: e.target.value }))} rows={3} />
       <Textarea placeholder="Полный текст (HTML)" value={newsForm.content} onChange={e => setNewsForm(f => ({ ...f, content: e.target.value }))} rows={8} />
+      <Input placeholder="Meta Title (если пусто — автогенерация)" value={newsForm.meta_title} onChange={e => setNewsForm(f => ({ ...f, meta_title: e.target.value }))} />
+      <Textarea placeholder="Meta Description (если пусто — автогенерация из описания/текста)" value={newsForm.meta_description} onChange={e => setNewsForm(f => ({ ...f, meta_description: e.target.value }))} rows={3} />
     </div>
   );
 
@@ -412,7 +473,7 @@ export default function Admin() {
                   </Button>
                   <Dialog open={showAddNews} onOpenChange={setShowAddNews}>
                     <DialogTrigger asChild>
-                      <Button onClick={() => setNewsForm({ title: '', description: '', content: '', image_url: '' })}>
+                      <Button onClick={() => setNewsForm({ title: '', description: '', content: '', image_url: '', slug: '', meta_title: '', meta_description: '' })}>
                         <Plus className="w-4 h-4 mr-2" />Добавить вручную
                       </Button>
                     </DialogTrigger>
@@ -446,7 +507,7 @@ export default function Admin() {
                               <TableCell className="text-right flex gap-1 justify-end">
                                 <Dialog open={editingNews?.id === n.id} onOpenChange={open => { if (!open) setEditingNews(null); }}>
                                   <DialogTrigger asChild>
-                                    <Button variant="ghost" size="sm" onClick={() => { setEditingNews(n); setNewsForm({ title: n.title, description: n.description || '', content: n.content, image_url: n.image_url || '' }); }}>
+                                    <Button variant="ghost" size="sm" onClick={() => { setEditingNews(n); setNewsForm({ title: n.title, description: n.description || '', content: n.content, image_url: n.image_url || '', slug: n.slug, meta_title: n.meta_title || '', meta_description: n.meta_description || '' }); }}>
                                       <Pencil className="w-4 h-4" />
                                     </Button>
                                   </DialogTrigger>
