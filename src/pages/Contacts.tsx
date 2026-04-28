@@ -2,7 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ContactForm } from "@/components/ContactForm";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs } from "@/components/seo";
 import { Phone, Mail, Send, MapPin, Clock, ShieldAlert } from "lucide-react";
 import { MessengerAvailability } from "@/components/MessengerAvailability";
 import portImg from "@/assets/images/tugboat-salvage-operation.jpg";
@@ -50,7 +50,9 @@ const emergencyServices = [
 const Contacts = () => {
   return (
     <Layout pageClass="page-contacts">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="contacts"
+        pageName="Контакты"
         title="Контакты — Центр Притяжения | Владивосток"
         description="Свяжитесь с нами для заказа судоподъёма и водолазных работ. Телефон, email, Telegram, Max, WhatsApp. Владивосток, Приморский край. Круглосуточная аварийная служба."
         keywords="контакты судоподъём, Владивосток, Центр Притяжения, заявка на судоподъём"

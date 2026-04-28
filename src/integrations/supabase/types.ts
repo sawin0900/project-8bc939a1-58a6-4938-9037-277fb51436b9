@@ -113,6 +113,39 @@ export type Database = {
         }
         Relationships: []
       }
+      menu_page_seo: {
+        Row: {
+          created_at: string
+          id: string
+          page_key: string
+          page_name: string
+          seo_description: string | null
+          seo_title: string | null
+          source_text: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page_key: string
+          page_name: string
+          seo_description?: string | null
+          seo_title?: string | null
+          source_text?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page_key?: string
+          page_name?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          source_text?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       page_visits: {
         Row: {
           browser: string | null

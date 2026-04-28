@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { 
   Scissors, 
   Flame, 
@@ -126,7 +126,9 @@ const workStages = [
 export default function DismantlingCutting() {
   return (
     <Layout pageClass="page-demontazh">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="dismantling"
+        pageName="Демонтаж и резка"
         title="Демонтаж и резка металлоконструкций | Подводная резка"
         description="Демонтаж затонувших судов, подводная и надводная резка металла. Газовая, плазменная, механическая резка. Работаем в Приморском крае."
         keywords="демонтаж судов, подводная резка, резка металлоконструкций, газовая резка, плазменная резка, утилизация судов"

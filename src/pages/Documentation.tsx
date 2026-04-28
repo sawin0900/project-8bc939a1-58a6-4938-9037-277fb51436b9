@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { FileText, Scale, Leaf, Building2, CheckCircle2, ArrowRight } from "lucide-react";
 import docsImg from "@/assets/images/documentation-blueprints.jpg";
 
@@ -51,7 +51,9 @@ const documents = [
 const Documentation = () => {
   return (
     <Layout pageClass="page-documentation">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="documentation"
+        pageName="Документация"
         title="Документация по судоподъёму | Приказ Минтранса №176"
         description="Разработка проектной документации для судоподъёма: проект подъёма судна, ППР, технические отчёты. Полное соответствие Приказу Минтранса РФ №176, КТМ и КВВТ."
         keywords="документация судоподъём, Приказ Минтранса 176, проект подъёма судна, ППР судоподъём, КТМ РФ, КВВТ, нормативная база"
