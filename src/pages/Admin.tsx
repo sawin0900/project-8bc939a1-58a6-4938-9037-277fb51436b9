@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Loader2, Mail, Phone, Calendar, User, Settings, RefreshCw, Trash2, 
-  Users, MessageSquare, Newspaper, Plus, Download, Pencil, ExternalLink, Globe, BarChart3
+  Users, MessageSquare, Newspaper, Plus, Download, Pencil, ExternalLink, Globe, BarChart3, Megaphone
 } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format } from 'date-fns';
@@ -28,6 +28,7 @@ import { ru } from 'date-fns/locale';
 import { SEOHead } from '@/components/seo';
 import { generateNewsMetaDescription, generateNewsMetaTitle, generateNewsSlug } from '@/lib/newsSeo';
 import { MENU_PAGE_KEYS, resolveMenuSeo, type MenuPageKey } from '@/lib/menuSeo';
+import { AdsManager } from '@/components/admin/AdsManager';
 
 interface ContactSubmission {
   id: string; name: string; email: string; phone: string | null;
@@ -46,7 +47,7 @@ interface NewsItem {
   meta_title: string | null; meta_description: string | null;
 }
 
-type TabType = 'submissions' | 'users' | 'news' | 'seo';
+type TabType = 'submissions' | 'users' | 'news' | 'seo' | 'ads';
 interface MenuSeoItem {
   id?: string;
   page_key: MenuPageKey;
@@ -89,7 +90,7 @@ export default function Admin() {
     manual_related_slugs: '',
   });
   const [showAddNews, setShowAddNews] = useState(false);
-  const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0 });
+  const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0, ads: 0 });
   const [menuSeoItems, setMenuSeoItems] = useState<MenuSeoItem[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
   const [dataWarnings, setDataWarnings] = useState<string[]>([]);
@@ -121,6 +122,11 @@ export default function Admin() {
 
     if (activeTab === 'seo' && menuSeoItems.length === 0) {
       fetchMenuSeo();
+      return;
+    }
+
+    if (activeTab === 'ads') {
+      return;
     }
   }, [activeTab, isAdmin, users.length, news.length, menuSeoItems.length]);
 
@@ -133,7 +139,7 @@ export default function Admin() {
       await fetchUsers();
     } else if (tab === 'news') {
       await fetchNews();
-    } else {
+    } else if (tab === 'seo') {
       await fetchMenuSeo();
     }
     await fetchCounts();
@@ -144,20 +150,23 @@ export default function Admin() {
   const fetchCounts = async () => {
     const warnings: string[] = [];
 
-    const [submissionsResult, usersResult, newsResult] = await Promise.all([
+    const [submissionsResult, usersResult, newsResult, adsResult] = await Promise.all([
       supabase.from('contact_submissions').select('*', { count: 'exact', head: true }),
       supabase.from('profiles').select('*', { count: 'exact', head: true }),
       supabase.from('news').select('*', { count: 'exact', head: true }),
+      supabase.from('ad_banners').select('*', { count: 'exact', head: true }),
     ]);
 
     if (submissionsResult.error) warnings.push('Не удалось получить количество заявок.');
     if (usersResult.error) warnings.push('Не удалось получить количество пользователей.');
     if (newsResult.error) warnings.push('Не удалось получить количество новостей.');
+    if (adsResult.error) warnings.push('Не удалось получить количество рекламных баннеров.');
 
     setCounts({
       submissions: submissionsResult.count ?? 0,
       users: usersResult.count ?? 0,
       news: newsResult.count ?? 0,
+      ads: adsResult.count ?? 0,
     });
     setDataWarnings(warnings);
   };
@@ -451,7 +460,7 @@ export default function Admin() {
           </AnimatedSection>
 
           <AnimatedSection animation="fadeUp" delay={0.05}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
@@ -482,6 +491,16 @@ export default function Admin() {
                   <p className="text-2xl font-semibold">{counts.news}</p>
                 </CardContent>
               </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Megaphone className="w-4 h-4" />Реклама
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-semibold">{counts.ads}</p>
+                </CardContent>
+              </Card>
             </div>
             {(lastUpdatedAt || dataWarnings.length > 0) && (
               <div className="mb-6 text-sm text-muted-foreground">
@@ -508,6 +527,9 @@ export default function Admin() {
               </Button>
               <Button variant={activeTab === 'seo' ? 'default' : 'outline'} onClick={() => setActiveTab('seo')} className="flex items-center gap-2">
                 <Globe className="w-4 h-4" />SEO меню
+              </Button>
+              <Button variant={activeTab === 'ads' ? 'default' : 'outline'} onClick={() => setActiveTab('ads')} className="flex items-center gap-2">
+                <Megaphone className="w-4 h-4" />Реклама ({counts.ads})
               </Button>
             </div>
           </AnimatedSection>
@@ -710,6 +732,8 @@ export default function Admin() {
                 ))}
               </div>
             )}
+
+            {activeTab === 'ads' && <AdsManager />}
           </AnimatedSection>
         </div>
       </section>

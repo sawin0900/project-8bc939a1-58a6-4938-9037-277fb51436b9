@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      ad_banners: {
+        Row: {
+          ad_type: string
+          clicks: number
+          created_at: string
+          end_date: string | null
+          html_code: string | null
+          id: string
+          image_url: string | null
+          impressions: number
+          is_active: boolean
+          link_url: string | null
+          max_impressions: number | null
+          position: string
+          priority: number
+          start_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ad_type: string
+          clicks?: number
+          created_at?: string
+          end_date?: string | null
+          html_code?: string | null
+          id?: string
+          image_url?: string | null
+          impressions?: number
+          is_active?: boolean
+          link_url?: string | null
+          max_impressions?: number | null
+          position: string
+          priority?: number
+          start_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ad_type?: string
+          clicks?: number
+          created_at?: string
+          end_date?: string | null
+          html_code?: string | null
+          id?: string
+          image_url?: string | null
+          impressions?: number
+          is_active?: boolean
+          link_url?: string | null
+          max_impressions?: number | null
+          position?: string
+          priority?: number
+          start_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           created_at: string
@@ -309,6 +366,18 @@ export type Database = {
       refresh_related_news_links: {
         Args: {
           p_news_id: string
+        }
+        Returns: undefined
+      }
+      increment_ad_click: {
+        Args: {
+          p_ad_id: string
+        }
+        Returns: undefined
+      }
+      increment_ad_impression: {
+        Args: {
+          p_ad_id: string
         }
         Returns: undefined
       }

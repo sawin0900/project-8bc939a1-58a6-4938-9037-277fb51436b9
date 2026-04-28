@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { generateNewsMetaDescription, generateNewsMetaTitle } from "@/lib/newsSeo";
+import { AdSlot } from "@/components/ads/AdSlot";
 
 type RelatedNewsItem = {
   id: string;
@@ -114,14 +115,16 @@ export default function NewsDetail() {
       />
 
       <section className="pt-32 pb-20 hero relative overflow-hidden">
-        <div className="container-custom max-w-4xl">
-          <Breadcrumbs
-            items={[
-            { name: "Главная", href: "/" },
-              { name: "Новости", href: "/news" },
-              { name: news.title, href: `/news/${news.slug}` },
-            ]}
-          />
+        <div className="container-custom max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8">
+              <Breadcrumbs
+                items={[
+                  { name: "Главная", href: "/" },
+                  { name: "Новости", href: "/news" },
+                  { name: news.title, href: `/news/${news.slug}` },
+                ]}
+              />
 
           <AnimatedSection>
             <Button variant="ghost" size="sm" className="mb-6" asChild>
@@ -154,6 +157,8 @@ export default function NewsDetail() {
               className="prose prose-invert max-w-none mb-8"
               dangerouslySetInnerHTML={{ __html: news.content }}
             />
+
+            <AdSlot position="bottom" className="my-8" />
 
             {relatedNews.length > 0 && (
               <div className="related-news border-t border-border pt-8 mb-8">
@@ -207,6 +212,13 @@ export default function NewsDetail() {
               </div>
             )}
           </AnimatedSection>
+            </div>
+            <aside className="lg:col-span-4">
+              <div className="lg:sticky lg:top-28 space-y-4">
+                <AdSlot position="sidebar" />
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
     </Layout>
