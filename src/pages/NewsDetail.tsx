@@ -11,6 +11,14 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { generateNewsMetaDescription, generateNewsMetaTitle } from "@/lib/newsSeo";
 
+type RelatedNewsItem = {
+  id: string;
+  slug: string;
+  title: string;
+  created_at: string;
+  image_url: string | null;
+};
+
 export default function NewsDetail() {
   const { slug } = useParams<{ slug: string }>();
 
@@ -27,6 +35,20 @@ export default function NewsDetail() {
       return data;
     },
     enabled: !!slug,
+  });
+
+  const { data: relatedNews = [] } = useQuery({
+    queryKey: ["related-news", news?.id],
+    queryFn: async () => {
+      if (!news?.id) return [] as RelatedNewsItem[];
+      const { data, error } = await supabase.rpc("get_related_news", {
+        p_news_id: news.id,
+        p_limit: 5,
+      });
+      if (error) throw error;
+      return (data || []) as RelatedNewsItem[];
+    },
+    enabled: !!news?.id,
   });
 
   const computedTitle = news
@@ -132,6 +154,36 @@ export default function NewsDetail() {
               className="prose prose-invert max-w-none mb-8"
               dangerouslySetInnerHTML={{ __html: news.content }}
             />
+
+            {relatedNews.length > 0 && (
+              <div className="related-news border-t border-border pt-8 mb-8">
+                <h3 className="text-xl font-semibold mb-4">Читайте по теме:</h3>
+                <ul className="space-y-4">
+                  {relatedNews.map((item) => (
+                    <li key={item.id}>
+                      <Link to={`/news/${item.slug}`} className="flex gap-4 group">
+                        {item.image_url ? (
+                          <img
+                            src={item.image_url}
+                            alt={item.title}
+                            className="w-20 h-20 object-cover rounded-md shrink-0"
+                            loading="lazy"
+                          />
+                        ) : null}
+                        <div>
+                          <p className="font-medium group-hover:text-primary transition-colors">
+                            {item.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {format(new Date(item.created_at), "dd MMMM yyyy", { locale: ru })}
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {news.keywords && news.keywords.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-8">
