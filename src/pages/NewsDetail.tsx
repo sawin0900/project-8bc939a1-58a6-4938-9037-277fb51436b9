@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+import { generateNewsMetaDescription, generateNewsMetaTitle } from "@/lib/newsSeo";
 
 export default function NewsDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -27,6 +28,17 @@ export default function NewsDetail() {
     },
     enabled: !!slug,
   });
+
+  const computedTitle = news
+    ? (news.meta_title?.trim() || generateNewsMetaTitle(news.title))
+    : "";
+  const computedDescription = news
+    ? (news.meta_description?.trim() || generateNewsMetaDescription({
+        description: news.description,
+        content: news.content,
+        fallbackTitle: news.title,
+      }))
+    : "";
 
   if (isLoading) {
     return (
@@ -52,11 +64,12 @@ export default function NewsDetail() {
   return (
     <Layout pageClass="page-news-detail">
       <SEOHead
-        title={news.meta_title || news.title}
-        description={news.meta_description || news.description || ""}
+        title={computedTitle}
+        description={computedDescription}
         keywords={(news.keywords || []).join(", ")}
         canonical={`/news/${news.slug}`}
         ogImage={news.image_url || "/images/heroes/news-detail.webp"}
+        ogType="article"
       />
       {/* JSON-LD */}
       <script

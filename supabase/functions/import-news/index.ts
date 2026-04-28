@@ -145,12 +145,14 @@ async function rewriteWithAI(
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
+      const normalizedTitle = (parsed.title || title || "").trim();
+      const normalizedDescription = (parsed.metaDescription || parsed.description || description || normalizedTitle).trim();
       return {
-        title: parsed.title || title,
+        title: normalizedTitle,
         description: parsed.description || description,
         content: parsed.content || content,
-        metaTitle: parsed.metaTitle || parsed.title || title,
-        metaDescription: parsed.metaDescription || parsed.description || description,
+        metaTitle: `${normalizedTitle} | Центр Притяжения`,
+        metaDescription: normalizedDescription.slice(0, 160),
         keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
       };
     }
@@ -158,12 +160,13 @@ async function rewriteWithAI(
     console.error("AI rewrite error:", error);
   }
 
+  const normalizedTitle = title.trim();
   return {
-    title,
+    title: normalizedTitle,
     description,
     content: `<p>${content || description}</p>`,
-    metaTitle: title.slice(0, 60),
-    metaDescription: (description || title).slice(0, 160),
+    metaTitle: `${normalizedTitle} | Центр Притяжения`,
+    metaDescription: (description || normalizedTitle).slice(0, 160),
     keywords: [],
   };
 }
