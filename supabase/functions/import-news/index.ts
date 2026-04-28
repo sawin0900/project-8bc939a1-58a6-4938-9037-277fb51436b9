@@ -337,9 +337,6 @@ async function rewriteWithAI(
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || "";
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-
-    if (!jsonMatch) {
-      throw new Error("AI response does not contain JSON");
     }
 
     const parsed = JSON.parse(jsonMatch[0]);
