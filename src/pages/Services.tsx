@@ -4,7 +4,7 @@ import { ServiceCard } from "@/components/ui/ServiceCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { 
   Ship, 
   Anchor, 
@@ -112,7 +112,9 @@ const services = [
 const Services = () => {
   return (
     <Layout pageClass="page-services">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="services"
+        pageName="Услуги"
         title="Услуги судоподъёма и водолазных работ | Владивосток"
         description="Полный спектр услуг: судоподъём затонувших судов, водолазные обследования акваторий, демонтаж и резка металлоконструкций, проектная документация по Приказу №176."
         keywords="судоподъём услуги, водолазные работы Владивосток, демонтаж судов, подводная резка, обследование акватории, проектная документация"

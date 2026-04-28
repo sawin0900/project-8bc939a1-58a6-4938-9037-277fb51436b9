@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 
 const articles = [
@@ -172,7 +172,9 @@ const articles = [
 const Articles = () => {
   return (
     <Layout pageClass="page-articles">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="articles"
+        pageName="Статьи"
         title="Статьи о судоподъёме — экспертные материалы | Владивосток"
         description="Полезные статьи о судоподъёме: что делать при затоплении судна, ответственность, согласования, выбор подрядчика. Экспертный опыт для судовладельцев Приморского края."
         keywords="статьи судоподъём, затонуло судно что делать, ответственность судовладельца, согласование судоподъёма, выбор подрядчика"

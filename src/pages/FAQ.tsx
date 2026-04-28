@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs, FAQSchema } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs, FAQSchema } from "@/components/seo";
 import {
   Accordion,
   AccordionContent,
@@ -119,7 +119,9 @@ const FAQ = () => {
 
   return (
     <Layout pageClass="page-faq">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="faq"
+        pageName="FAQ"
         title={content.seo.title}
         description={content.seo.description}
         keywords={content.seo.keywords}

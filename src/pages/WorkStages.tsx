@@ -4,7 +4,7 @@ import { TimelineStep } from "@/components/ui/TimelineStep";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight } from "lucide-react";
 import divingTeamImg from "@/assets/images/diving-team-equipment.jpg";
 import pontoonImg from "@/assets/images/pontoon-salvage.jpg";
@@ -117,7 +117,9 @@ const WorkStages = () => {
 
   return (
     <Layout pageClass="page-etapy">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="stages"
+        pageName="Этапы работ"
         title={content.seo.title}
         description={content.seo.description}
         keywords={content.seo.keywords}

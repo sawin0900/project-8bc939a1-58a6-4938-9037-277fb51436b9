@@ -27,6 +27,7 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { SEOHead } from '@/components/seo';
 import { generateNewsMetaDescription, generateNewsMetaTitle, generateNewsSlug } from '@/lib/newsSeo';
+import { MENU_PAGE_KEYS, resolveMenuSeo, type MenuPageKey } from '@/lib/menuSeo';
 
 interface ContactSubmission {
   id: string; name: string; email: string; phone: string | null;
@@ -45,7 +46,15 @@ interface NewsItem {
   meta_title: string | null; meta_description: string | null;
 }
 
-type TabType = 'submissions' | 'users' | 'news';
+type TabType = 'submissions' | 'users' | 'news' | 'seo';
+interface MenuSeoItem {
+  id?: string;
+  page_key: MenuPageKey;
+  page_name: string;
+  seo_title: string;
+  seo_description: string;
+  source_text: string;
+}
 
 const AdminAnalyticsButton = () => {
   const navigate = useNavigate();
@@ -80,6 +89,7 @@ export default function Admin() {
   });
   const [showAddNews, setShowAddNews] = useState(false);
   const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0 });
+  const [menuSeoItems, setMenuSeoItems] = useState<MenuSeoItem[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
   const [dataWarnings, setDataWarnings] = useState<string[]>([]);
 
@@ -105,8 +115,13 @@ export default function Admin() {
 
     if (activeTab === 'news' && news.length === 0) {
       fetchNews();
+      return;
     }
-  }, [activeTab, isAdmin, users.length, news.length]);
+
+    if (activeTab === 'seo' && menuSeoItems.length === 0) {
+      fetchMenuSeo();
+    }
+  }, [activeTab, isAdmin, users.length, news.length, menuSeoItems.length]);
 
   const fetchData = async (tab: TabType = activeTab) => {
     setIsLoading(true);
@@ -115,8 +130,10 @@ export default function Admin() {
       await fetchSubmissions();
     } else if (tab === 'users') {
       await fetchUsers();
-    } else {
+    } else if (tab === 'news') {
       await fetchNews();
+    } else {
+      await fetchMenuSeo();
     }
     await fetchCounts();
     setLastUpdatedAt(new Date().toISOString());
@@ -170,6 +187,77 @@ export default function Admin() {
       return;
     }
     setNews((data as NewsItem[]) || []);
+  };
+
+  const fetchMenuSeo = async () => {
+    const { data, error } = await supabase
+      .from('menu_page_seo')
+      .select('*')
+      .order('page_key', { ascending: true });
+    if (error) {
+      toast({ title: 'Ошибка', description: 'Не удалось загрузить SEO-данные меню', variant: 'destructive' });
+      return;
+    }
+
+    const byKey = new Map((data || []).map((item) => [item.page_key, item]));
+    const normalized = MENU_PAGE_KEYS.map((key) => {
+      const row = byKey.get(key);
+      const pageName = row?.page_name || key;
+      const resolved = resolveMenuSeo({
+        pageName,
+        manualTitle: row?.seo_title,
+        manualDescription: row?.seo_description,
+        fallbackText: row?.source_text || '',
+      });
+      return {
+        id: row?.id,
+        page_key: key,
+        page_name: pageName,
+        seo_title: resolved.title,
+        seo_description: resolved.description,
+        source_text: row?.source_text || '',
+      } satisfies MenuSeoItem;
+    });
+    setMenuSeoItems(normalized);
+  };
+
+  const updateMenuSeoItem = (pageKey: MenuPageKey, patch: Partial<MenuSeoItem>) => {
+    setMenuSeoItems((items) =>
+      items.map((item) => (item.page_key === pageKey ? { ...item, ...patch } : item)),
+    );
+  };
+
+  const saveMenuSeoItem = async (item: MenuSeoItem) => {
+    const trimmedTitle = item.seo_title.trim();
+    const trimmedDescription = item.seo_description.trim();
+    const duplicateTitle = menuSeoItems.some(
+      (candidate) => candidate.page_key !== item.page_key && candidate.seo_title.trim().toLowerCase() === trimmedTitle.toLowerCase(),
+    );
+    if (duplicateTitle) {
+      toast({ title: 'Ошибка', description: 'Title дублируется с другой страницей меню.', variant: 'destructive' });
+      return;
+    }
+    if (!trimmedDescription) {
+      toast({ title: 'Ошибка', description: 'Description не может быть пустым.', variant: 'destructive' });
+      return;
+    }
+
+    const payload = {
+      page_key: item.page_key,
+      page_name: item.page_name.trim() || item.page_name,
+      seo_title: trimmedTitle,
+      seo_description: trimmedDescription.slice(0, 160),
+      source_text: item.source_text.trim() || null,
+    };
+    const { error } = item.id
+      ? await supabase.from('menu_page_seo').update(payload).eq('id', item.id)
+      : await supabase.from('menu_page_seo').insert(payload);
+    if (error) {
+      toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'SEO сохранено' });
+    fetchMenuSeo();
   };
 
   const updateSubmissionStatus = async (id: string, status: string) => {
@@ -383,6 +471,9 @@ export default function Admin() {
               <Button variant={activeTab === 'news' ? 'default' : 'outline'} onClick={() => setActiveTab('news')} className="flex items-center gap-2">
                 <Newspaper className="w-4 h-4" />Новости ({counts.news})
               </Button>
+              <Button variant={activeTab === 'seo' ? 'default' : 'outline'} onClick={() => setActiveTab('seo')} className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />SEO меню
+              </Button>
             </div>
           </AnimatedSection>
 
@@ -526,6 +617,49 @@ export default function Admin() {
                     </div>
                   )}
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'seo' && (
+              <div className="bg-card rounded-xl border border-border overflow-hidden p-4 space-y-4">
+                <h3 className="text-lg font-semibold">SEO для страниц главного меню</h3>
+                {menuSeoItems.map((item) => (
+                  <Card key={item.page_key}>
+                    <CardHeader>
+                      <CardTitle className="text-base">{item.page_name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <Input
+                        value={item.page_name}
+                        onChange={(e) => updateMenuSeoItem(item.page_key, { page_name: e.target.value })}
+                        placeholder="Название страницы"
+                      />
+                      <Input
+                        value={item.seo_title}
+                        onChange={(e) => updateMenuSeoItem(item.page_key, { seo_title: e.target.value })}
+                        placeholder="SEO Title"
+                      />
+                      <Textarea
+                        value={item.seo_description}
+                        onChange={(e) => updateMenuSeoItem(item.page_key, { seo_description: e.target.value.slice(0, 160) })}
+                        placeholder="SEO Description (до 160 символов)"
+                        rows={3}
+                      />
+                      <Textarea
+                        value={item.source_text}
+                        onChange={(e) => updateMenuSeoItem(item.page_key, { source_text: e.target.value })}
+                        placeholder="Текст для автогенерации (если SEO-поля очищены)"
+                        rows={3}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Длина description: {item.seo_description.length}/160
+                      </p>
+                      <Button size="sm" onClick={() => saveMenuSeoItem(item)}>
+                        Сохранить
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             )}
           </AnimatedSection>
