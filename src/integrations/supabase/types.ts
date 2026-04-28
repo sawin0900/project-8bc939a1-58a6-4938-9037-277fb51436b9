@@ -63,8 +63,11 @@ export type Database = {
           keywords: string[] | null
           meta_description: string | null
           meta_title: string | null
+          original_source: string | null
           published: boolean
+          published_at: string | null
           slug: string
+          source_author: string | null
           source_title: string | null
           source_url: string | null
           title: string
@@ -79,8 +82,11 @@ export type Database = {
           keywords?: string[] | null
           meta_description?: string | null
           meta_title?: string | null
+          original_source?: string | null
           published?: boolean
+          published_at?: string | null
           slug: string
+          source_author?: string | null
           source_title?: string | null
           source_url?: string | null
           title: string
@@ -95,8 +101,11 @@ export type Database = {
           keywords?: string[] | null
           meta_description?: string | null
           meta_title?: string | null
+          original_source?: string | null
           published?: boolean
+          published_at?: string | null
           slug?: string
+          source_author?: string | null
           source_title?: string | null
           source_url?: string | null
           title?: string
