@@ -46,6 +46,7 @@ interface NewsItem {
 }
 
 type TabType = 'submissions' | 'users' | 'news';
+const MESSENGER_SETTINGS_STORAGE_KEY = 'admin_messenger_settings_v1';
 
 const AdminAnalyticsButton = () => {
   const navigate = useNavigate();
@@ -82,7 +83,6 @@ export default function Admin() {
   const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0 });
   const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
   const [dataWarnings, setDataWarnings] = useState<string[]>([]);
-
   useEffect(() => {
     if (!authLoading) {
       if (!user) { navigate('/auth'); return; }
@@ -285,6 +285,11 @@ export default function Admin() {
     }
   };
 
+  const saveMessengerLinks = () => {
+    localStorage.setItem(MESSENGER_SETTINGS_STORAGE_KEY, JSON.stringify(messengerLinks));
+    toast({ title: 'Сохранено', description: 'Ссылки мессенджеров обновлены.' });
+  };
+
   if (authLoading || isLoading) {
     return (<Layout><div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div></Layout>);
   }
@@ -371,8 +376,7 @@ export default function Admin() {
               </div>
             )}
           </AnimatedSection>
-
-          <AnimatedSection animation="fadeUp" delay={0.1}>
+          <AnimatedSection animation="fadeUp" delay={0.1}
             <div className="flex gap-2 mb-6 flex-wrap">
               <Button variant={activeTab === 'submissions' ? 'default' : 'outline'} onClick={() => setActiveTab('submissions')} className="flex items-center gap-2">
                 <MessageSquare className="w-4 h-4" />Заявки ({counts.submissions})
