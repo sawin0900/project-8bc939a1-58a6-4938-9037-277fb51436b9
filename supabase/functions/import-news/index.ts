@@ -108,6 +108,41 @@ async function scrapeImageFromPage(url: string): Promise<string | undefined> {
   return undefined;
 }
 
+function htmlToPlainText(html: string, maxChars: number): string {
+  // HTML -> plain text without DOM parsing (this function is for AI input only).
+  const withoutScripts = html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ");
+
+  const withoutTags = withoutScripts
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/<\/?[^>]+>/g, " ");
+
+  return withoutTags.replace(/\s+/g, " ").trim().slice(0, maxChars);
+}
+
+async function fetchArticleText(url: string): Promise<string | undefined> {
+  try {
+    const response = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)" },
+    });
+
+    if (!response.ok) return undefined;
+
+    const html = await response.text();
+    // Truncate to keep prompt size reasonable.
+    return htmlToPlainText(html, 8000);
+  } catch (error) {
+    console.error("Error fetching article text from", url, error);
+    return undefined;
+  }
+}
+
 async function rewriteWithAI(
   title: string,
   description: string,
@@ -215,10 +250,16 @@ Deno.serve(async (req) => {
           }
         }
 
+        const pageText = await fetchArticleText(item.link);
+        const descriptionForAI = item.description.trim()
+          ? item.description
+          : (pageText ? pageText.slice(0, 350) : item.description);
+        const contentForAI = pageText || item.description;
+
         const rewritten = await rewriteWithAI(
           item.title,
-          item.description,
-          item.description,
+          descriptionForAI,
+          contentForAI,
           lovableApiKey
         );
 
