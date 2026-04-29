@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow 
 } from '@/components/ui/table';
@@ -19,11 +20,15 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Loader2, Mail, Phone, Calendar, User, Settings, RefreshCw, Trash2, 
-  Users, MessageSquare, Newspaper, Plus, Download, Pencil, ExternalLink, Globe, BarChart3
+  Users, MessageSquare, Newspaper, Plus, Download, Pencil, ExternalLink, Globe, BarChart3, Megaphone
 } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { SEOHead } from '@/components/seo';
+import { generateNewsMetaDescription, generateNewsMetaTitle, generateNewsSlug } from '@/lib/newsSeo';
+import { MENU_PAGE_KEYS, resolveMenuSeo, type MenuPageKey } from '@/lib/menuSeo';
+import { AdsManager } from '@/components/admin/AdsManager';
 
 interface ContactSubmission {
   id: string; name: string; email: string; phone: string | null;
@@ -39,9 +44,18 @@ interface NewsItem {
   id: string; title: string; slug: string; description: string | null;
   content: string; image_url: string | null; source_url: string | null;
   published: boolean; created_at: string;
+  meta_title: string | null; meta_description: string | null;
 }
 
-type TabType = 'submissions' | 'users' | 'news';
+type TabType = 'submissions' | 'users' | 'news' | 'seo' | 'ads';
+interface MenuSeoItem {
+  id?: string;
+  page_key: MenuPageKey;
+  page_name: string;
+  seo_title: string;
+  seo_description: string;
+  source_text: string;
+}
 
 const AdminAnalyticsButton = () => {
   const navigate = useNavigate();
@@ -56,6 +70,7 @@ export default function Admin() {
   const { user, isAdmin, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const siteBaseUrl = window.location.origin;
   
   const [activeTab, setActiveTab] = useState<TabType>('submissions');
   const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
@@ -64,8 +79,21 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(true);
   const [importing, setImporting] = useState(false);
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
-  const [newsForm, setNewsForm] = useState({ title: '', description: '', content: '', image_url: '' });
+  const [newsForm, setNewsForm] = useState({
+    title: '',
+    description: '',
+    content: '',
+    image_url: '',
+    slug: '',
+    meta_title: '',
+    meta_description: '',
+    manual_related_slugs: '',
+  });
   const [showAddNews, setShowAddNews] = useState(false);
+  const [counts, setCounts] = useState({ submissions: 0, users: 0, news: 0, ads: 0 });
+  const [menuSeoItems, setMenuSeoItems] = useState<MenuSeoItem[]>([]);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
+  const [dataWarnings, setDataWarnings] = useState<string[]>([]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -74,14 +102,73 @@ export default function Admin() {
         toast({ title: 'Доступ запрещён', description: 'У вас нет прав для просмотра этой страницы', variant: 'destructive' });
         navigate('/'); return;
       }
-      fetchData();
+      fetchCounts();
+      fetchData('submissions');
     }
-  }, [user, isAdmin, authLoading, navigate]);
+  }, [user, isAdmin, authLoading, navigate, toast]);
 
-  const fetchData = async () => {
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    if (activeTab === 'users' && users.length === 0) {
+      fetchUsers();
+      return;
+    }
+
+    if (activeTab === 'news' && news.length === 0) {
+      fetchNews();
+      return;
+    }
+
+    if (activeTab === 'seo' && menuSeoItems.length === 0) {
+      fetchMenuSeo();
+      return;
+    }
+
+    if (activeTab === 'ads') {
+      return;
+    }
+  }, [activeTab, isAdmin, users.length, news.length, menuSeoItems.length]);
+
+  const fetchData = async (tab: TabType = activeTab) => {
     setIsLoading(true);
-    await Promise.all([fetchSubmissions(), fetchUsers(), fetchNews()]);
+    setDataWarnings([]);
+    if (tab === 'submissions') {
+      await fetchSubmissions();
+    } else if (tab === 'users') {
+      await fetchUsers();
+    } else if (tab === 'news') {
+      await fetchNews();
+    } else if (tab === 'seo') {
+      await fetchMenuSeo();
+    }
+    await fetchCounts();
+    setLastUpdatedAt(new Date().toISOString());
     setIsLoading(false);
+  };
+
+  const fetchCounts = async () => {
+    const warnings: string[] = [];
+
+    const [submissionsResult, usersResult, newsResult, adsResult] = await Promise.all([
+      supabase.from('contact_submissions').select('*', { count: 'exact', head: true }),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }),
+      supabase.from('news').select('*', { count: 'exact', head: true }),
+      supabase.from('ad_banners').select('*', { count: 'exact', head: true }),
+    ]);
+
+    if (submissionsResult.error) warnings.push('Не удалось получить количество заявок.');
+    if (usersResult.error) warnings.push('Не удалось получить количество пользователей.');
+    if (newsResult.error) warnings.push('Не удалось получить количество новостей.');
+    if (adsResult.error) warnings.push('Не удалось получить количество рекламных баннеров.');
+
+    setCounts({
+      submissions: submissionsResult.count ?? 0,
+      users: usersResult.count ?? 0,
+      news: newsResult.count ?? 0,
+      ads: adsResult.count ?? 0,
+    });
+    setDataWarnings(warnings);
   };
 
   const fetchSubmissions = async () => {
@@ -92,41 +179,95 @@ export default function Admin() {
 
   const fetchUsers = async () => {
     const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
-    if (!error) setUsers(data || []);
+    if (error) {
+      toast({ title: 'Ошибка', description: 'Не удалось загрузить пользователей', variant: 'destructive' });
+      return;
+    }
+    setUsers(data || []);
   };
 
   const fetchNews = async () => {
-    const pageSize = 1000;
-    const allNews: NewsItem[] = [];
-    let from = 0;
+    const { data, error } = await supabase
+      .from('news')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    if (error) {
+      toast({ title: 'Ошибка', description: 'Не удалось загрузить новости', variant: 'destructive' });
+      return;
+    }
+    setNews((data as NewsItem[]) || []);
+  };
 
-    while (true) {
-      const to = from + pageSize - 1;
-      const { data, error } = await supabase
-        .from('news')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .range(from, to);
-
-      if (error) {
-        toast({ title: 'Ошибка', description: 'Не удалось загрузить новости', variant: 'destructive' });
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        break;
-      }
-
-      allNews.push(...(data as NewsItem[]));
-
-      if (data.length < pageSize) {
-        break;
-      }
-
-      from += pageSize;
+  const fetchMenuSeo = async () => {
+    const { data, error } = await supabase
+      .from('menu_page_seo')
+      .select('*')
+      .order('page_key', { ascending: true });
+    if (error) {
+      toast({ title: 'Ошибка', description: 'Не удалось загрузить SEO-данные меню', variant: 'destructive' });
+      return;
     }
 
-    setNews(allNews);
+    const byKey = new Map((data || []).map((item) => [item.page_key, item]));
+    const normalized = MENU_PAGE_KEYS.map((key) => {
+      const row = byKey.get(key);
+      const pageName = row?.page_name || key;
+      const resolved = resolveMenuSeo({
+        pageName,
+        manualTitle: row?.seo_title,
+        manualDescription: row?.seo_description,
+        fallbackText: row?.source_text || '',
+      });
+      return {
+        id: row?.id,
+        page_key: key,
+        page_name: pageName,
+        seo_title: resolved.title,
+        seo_description: resolved.description,
+        source_text: row?.source_text || '',
+      } satisfies MenuSeoItem;
+    });
+    setMenuSeoItems(normalized);
+  };
+
+  const updateMenuSeoItem = (pageKey: MenuPageKey, patch: Partial<MenuSeoItem>) => {
+    setMenuSeoItems((items) =>
+      items.map((item) => (item.page_key === pageKey ? { ...item, ...patch } : item)),
+    );
+  };
+
+  const saveMenuSeoItem = async (item: MenuSeoItem) => {
+    const trimmedTitle = item.seo_title.trim();
+    const trimmedDescription = item.seo_description.trim();
+    const duplicateTitle = menuSeoItems.some(
+      (candidate) => candidate.page_key !== item.page_key && candidate.seo_title.trim().toLowerCase() === trimmedTitle.toLowerCase(),
+    );
+    if (duplicateTitle) {
+      toast({ title: 'Ошибка', description: 'Title дублируется с другой страницей меню.', variant: 'destructive' });
+      return;
+    }
+    if (!trimmedDescription) {
+      toast({ title: 'Ошибка', description: 'Description не может быть пустым.', variant: 'destructive' });
+      return;
+    }
+
+    const payload = {
+      page_key: item.page_key,
+      page_name: item.page_name.trim() || item.page_name,
+      seo_title: trimmedTitle,
+      seo_description: trimmedDescription.slice(0, 160),
+      source_text: item.source_text.trim() || null,
+    };
+    const { error } = item.id
+      ? await supabase.from('menu_page_seo').update(payload).eq('id', item.id)
+      : await supabase.from('menu_page_seo').insert(payload);
+    if (error) {
+      toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'SEO сохранено' });
+    fetchMenuSeo();
   };
 
   const updateSubmissionStatus = async (id: string, status: string) => {
@@ -165,23 +306,100 @@ export default function Admin() {
     if (!error) fetchNews();
   };
 
+  const hasDuplicateMeta = (metaTitle: string, metaDescription: string, excludedId?: string) => {
+    const normalizedTitle = metaTitle.trim().toLowerCase();
+    const normalizedDescription = metaDescription.trim().toLowerCase();
+    return news.some((item) => {
+      if (excludedId && item.id === excludedId) return false;
+      return (
+        (item.meta_title || '').trim().toLowerCase() === normalizedTitle ||
+        (item.meta_description || '').trim().toLowerCase() === normalizedDescription
+      );
+    });
+  };
+
   const saveNews = async () => {
     if (editingNews) {
+      const slug = newsForm.slug.trim() || generateNewsSlug(newsForm.title);
+      const metaTitle = newsForm.meta_title.trim() || generateNewsMetaTitle(newsForm.title);
+      const metaDescription = newsForm.meta_description.trim() || generateNewsMetaDescription({
+        description: newsForm.description,
+        content: newsForm.content,
+        fallbackTitle: newsForm.title,
+      });
+
+      if (hasDuplicateMeta(metaTitle, metaDescription, editingNews.id)) {
+        toast({ title: 'Ошибка', description: 'Найдены дублирующиеся meta title/meta description.', variant: 'destructive' });
+        return;
+      }
+
       const { error } = await supabase.from('news').update({
         title: newsForm.title, description: newsForm.description,
         content: newsForm.content, image_url: newsForm.image_url || null,
+        slug,
+        meta_title: metaTitle,
+        meta_description: metaDescription,
       }).eq('id', editingNews.id);
-      if (!error) { toast({ title: 'Сохранено' }); setEditingNews(null); fetchNews(); }
+      if (!error) {
+        const manualSlugs = newsForm.manual_related_slugs
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean);
+        const { error: manualError } = await supabase.rpc('set_manual_related_news', {
+          p_news_id: editingNews.id,
+          p_related_slugs: manualSlugs,
+        });
+        if (manualError) {
+          toast({ title: 'Сохранено', description: `Но не удалось обновить ручные связи: ${manualError.message}` });
+        } else {
+          toast({ title: 'Сохранено' });
+        }
+        setEditingNews(null);
+        fetchNews();
+      }
+      else toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
     }
   };
 
   const addNews = async () => {
-    const slug = newsForm.title.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, '-').slice(0, 80) + '-' + Date.now().toString(36);
-    const { error } = await supabase.from('news').insert({
+    const slug = newsForm.slug.trim() || generateNewsSlug(newsForm.title);
+    const metaTitle = newsForm.meta_title.trim() || generateNewsMetaTitle(newsForm.title);
+    const metaDescription = newsForm.meta_description.trim() || generateNewsMetaDescription({
+      description: newsForm.description,
+      content: newsForm.content,
+      fallbackTitle: newsForm.title,
+    });
+
+    if (hasDuplicateMeta(metaTitle, metaDescription)) {
+      toast({ title: 'Ошибка', description: 'Найдены дублирующиеся meta title/meta description.', variant: 'destructive' });
+      return;
+    }
+
+    const { data, error } = await supabase.from('news').insert({
       title: newsForm.title, slug, description: newsForm.description,
       content: newsForm.content, image_url: newsForm.image_url || null, published: true,
-    });
-    if (!error) { toast({ title: 'Новость добавлена' }); setShowAddNews(false); setNewsForm({ title: '', description: '', content: '', image_url: '' }); fetchNews(); }
+      meta_title: metaTitle,
+      meta_description: metaDescription,
+    }).select('id').single();
+    if (!error) {
+      const manualSlugs = newsForm.manual_related_slugs
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+      if (data?.id && manualSlugs.length > 0) {
+        const { error: manualError } = await supabase.rpc('set_manual_related_news', {
+          p_news_id: data.id,
+          p_related_slugs: manualSlugs,
+        });
+        if (manualError) {
+          toast({ title: 'Новость добавлена', description: `Но не удалось сохранить ручные связи: ${manualError.message}` });
+        }
+      }
+      toast({ title: 'Новость добавлена' });
+      setShowAddNews(false);
+      setNewsForm({ title: '', description: '', content: '', image_url: '', slug: '', meta_title: '', meta_description: '', manual_related_slugs: '' });
+      fetchNews();
+    }
     else toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
   };
 
@@ -201,14 +419,28 @@ export default function Admin() {
   const newsFormDialog = (
     <div className="space-y-4">
       <Input placeholder="Заголовок" value={newsForm.title} onChange={e => setNewsForm(f => ({ ...f, title: e.target.value }))} />
+      <Input placeholder="Slug (ЧПУ URL), можно оставить пустым для авто" value={newsForm.slug} onChange={e => setNewsForm(f => ({ ...f, slug: e.target.value }))} />
       <Input placeholder="URL изображения" value={newsForm.image_url} onChange={e => setNewsForm(f => ({ ...f, image_url: e.target.value }))} />
       <Textarea placeholder="Краткое описание" value={newsForm.description} onChange={e => setNewsForm(f => ({ ...f, description: e.target.value }))} rows={3} />
       <Textarea placeholder="Полный текст (HTML)" value={newsForm.content} onChange={e => setNewsForm(f => ({ ...f, content: e.target.value }))} rows={8} />
+      <Input placeholder="Meta Title (если пусто — автогенерация)" value={newsForm.meta_title} onChange={e => setNewsForm(f => ({ ...f, meta_title: e.target.value }))} />
+      <Textarea placeholder="Meta Description (если пусто — автогенерация из описания/текста)" value={newsForm.meta_description} onChange={e => setNewsForm(f => ({ ...f, meta_description: e.target.value }))} rows={3} />
+      <Input
+        placeholder="Ручные похожие новости (slug через запятую, приоритет выше авто)"
+        value={newsForm.manual_related_slugs}
+        onChange={e => setNewsForm(f => ({ ...f, manual_related_slugs: e.target.value }))}
+      />
     </div>
   );
 
   return (
     <Layout>
+      <SEOHead
+        title="Панель администратора | Центр Притяжения"
+        description="Служебная страница администрирования заявок и новостей."
+        canonical="/admin"
+        noindex
+      />
       <section className="pt-32 pb-20 min-h-screen">
         <div className="container-custom">
           <AnimatedSection animation="fadeUp">
@@ -220,23 +452,84 @@ export default function Admin() {
                 </h1>
                 <p className="text-muted-foreground mt-1">Управление заявками, пользователями и новостями</p>
               </div>
-              <Button onClick={fetchData} variant="outline" size="sm">
+              <Button onClick={() => fetchData()} variant="outline" size="sm">
                 <RefreshCw className="w-4 h-4 mr-2" />Обновить
               </Button>
               <AdminAnalyticsButton />
             </div>
           </AnimatedSection>
 
+          <AnimatedSection animation="fadeUp" delay={0.05}>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" />Заявки
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-semibold">{counts.submissions}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Users className="w-4 h-4" />Пользователи
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-semibold">{counts.users}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Newspaper className="w-4 h-4" />Новости
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-semibold">{counts.news}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Megaphone className="w-4 h-4" />Реклама
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-semibold">{counts.ads}</p>
+                </CardContent>
+              </Card>
+            </div>
+            {(lastUpdatedAt || dataWarnings.length > 0) && (
+              <div className="mb-6 text-sm text-muted-foreground">
+                {lastUpdatedAt && <p>Последнее обновление: {format(new Date(lastUpdatedAt), 'dd.MM.yyyy HH:mm')}</p>}
+                {dataWarnings.length > 0 && (
+                  <ul className="list-disc pl-5 mt-1 text-amber-500">
+                    {dataWarnings.map((warning) => <li key={warning}>{warning}</li>)}
+                  </ul>
+                )}
+              </div>
+            )}
+          </AnimatedSection>
+
           <AnimatedSection animation="fadeUp" delay={0.1}>
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-2 mb-6 flex-wrap">
               <Button variant={activeTab === 'submissions' ? 'default' : 'outline'} onClick={() => setActiveTab('submissions')} className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" />Заявки ({submissions.length})
+                <MessageSquare className="w-4 h-4" />Заявки ({counts.submissions})
               </Button>
               <Button variant={activeTab === 'users' ? 'default' : 'outline'} onClick={() => setActiveTab('users')} className="flex items-center gap-2">
-                <Users className="w-4 h-4" />Пользователи ({users.length})
+                <Users className="w-4 h-4" />Пользователи ({counts.users})
               </Button>
               <Button variant={activeTab === 'news' ? 'default' : 'outline'} onClick={() => setActiveTab('news')} className="flex items-center gap-2">
-                <Newspaper className="w-4 h-4" />Новости ({news.length})
+                <Newspaper className="w-4 h-4" />Новости ({counts.news})
+              </Button>
+              <Button variant={activeTab === 'seo' ? 'default' : 'outline'} onClick={() => setActiveTab('seo')} className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />SEO меню
+              </Button>
+              <Button variant={activeTab === 'ads' ? 'default' : 'outline'} onClick={() => setActiveTab('ads')} className="flex items-center gap-2">
+                <Megaphone className="w-4 h-4" />Реклама ({counts.ads})
               </Button>
             </div>
           </AnimatedSection>
@@ -309,12 +602,12 @@ export default function Admin() {
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <a href={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sitemap`} target="_blank" rel="noopener noreferrer">
+                      <a href={`${siteBaseUrl}/sitemap.xml`} target="_blank" rel="noopener noreferrer">
                         <ExternalLink className="w-3 h-3 mr-2" />Sitemap.xml
                       </a>
                     </Button>
                     <Button variant="outline" size="sm" asChild>
-                      <a href={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/turbo-rss`} target="_blank" rel="noopener noreferrer">
+                      <a href={`${siteBaseUrl}/turbo-sitemap.xml`} target="_blank" rel="noopener noreferrer">
                         <ExternalLink className="w-3 h-3 mr-2" />Турбо-страницы (RSS)
                       </a>
                     </Button>
@@ -328,7 +621,7 @@ export default function Admin() {
                   </Button>
                   <Dialog open={showAddNews} onOpenChange={setShowAddNews}>
                     <DialogTrigger asChild>
-                      <Button onClick={() => setNewsForm({ title: '', description: '', content: '', image_url: '' })}>
+                      <Button onClick={() => setNewsForm({ title: '', description: '', content: '', image_url: '', slug: '', meta_title: '', meta_description: '', manual_related_slugs: '' })}>
                         <Plus className="w-4 h-4 mr-2" />Добавить вручную
                       </Button>
                     </DialogTrigger>
@@ -362,7 +655,20 @@ export default function Admin() {
                               <TableCell className="text-right flex gap-1 justify-end">
                                 <Dialog open={editingNews?.id === n.id} onOpenChange={open => { if (!open) setEditingNews(null); }}>
                                   <DialogTrigger asChild>
-                                    <Button variant="ghost" size="sm" onClick={() => { setEditingNews(n); setNewsForm({ title: n.title, description: n.description || '', content: n.content, image_url: n.image_url || '' }); }}>
+                                    <Button variant="ghost" size="sm" onClick={async () => {
+                                      setEditingNews(n);
+                                      const { data } = await supabase.rpc('get_manual_related_news_slugs', { p_news_id: n.id });
+                                      setNewsForm({
+                                        title: n.title,
+                                        description: n.description || '',
+                                        content: n.content,
+                                        image_url: n.image_url || '',
+                                        slug: n.slug,
+                                        meta_title: n.meta_title || '',
+                                        meta_description: n.meta_description || '',
+                                        manual_related_slugs: (data || []).join(', '),
+                                      });
+                                    }}>
                                       <Pencil className="w-4 h-4" />
                                     </Button>
                                   </DialogTrigger>
@@ -383,6 +689,51 @@ export default function Admin() {
                 </div>
               </div>
             )}
+
+            {activeTab === 'seo' && (
+              <div className="bg-card rounded-xl border border-border overflow-hidden p-4 space-y-4">
+                <h3 className="text-lg font-semibold">SEO для страниц главного меню</h3>
+                {menuSeoItems.map((item) => (
+                  <Card key={item.page_key}>
+                    <CardHeader>
+                      <CardTitle className="text-base">{item.page_name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <Input
+                        value={item.page_name}
+                        onChange={(e) => updateMenuSeoItem(item.page_key, { page_name: e.target.value })}
+                        placeholder="Название страницы"
+                      />
+                      <Input
+                        value={item.seo_title}
+                        onChange={(e) => updateMenuSeoItem(item.page_key, { seo_title: e.target.value })}
+                        placeholder="SEO Title"
+                      />
+                      <Textarea
+                        value={item.seo_description}
+                        onChange={(e) => updateMenuSeoItem(item.page_key, { seo_description: e.target.value.slice(0, 160) })}
+                        placeholder="SEO Description (до 160 символов)"
+                        rows={3}
+                      />
+                      <Textarea
+                        value={item.source_text}
+                        onChange={(e) => updateMenuSeoItem(item.page_key, { source_text: e.target.value })}
+                        placeholder="Текст для автогенерации (если SEO-поля очищены)"
+                        rows={3}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Длина description: {item.seo_description.length}/160
+                      </p>
+                      <Button size="sm" onClick={() => saveMenuSeoItem(item)}>
+                        Сохранить
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'ads' && <AdsManager />}
           </AnimatedSection>
         </div>
       </section>

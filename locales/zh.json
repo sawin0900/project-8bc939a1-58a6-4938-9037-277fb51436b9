@@ -1,0 +1,56 @@
+{
+  "language": {
+    "label": "语言",
+    "ru": "RU",
+    "en": "EN",
+    "zh": "中文"
+  },
+  "brand": {
+    "name": "引力中心",
+    "tagline": "船舶打捞 • 潜水作业"
+  },
+  "navigation": {
+    "home": "首页",
+    "services": "服务",
+    "dismantling": "拆解与切割",
+    "stages": "工作阶段",
+    "documentation": "文档",
+    "projects": "项目",
+    "emergency": "紧急作业",
+    "news": "新闻",
+    "articles": "文章",
+    "faq": "常见问题",
+    "contacts": "联系方式"
+  },
+  "header": {
+    "admin": "管理",
+    "adminPanel": "管理面板",
+    "signIn": "登录",
+    "signOut": "退出",
+    "call": "致电",
+    "request": "提交申请"
+  },
+  "footer": {
+    "description": "引力中心提供沉船打捞、潜水调查和项目文档服务，符合俄罗斯海事法规要求。",
+    "location": "符拉迪沃斯托克，俄罗斯远东",
+    "activity": "业务方向",
+    "regulations": "法规依据",
+    "navigation": "导航",
+    "contacts": "联系方式",
+    "region": "服务区域：俄罗斯联邦沿海与港口水域",
+    "rights": "版权所有。",
+    "compliance": "所有作业均按照俄罗斯交通部第176号命令执行",
+    "services": {
+      "shipRaising": "沉船打捞",
+      "diving": "潜水勘察",
+      "designDocs": "设计文件",
+      "permits": "许可文件",
+      "emergency": "应急作业"
+    },
+    "regulationItems": {
+      "order176": "俄罗斯交通部第176号命令",
+      "merchantCode": "俄罗斯联邦商船法典",
+      "kvvt": "俄罗斯联邦内河运输法典"
+    }
+  }
+}

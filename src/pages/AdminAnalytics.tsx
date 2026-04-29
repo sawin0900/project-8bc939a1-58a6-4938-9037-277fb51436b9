@@ -20,6 +20,7 @@ import {
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
 import { format, subDays, startOfDay, isToday, isYesterday } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { SEOHead } from '@/components/seo';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, PieChart, Pie, Cell,
@@ -245,6 +246,12 @@ export default function AdminAnalytics() {
 
   return (
     <Layout>
+      <SEOHead
+        title="Аналитика администратора | Центр Притяжения"
+        description="Служебная страница аналитики посещаемости."
+        canonical="/admin/analytics"
+        noindex
+      />
       <section className="pt-32 pb-20 min-h-screen">
         <div className="container-custom">
           <AnimatedSection animation="fadeUp">

@@ -4,8 +4,8 @@ export function OrganizationSchema() {
     '@type': 'Organization',
     name: 'Центр Притяжения',
     alternateName: 'ЦентрПритяжения',
-    url: 'https://centr-prityazheniya.store',
-    logo: 'https://centr-prityazheniya.store/favicon.ico',
+    url: 'https://centr-prityazheniya.ru',
+    logo: 'https://centr-prityazheniya.ru/favicon.ico',
     description: 'Профессиональный судоподъём затонувших судов, водолазные обследования акваторий и подготовка проектной документации по Приказу Минтранса РФ №176 в Приморском крае.',
     address: {
       '@type': 'PostalAddress',
@@ -33,7 +33,7 @@ export function OrganizationSchema() {
     ],
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+7-999-123-45-67',
+      telephone: '+7-924-730-14-54',
       contactType: 'customer service',
       availableLanguage: 'Russian',
     },

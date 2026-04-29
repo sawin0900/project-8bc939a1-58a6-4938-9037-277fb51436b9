@@ -1,0 +1,10 @@
+# Canonical host and protocol
+http://centr-prityazheniya.ru/* https://centr-prityazheniya.ru/:splat 301!
+http://www.centr-prityazheniya.ru/* https://centr-prityazheniya.ru/:splat 301!
+https://www.centr-prityazheniya.ru/* https://centr-prityazheniya.ru/:splat 301!
+
+# Normalize trailing slashes for non-root URLs
+/:path/ /:path 301!
+
+# SPA fallback (must be last)
+/* /index.html 200

@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
@@ -281,6 +282,14 @@ main.page-faq .hero {
   background-image: url("/images/heroes/faq.webp");
 }
 
+/* Compact hero variants for pages that immediately show image galleries */
+main.page-services .hero.hero-compact,
+main.page-etapy .hero.hero-compact,
+main.page-documentation .hero.hero-compact,
+main.page-faq .hero.hero-compact {
+  min-height: clamp(150px, 24vh, 280px);
+}
+
 @media (max-width: 640px) {
   main.page-services .hero,
   main.page-demontazh .hero,
@@ -295,5 +304,12 @@ main.page-faq .hero {
   main.page-emergency .hero,
   main.page-faq .hero {
     min-height: clamp(180px, 32vh, 360px);
+  }
+
+  main.page-services .hero.hero-compact,
+  main.page-etapy .hero.hero-compact,
+  main.page-documentation .hero.hero-compact,
+  main.page-faq .hero.hero-compact {
+    min-height: clamp(130px, 20vh, 220px);
   }
 }

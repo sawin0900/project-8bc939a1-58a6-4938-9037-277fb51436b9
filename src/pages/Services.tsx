@@ -4,7 +4,7 @@ import { ServiceCard } from "@/components/ui/ServiceCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { 
   Ship, 
   Anchor, 
@@ -112,7 +112,9 @@ const services = [
 const Services = () => {
   return (
     <Layout pageClass="page-services">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="services"
+        pageName="Услуги"
         title="Услуги судоподъёма и водолазных работ | Владивосток"
         description="Полный спектр услуг: судоподъём затонувших судов, водолазные обследования акваторий, демонтаж и резка металлоконструкций, проектная документация по Приказу №176."
         keywords="судоподъём услуги, водолазные работы Владивосток, демонтаж судов, подводная резка, обследование акватории, проектная документация"
@@ -125,12 +127,13 @@ const Services = () => {
       />
 
       {/* Hero */}
-      <section className="section-padding pt-32 hero relative overflow-hidden">
+      <section className="section-padding pt-32 pb-6 md:pb-10 hero hero-compact relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="Услуги"
+              headingLevel="h1"
               title="Полный спектр услуг по судоподъёму, демонтажу и резке"
               description="Профессиональное выполнение работ в соответствии с требованиями законодательства РФ и надзорных органов"
             />
@@ -139,7 +142,7 @@ const Services = () => {
       </section>
 
       {/* Service Images Gallery */}
-      <section className="section-padding pt-0 pb-8">
+      <section className="section-padding pt-6 md:pt-8 pb-8">
         <div className="container-custom">
           <AnimatedSection>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

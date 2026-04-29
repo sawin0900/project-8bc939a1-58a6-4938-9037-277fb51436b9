@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
-import { SEOHead, Breadcrumbs } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs } from "@/components/seo";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
 import { Button } from "@/components/ui/button";
@@ -79,7 +79,9 @@ export default function News() {
 
   return (
     <Layout pageClass="page-news">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="news"
+        pageName="Новости"
         title="Новости морской отрасли | Центр Притяжения"
         description="Актуальные новости судоподъёма, морских перевозок и портовой инфраструктуры."
         keywords="морские новости, судоподъём новости, порт новости, морская отрасль"
@@ -91,6 +93,7 @@ export default function News() {
           <AnimatedSection>
             <SectionHeader
               badge="Новости"
+              headingLevel="h1"
               title="Новости морской отрасли"
               description="Актуальные события в сфере судоподъёма и морских работ"
             />

@@ -2,8 +2,8 @@ import { Layout } from "@/components/layout/Layout";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ContactForm } from "@/components/ContactForm";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs } from "@/components/seo";
-import { Phone, Mail, Send, MapPin, Clock } from "lucide-react";
+import { MenuSEOHead, Breadcrumbs } from "@/components/seo";
+import { Phone, Mail, Send, MapPin, Clock, ShieldAlert } from "lucide-react";
 import { MessengerAvailability } from "@/components/MessengerAvailability";
 import portImg from "@/assets/images/tugboat-salvage-operation.jpg";
 
@@ -38,12 +38,23 @@ const contactInfo = [
   },
 ];
 
+
+
+const emergencyServices = [
+  { name: "Единый номер экстренных служб", phone: "112" },
+  { name: "Пожарно-спасательная служба", phone: "101" },
+  { name: "Полиция", phone: "102" },
+  { name: "Скорая медицинская помощь", phone: "103" },
+];
+
 const Contacts = () => {
   return (
     <Layout pageClass="page-contacts">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="contacts"
+        pageName="Контакты"
         title="Контакты — Центр Притяжения | Владивосток"
-        description="Свяжитесь с нами для заказа судоподъёма и водолазных работ. Телефон, email, Telegram, Max, WhatsApp, Viber. Владивосток, Приморский край. Круглосуточная аварийная служба."
+        description="Свяжитесь с нами для заказа судоподъёма и водолазных работ. Телефон, email, Telegram, Max, WhatsApp. Владивосток, Приморский край. Круглосуточная аварийная служба."
         keywords="контакты судоподъём, Владивосток, Центр Притяжения, заявка на судоподъём"
         canonical="/contacts"
       />
@@ -55,6 +66,7 @@ const Contacts = () => {
           <AnimatedSection>
             <SectionHeader
               badge="Контакты"
+              headingLevel="h1"
               title="Свяжитесь с нами"
               description="Оставьте заявку или свяжитесь любым удобным способом — мы ответим в кратчайшие сроки"
             />
@@ -63,7 +75,7 @@ const Contacts = () => {
       </section>
 
       {/* Image */}
-      <section className="section-padding pb-0 pt-0">
+      <section className="section-padding pb-0 pt-8 md:pt-12">
         <div className="container-custom">
           <AnimatedSection>
             <img
@@ -122,6 +134,26 @@ const Contacts = () => {
                 <AnimatedSection delay={0.25}>
                   <div className="card-ocean p-6">
                     <MessengerAvailability />
+                  </div>
+                </AnimatedSection>
+
+                <AnimatedSection delay={0.28}>
+                  <div className="card-ocean p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                        <ShieldAlert className="w-5 h-5 text-destructive" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-foreground mb-2">Экстренные службы</h4>
+                        <ul className="space-y-1 text-sm text-muted-foreground">
+                          {emergencyServices.map((service) => (
+                            <li key={service.phone}>
+                              {service.name}: <a href={`tel:${service.phone}`} className="text-primary hover:underline">{service.phone}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </AnimatedSection>
 

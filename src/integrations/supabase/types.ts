@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      ad_banners: {
+        Row: {
+          ad_type: string
+          clicks: number
+          created_at: string
+          end_date: string | null
+          html_code: string | null
+          id: string
+          image_url: string | null
+          impressions: number
+          is_active: boolean
+          link_url: string | null
+          max_impressions: number | null
+          position: string
+          priority: number
+          start_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ad_type: string
+          clicks?: number
+          created_at?: string
+          end_date?: string | null
+          html_code?: string | null
+          id?: string
+          image_url?: string | null
+          impressions?: number
+          is_active?: boolean
+          link_url?: string | null
+          max_impressions?: number | null
+          position: string
+          priority?: number
+          start_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ad_type?: string
+          clicks?: number
+          created_at?: string
+          end_date?: string | null
+          html_code?: string | null
+          id?: string
+          image_url?: string | null
+          impressions?: number
+          is_active?: boolean
+          link_url?: string | null
+          max_impressions?: number | null
+          position?: string
+          priority?: number
+          start_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           created_at: string
@@ -63,8 +120,11 @@ export type Database = {
           keywords: string[] | null
           meta_description: string | null
           meta_title: string | null
+          original_source: string | null
           published: boolean
+          published_at: string | null
           slug: string
+          source_author: string | null
           source_title: string | null
           source_url: string | null
           title: string
@@ -79,8 +139,11 @@ export type Database = {
           keywords?: string[] | null
           meta_description?: string | null
           meta_title?: string | null
+          original_source?: string | null
           published?: boolean
+          published_at?: string | null
           slug: string
+          source_author?: string | null
           source_title?: string | null
           source_url?: string | null
           title: string
@@ -95,11 +158,71 @@ export type Database = {
           keywords?: string[] | null
           meta_description?: string | null
           meta_title?: string | null
+          original_source?: string | null
           published?: boolean
+          published_at?: string | null
           slug?: string
+          source_author?: string | null
           source_title?: string | null
           source_url?: string | null
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      news_related_links: {
+        Row: {
+          created_at: string
+          news_id: string
+          related_news_id: string
+          score: number
+          source_type: string
+        }
+        Insert: {
+          created_at?: string
+          news_id: string
+          related_news_id: string
+          score?: number
+          source_type?: string
+        }
+        Update: {
+          created_at?: string
+          news_id?: string
+          related_news_id?: string
+          score?: number
+          source_type?: string
+        }
+        Relationships: []
+      }
+      menu_page_seo: {
+        Row: {
+          created_at: string
+          id: string
+          page_key: string
+          page_name: string
+          seo_description: string | null
+          seo_title: string | null
+          source_text: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page_key: string
+          page_name: string
+          seo_description?: string | null
+          seo_title?: string | null
+          source_text?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page_key?: string
+          page_name?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          source_text?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -214,12 +337,56 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_manual_related_news_slugs: {
+        Args: {
+          p_news_id: string
+        }
+        Returns: string[]
+      }
+      get_related_news: {
+        Args: {
+          p_limit?: number
+          p_news_id: string
+        }
+        Returns: {
+          created_at: string
+          id: string
+          image_url: string | null
+          slug: string
+          title: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      refresh_related_news_links: {
+        Args: {
+          p_news_id: string
+        }
+        Returns: undefined
+      }
+      increment_ad_click: {
+        Args: {
+          p_ad_id: string
+        }
+        Returns: undefined
+      }
+      increment_ad_impression: {
+        Args: {
+          p_ad_id: string
+        }
+        Returns: undefined
+      }
+      set_manual_related_news: {
+        Args: {
+          p_news_id: string
+          p_related_slugs: string[]
+        }
+        Returns: undefined
       }
     }
     Enums: {

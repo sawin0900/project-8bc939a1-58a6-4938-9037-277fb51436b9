@@ -9,6 +9,16 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+import { generateNewsMetaDescription, generateNewsMetaTitle } from "@/lib/newsSeo";
+import { AdSlot } from "@/components/ads/AdSlot";
+
+type RelatedNewsItem = {
+  id: string;
+  slug: string;
+  title: string;
+  created_at: string;
+  image_url: string | null;
+};
 
 export default function NewsDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -27,6 +37,31 @@ export default function NewsDetail() {
     },
     enabled: !!slug,
   });
+
+  const { data: relatedNews = [] } = useQuery({
+    queryKey: ["related-news", news?.id],
+    queryFn: async () => {
+      if (!news?.id) return [] as RelatedNewsItem[];
+      const { data, error } = await supabase.rpc("get_related_news", {
+        p_news_id: news.id,
+        p_limit: 5,
+      });
+      if (error) throw error;
+      return (data || []) as RelatedNewsItem[];
+    },
+    enabled: !!news?.id,
+  });
+
+  const computedTitle = news
+    ? (news.meta_title?.trim() || generateNewsMetaTitle(news.title))
+    : "";
+  const computedDescription = news
+    ? (news.meta_description?.trim() || generateNewsMetaDescription({
+        description: news.description,
+        content: news.content,
+        fallbackTitle: news.title,
+      }))
+    : "";
 
   if (isLoading) {
     return (
@@ -52,10 +87,12 @@ export default function NewsDetail() {
   return (
     <Layout pageClass="page-news-detail">
       <SEOHead
-        title={news.meta_title || news.title}
-        description={news.meta_description || news.description || ""}
+        title={computedTitle}
+        description={computedDescription}
         keywords={(news.keywords || []).join(", ")}
         canonical={`/news/${news.slug}`}
+        ogImage={news.image_url || "/images/heroes/news-detail.webp"}
+        ogType="article"
       />
       {/* JSON-LD */}
       <script
@@ -78,14 +115,16 @@ export default function NewsDetail() {
       />
 
       <section className="pt-32 pb-20 hero relative overflow-hidden">
-        <div className="container-custom max-w-4xl">
-          <Breadcrumbs
-            items={[
-            { name: "Главная", href: "/" },
-              { name: "Новости", href: "/news" },
-              { name: news.title, href: `/news/${news.slug}` },
-            ]}
-          />
+        <div className="container-custom max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8">
+              <Breadcrumbs
+                items={[
+                  { name: "Главная", href: "/" },
+                  { name: "Новости", href: "/news" },
+                  { name: news.title, href: `/news/${news.slug}` },
+                ]}
+              />
 
           <AnimatedSection>
             <Button variant="ghost" size="sm" className="mb-6" asChild>
@@ -119,6 +158,38 @@ export default function NewsDetail() {
               dangerouslySetInnerHTML={{ __html: news.content }}
             />
 
+            <AdSlot position="bottom" className="my-8" />
+
+            {relatedNews.length > 0 && (
+              <div className="related-news border-t border-border pt-8 mb-8">
+                <h3 className="text-xl font-semibold mb-4">Читайте по теме:</h3>
+                <ul className="space-y-4">
+                  {relatedNews.map((item) => (
+                    <li key={item.id}>
+                      <Link to={`/news/${item.slug}`} className="flex gap-4 group">
+                        {item.image_url ? (
+                          <img
+                            src={item.image_url}
+                            alt={item.title}
+                            className="w-20 h-20 object-cover rounded-md shrink-0"
+                            loading="lazy"
+                          />
+                        ) : null}
+                        <div>
+                          <p className="font-medium group-hover:text-primary transition-colors">
+                            {item.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {format(new Date(item.created_at), "dd MMMM yyyy", { locale: ru })}
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {news.keywords && news.keywords.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-8">
                 {news.keywords.map((kw: string, i: number) => (
@@ -141,6 +212,13 @@ export default function NewsDetail() {
               </div>
             )}
           </AnimatedSection>
+            </div>
+            <aside className="lg:col-span-4">
+              <div className="lg:sticky lg:top-28 space-y-4">
+                <AdSlot position="sidebar" />
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
     </Layout>

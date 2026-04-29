@@ -4,7 +4,7 @@ import { ProjectCard } from "@/components/ui/ProjectCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs } from "@/components/seo";
 import { ArrowRight } from "lucide-react";
 import projectImage from "@/assets/project-salvage.jpg";
 import divingImage from "@/assets/diving-inspection.jpg";
@@ -93,7 +93,9 @@ const projects = [
 const Projects = () => {
   return (
     <Layout pageClass="page-projects">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="projects"
+        pageName="Проекты"
         title="Проекты судоподъёма — выполненные работы"
         description="Реализованные проекты по судоподъёму и водолазным обследованиям: подъём танкеров, траулеров, барж, обследование причалов. Владивосток, Находка, Сахалин."
         keywords="проекты судоподъёма, кейсы водолазные работы, подъём судна Владивосток, обследование акватории, демонтаж судов"
@@ -107,6 +109,7 @@ const Projects = () => {
           <AnimatedSection>
             <SectionHeader
               badge="Проекты"
+              headingLevel="h1"
               title="Опыт выполненных работ"
               description="Реализованные проекты по судоподъёму и водолазным обследованиям в акваториях Дальнего Востока"
             />

@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, ServiceSchema } from "@/components/seo";
+import { MenuSEOHead, ServiceSchema } from "@/components/seo";
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, Shield, Phone, Send, ArrowRight } from "lucide-react";
 import { MessengerAvailability } from "@/components/MessengerAvailability";
@@ -31,7 +31,9 @@ const features = [
 const Emergency = () => {
   return (
     <Layout pageClass="page-emergency">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="emergency"
+        pageName="Аварийные работы"
         title="Аварийный судоподъём 24/7 | Срочные работы Владивосток"
         description="Аварийный судоподъём и срочные водолазные работы круглосуточно. Выезд в течение 24 часов, работа в сложных условиях, минимизация экологического ущерба."
         keywords="аварийный судоподъём, срочный судоподъём, экстренные водолазные работы, 24/7, Владивосток"
@@ -86,7 +88,7 @@ const Emergency = () => {
               className="flex flex-wrap justify-center gap-4"
             >
               <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90" asChild>
-                <a href="tel:+79991234567">
+                <a href="tel:+79247301454">
                   <Phone className="w-5 h-5 mr-2" />
                   Экстренный вызов
                 </a>
@@ -193,9 +195,9 @@ const Emergency = () => {
                 </div>
                 <div className="flex flex-wrap gap-4">
                   <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90" asChild>
-                    <a href="tel:+79991234567">
+                    <a href="tel:+79247301454">
                       <Phone className="w-5 h-5 mr-2" />
-                      +7 (999) 123-45-67
+                      +7 (924) 730-14-54
                     </a>
                   </Button>
                   <Button size="lg" variant="outline" asChild>

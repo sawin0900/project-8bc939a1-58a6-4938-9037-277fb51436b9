@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/AnimatedSection";
-import { SEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
+import { MenuSEOHead, Breadcrumbs, ServiceSchema } from "@/components/seo";
 import { FileText, Scale, Leaf, Building2, CheckCircle2, ArrowRight } from "lucide-react";
 import docsImg from "@/assets/images/documentation-blueprints.jpg";
 
@@ -51,7 +51,9 @@ const documents = [
 const Documentation = () => {
   return (
     <Layout pageClass="page-documentation">
-      <SEOHead
+      <MenuSEOHead
+        pageKey="documentation"
+        pageName="Документация"
         title="Документация по судоподъёму | Приказ Минтранса №176"
         description="Разработка проектной документации для судоподъёма: проект подъёма судна, ППР, технические отчёты. Полное соответствие Приказу Минтранса РФ №176, КТМ и КВВТ."
         keywords="документация судоподъём, Приказ Минтранса 176, проект подъёма судна, ППР судоподъём, КТМ РФ, КВВТ, нормативная база"
@@ -64,12 +66,13 @@ const Documentation = () => {
       />
 
       {/* Hero */}
-      <section className="pt-16 md:pt-20 pb-4 md:pb-8 hero relative overflow-hidden">
+      <section className="pt-16 md:pt-20 pb-4 md:pb-8 hero hero-compact relative overflow-hidden">
         <div className="container-custom">
           <Breadcrumbs />
           <AnimatedSection>
             <SectionHeader
               badge="Документация"
+              headingLevel="h1"
               title="Нормативная база и документация"
               description="Полное соответствие законодательству РФ и требованиям надзорных органов"
             />
@@ -78,7 +81,7 @@ const Documentation = () => {
       </section>
 
       {/* Image */}
-      <section className="section-padding pb-0 pt-0">
+      <section className="section-padding pb-0 pt-6 md:pt-8">
         <div className="container-custom">
           <AnimatedSection>
             <img src={docsImg} alt="Проектная документация и чертежи" className="w-full rounded-2xl shadow-lg max-h-[400px] object-cover" />

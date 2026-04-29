@@ -18,11 +18,11 @@ export function ServiceSchema({
     '@type': 'Service',
     name,
     description,
-    url: `https://centr-prityazheniya.store${url}`,
+    url: `https://centr-prityazheniya.ru${url}`,
     provider: {
       '@type': 'Organization',
       name: provider,
-      url: 'https://centr-prityazheniya.store',
+      url: 'https://centr-prityazheniya.ru',
     },
     areaServed: {
       '@type': 'AdministrativeArea',
