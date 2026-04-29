@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Menu,
@@ -31,6 +31,11 @@ export function Header() {
   const location = useLocation();
   const { user, isAdmin, signOut } = useAuth();
   const { t, language, setLanguage } = useI18n();
+
+  useEffect(() => {
+    // On the home page we want the top navigation to be visibly expanded.
+    setMobileMenuOpen(location.pathname === "/");
+  }, [location.pathname, setMobileMenuOpen]);
 
   const navigation = [
     { key: "navigation.home", href: "/" },
@@ -132,7 +137,7 @@ export function Header() {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-border bg-background animate-fade-in">
+        <div className="lg:hidden border-t border-border bg-background animate-fade-in shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
           <div className="container-custom py-4 space-y-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
