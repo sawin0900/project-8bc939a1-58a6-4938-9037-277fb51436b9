@@ -27,7 +27,7 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { SEOHead } from '@/components/seo';
 import { generateNewsMetaDescription, generateNewsMetaTitle, generateNewsSlug } from '@/lib/newsSeo';
-import { MENU_PAGE_KEYS, resolveMenuSeo, type MenuPageKey } from '@/lib/menuSeo';
+import { MENU_PAGE_KEYS, MENU_PAGE_NAMES, resolveMenuSeo, type MenuPageKey } from '@/lib/menuSeo';
 import { AdsManager } from '@/components/admin/AdsManager';
 
 interface ContactSubmission {
@@ -94,6 +94,7 @@ export default function Admin() {
   const [menuSeoItems, setMenuSeoItems] = useState<MenuSeoItem[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
   const [dataWarnings, setDataWarnings] = useState<string[]>([]);
+  const [savingMenuSeoKey, setSavingMenuSeoKey] = useState<MenuPageKey | null>(null);
 
   useEffect(() => {
     if (!authLoading) {
@@ -212,7 +213,7 @@ export default function Admin() {
     const byKey = new Map((data || []).map((item) => [item.page_key, item]));
     const normalized = MENU_PAGE_KEYS.map((key) => {
       const row = byKey.get(key);
-      const pageName = row?.page_name || key;
+      const pageName = row?.page_name || MENU_PAGE_NAMES[key];
       const resolved = resolveMenuSeo({
         pageName,
         manualTitle: row?.seo_title,
@@ -238,36 +239,56 @@ export default function Admin() {
   };
 
   const saveMenuSeoItem = async (item: MenuSeoItem) => {
+    const pageName = item.page_name.trim() || MENU_PAGE_NAMES[item.page_key];
     const trimmedTitle = item.seo_title.trim();
     const trimmedDescription = item.seo_description.trim();
-    const duplicateTitle = menuSeoItems.some(
+    const trimmedSourceText = item.source_text.trim();
+    const duplicateTitle = Boolean(trimmedTitle) && menuSeoItems.some(
       (candidate) => candidate.page_key !== item.page_key && candidate.seo_title.trim().toLowerCase() === trimmedTitle.toLowerCase(),
     );
     if (duplicateTitle) {
       toast({ title: 'Ошибка', description: 'Title дублируется с другой страницей меню.', variant: 'destructive' });
       return;
     }
-    if (!trimmedDescription) {
-      toast({ title: 'Ошибка', description: 'Description не может быть пустым.', variant: 'destructive' });
-      return;
-    }
 
     const payload = {
       page_key: item.page_key,
-      page_name: item.page_name.trim() || item.page_name,
-      seo_title: trimmedTitle,
-      seo_description: trimmedDescription.slice(0, 160),
-      source_text: item.source_text.trim() || null,
+      page_name: pageName,
+      seo_title: trimmedTitle || null,
+      seo_description: trimmedDescription ? trimmedDescription.slice(0, 160) : null,
+      source_text: trimmedSourceText || null,
     };
-    const { error } = item.id
-      ? await supabase.from('menu_page_seo').update(payload).eq('id', item.id)
-      : await supabase.from('menu_page_seo').insert(payload);
+
+    setSavingMenuSeoKey(item.page_key);
+    const { data, error } = await supabase
+      .from('menu_page_seo')
+      .upsert(payload, { onConflict: 'page_key' })
+      .select('*')
+      .single();
+    setSavingMenuSeoKey(null);
+
     if (error) {
       toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
       return;
     }
+
+    if (data) {
+      const resolved = resolveMenuSeo({
+        pageName: data.page_name || pageName,
+        manualTitle: data.seo_title,
+        manualDescription: data.seo_description,
+        fallbackText: data.source_text || '',
+      });
+      updateMenuSeoItem(item.page_key, {
+        id: data.id,
+        page_name: data.page_name || pageName,
+        seo_title: resolved.title,
+        seo_description: resolved.description,
+        source_text: data.source_text || '',
+      });
+    }
+
     toast({ title: 'SEO сохранено' });
-    fetchMenuSeo();
   };
 
   const updateSubmissionStatus = async (id: string, status: string) => {
@@ -724,7 +745,8 @@ export default function Admin() {
                       <p className="text-xs text-muted-foreground">
                         Длина description: {item.seo_description.length}/160
                       </p>
-                      <Button size="sm" onClick={() => saveMenuSeoItem(item)}>
+                      <Button size="sm" onClick={() => saveMenuSeoItem(item)} disabled={savingMenuSeoKey === item.page_key}>
+                        {savingMenuSeoKey === item.page_key && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Сохранить
                       </Button>
                     </CardContent>
