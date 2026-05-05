@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -78,18 +78,18 @@ export function AdsManager() {
   const [editing, setEditing] = useState<AdBanner | null>(null);
   const [open, setOpen] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     const { data, error } = await supabase.from('ad_banners').select('*').order('priority', { ascending: false }).order('created_at', { ascending: false });
     if (error) {
       toast({ title: 'Ошибка', description: 'Не удалось загрузить баннеры', variant: 'destructive' });
       return;
     }
     setItems((data || []) as AdBanner[]);
-  };
+  }, [toast]);
 
   useEffect(() => {
     void load();
-  }, []);
+  }, [load]);
 
   const reset = () => {
     setForm(initialForm);
