@@ -14,6 +14,20 @@ export const MENU_PAGE_KEYS = [
 
 export type MenuPageKey = (typeof MENU_PAGE_KEYS)[number];
 
+export const MENU_PAGE_NAMES: Record<MenuPageKey, string> = {
+  home: 'Главная',
+  services: 'Услуги',
+  dismantling: 'Демонтаж и резка',
+  stages: 'Этапы работ',
+  documentation: 'Документация',
+  projects: 'Проекты',
+  emergency: 'Аварийные работы',
+  news: 'Новости',
+  articles: 'Статьи',
+  faq: 'FAQ',
+  contacts: 'Контакты',
+};
+
 const BRAND_SUFFIX = ' | Центр Притяжения';
 
 const sanitize = (value: string) =>
@@ -58,8 +72,8 @@ export function resolveMenuSeo(params: {
   const title = sanitize(manualTitle || '') || `${pageName}${BRAND_SUFFIX}`;
   const sourceForDescription =
     sanitize(manualDescription || '') ||
-    sanitize(fallbackDescription || '') ||
     sanitize(fallbackText || '') ||
+    sanitize(fallbackDescription || '') ||
     pageName;
 
   const description = enforceDescriptionLength(sourceForDescription, pageName);
