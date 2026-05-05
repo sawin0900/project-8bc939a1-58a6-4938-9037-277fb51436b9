@@ -3,51 +3,51 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import Index from "./pages/Index";
-import Services from "./pages/Services";
-import WorkStages from "./pages/WorkStages";
-import Documentation from "./pages/Documentation";
-import Projects from "./pages/Projects";
-import Emergency from "./pages/Emergency";
-import Articles from "./pages/Articles";
-import FAQ from "./pages/FAQ";
-import Contacts from "./pages/Contacts";
-import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
-import AdminAnalytics from "./pages/AdminAnalytics";
-import DismantlingCutting from "./pages/DismantlingCutting";
-import NotFound from "./pages/NotFound";
-import News from "./pages/News";
-import NewsDetail from "./pages/NewsDetail";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { lazy, Suspense, useEffect } from "react";
 import { I18nProvider, useI18n } from "@/i18n";
 
-// Article pages
-import ChtoDelatEsliZatonuloSudno from "./pages/articles/ChtoDelatEsliZatonuloSudno";
-import OtvetstvennostZaZatonuvsheImuschestvo from "./pages/articles/OtvetstvennostZaZatonuvsheImuschestvo";
-import KakProhodyatSoglasovaniya from "./pages/articles/KakProhodyatSoglasovaniya";
-import KtoImeetPravoVypolnyatRaboty from "./pages/articles/KtoImeetPravoVypolnyatRaboty";
-import MetodyPodemaZatonuvshihSudov from "./pages/articles/MetodyPodemaZatonuvshihSudov";
-import EkologicheskieRiskiZatonuvshihSudov from "./pages/articles/EkologicheskieRiskiZatonuvshihSudov";
-import StoimostSudopodemnyRabot from "./pages/articles/StoimostSudopodemnyRabot";
-import VodolaznoeObsledovanieSudov from "./pages/articles/VodolaznoeObsledovanieSudov";
-import SudopodaemVPrimorye from "./pages/articles/SudopodaemVPrimorye";
-import UtilizaciyaZatonuvshihSudov from "./pages/articles/UtilizaciyaZatonuvshihSudov";
-import StrahovanieSudopodemnyRabot from "./pages/articles/StrahovanieSudopodemnyRabot";
-import PodgotovkaProektaSudopodema from "./pages/articles/PodgotovkaProektaSudopodema";
-import BezopasnostVodolaznyRabot from "./pages/articles/BezopasnostVodolaznyRabot";
-import ChtoDelayutSZatonuvshimSudnomPoslePodema from "./pages/articles/ChtoDelayutSZatonuvshimSudnomPoslePodema";
-import PravovoeRegulirovanieZatonuvshihSudov from "./pages/articles/PravovoeRegulirovanieZatonuvshihSudov";
-import OborudovanieDlyaSudopodema from "./pages/articles/OborudovanieDlyaSudopodema";
-import OchistkaAkvatoriyOtZatonuvshihSudov from "./pages/articles/OchistkaAkvatoriyOtZatonuvshihSudov";
-import ZimnieSudopodemnyyeRaboty from "./pages/articles/ZimnieSudopodemnyyeRaboty";
-import ObsledovaniePrichalov from "./pages/articles/ObsledovaniePrichalov";
-import LikvidaciyaRazlivovNefteproduktov from "./pages/articles/LikvidaciyaRazlivovNefteproduktov";
+const Index = lazy(() => import("./pages/Index"));
+const Services = lazy(() => import("./pages/Services"));
+const ServiceLanding = lazy(() => import("./pages/ServiceLanding"));
+const WorkStages = lazy(() => import("./pages/WorkStages"));
+const Documentation = lazy(() => import("./pages/Documentation"));
+const Projects = lazy(() => import("./pages/Projects"));
+const Emergency = lazy(() => import("./pages/Emergency"));
+const Articles = lazy(() => import("./pages/Articles"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const Contacts = lazy(() => import("./pages/Contacts"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Admin = lazy(() => import("./pages/Admin"));
+const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
+const DismantlingCutting = lazy(() => import("./pages/DismantlingCutting"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const News = lazy(() => import("./pages/News"));
+const NewsDetail = lazy(() => import("./pages/NewsDetail"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 
+const ChtoDelatEsliZatonuloSudno = lazy(() => import("./pages/articles/ChtoDelatEsliZatonuloSudno"));
+const OtvetstvennostZaZatonuvsheImuschestvo = lazy(() => import("./pages/articles/OtvetstvennostZaZatonuvsheImuschestvo"));
+const KakProhodyatSoglasovaniya = lazy(() => import("./pages/articles/KakProhodyatSoglasovaniya"));
+const KtoImeetPravoVypolnyatRaboty = lazy(() => import("./pages/articles/KtoImeetPravoVypolnyatRaboty"));
+const MetodyPodemaZatonuvshihSudov = lazy(() => import("./pages/articles/MetodyPodemaZatonuvshihSudov"));
+const EkologicheskieRiskiZatonuvshihSudov = lazy(() => import("./pages/articles/EkologicheskieRiskiZatonuvshihSudov"));
+const StoimostSudopodemnyRabot = lazy(() => import("./pages/articles/StoimostSudopodemnyRabot"));
+const VodolaznoeObsledovanieSudov = lazy(() => import("./pages/articles/VodolaznoeObsledovanieSudov"));
+const SudopodaemVPrimorye = lazy(() => import("./pages/articles/SudopodaemVPrimorye"));
+const UtilizaciyaZatonuvshihSudov = lazy(() => import("./pages/articles/UtilizaciyaZatonuvshihSudov"));
+const StrahovanieSudopodemnyRabot = lazy(() => import("./pages/articles/StrahovanieSudopodemnyRabot"));
+const PodgotovkaProektaSudopodema = lazy(() => import("./pages/articles/PodgotovkaProektaSudopodema"));
+const BezopasnostVodolaznyRabot = lazy(() => import("./pages/articles/BezopasnostVodolaznyRabot"));
+const ChtoDelayutSZatonuvshimSudnomPoslePodema = lazy(() => import("./pages/articles/ChtoDelayutSZatonuvshimSudnomPoslePodema"));
+const PravovoeRegulirovanieZatonuvshihSudov = lazy(() => import("./pages/articles/PravovoeRegulirovanieZatonuvshihSudov"));
+const OborudovanieDlyaSudopodema = lazy(() => import("./pages/articles/OborudovanieDlyaSudopodema"));
+const OchistkaAkvatoriyOtZatonuvshihSudov = lazy(() => import("./pages/articles/OchistkaAkvatoriyOtZatonuvshihSudov"));
+const ZimnieSudopodemnyyeRaboty = lazy(() => import("./pages/articles/ZimnieSudopodemnyyeRaboty"));
+const ObsledovaniePrichalov = lazy(() => import("./pages/articles/ObsledovaniePrichalov"));
+const LikvidaciyaRazlivovNefteproduktov = lazy(() => import("./pages/articles/LikvidaciyaRazlivovNefteproduktov"));
 
 
 function LanguageSEO() {
@@ -80,15 +80,27 @@ function ScrollToTopOnRouteChange() {
   return null;
 }
 
+function RouteLoading() {
+  return (
+    <div className="min-h-screen bg-background pt-24 flex items-center justify-center text-muted-foreground">
+      Загрузка раздела…
+    </div>
+  );
+}
+
 function AppRoutes() {
   usePageTracking();
   return (
     <>
       <ScrollToTopOnRouteChange />
       <LanguageSEO />
-      <Routes>
+      <Suspense fallback={<RouteLoading />}>
+        <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/sudopodem-zatonuvshih-sudov" element={<ServiceLanding slug="sudopodem-zatonuvshih-sudov" />} />
+              <Route path="/vodolaznye-raboty" element={<ServiceLanding slug="vodolaznye-raboty" />} />
+              <Route path="/proektnaya-dokumentaciya" element={<ServiceLanding slug="proektnaya-dokumentaciya" />} />
               <Route path="/services/dismantling-cutting" element={<DismantlingCutting />} />
               <Route path="/stages" element={<WorkStages />} />
               <Route path="/documentation" element={<Documentation />} />
@@ -125,7 +137,8 @@ function AppRoutes() {
               <Route path="/admin/analytics" element={<AdminAnalytics />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
-      </Routes>
+        </Routes>
+      </Suspense>
     </>
   );
 }

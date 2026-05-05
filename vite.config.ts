@@ -18,4 +18,17 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom", "react-helmet-async"],
+          query: ["@tanstack/react-query", "@supabase/supabase-js"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-toast"],
+          animation: ["framer-motion"],
+        },
+      },
+    },
+  },
 }));
