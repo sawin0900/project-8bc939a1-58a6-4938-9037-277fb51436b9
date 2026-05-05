@@ -28,6 +28,8 @@ const quickLinks = [
 
 export function Footer() {
   const { t } = useI18n();
+  const buildDate = __BUILD_DATE__;
+  const commitHash = __COMMIT_HASH__;
 
   return (
     <footer className="bg-ocean-dark border-t border-border">
@@ -128,6 +130,9 @@ export function Footer() {
             </Link>
           </div>
         </div>
+        <p className="mt-3 text-center text-xs text-muted-foreground/80">
+          Build {buildDate} · Commit {commitHash}
+        </p>
       </div>
     </footer>
   );
