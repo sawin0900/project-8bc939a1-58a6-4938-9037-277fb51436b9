@@ -14,7 +14,9 @@
     "test:full": "vitest run",
     "test:watch": "vitest",
     "security:smoke": "bash ./scripts/security-smoke-check.sh",
-    "build:heroes": "node ./scripts/build-hero-webp.mjs"
+    "build:heroes": "node ./scripts/build-hero-webp.mjs",
+    "postbuild": "npm run build:ssr && node ./scripts/prerender.mjs",
+    "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-ssr"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

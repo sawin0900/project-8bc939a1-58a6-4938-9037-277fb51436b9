@@ -14,7 +14,7 @@ const gitCommitHash = (() => {
 })();
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode, isSsrBuild }) => ({
   server: {
     host: "::",
     port: 8080,
@@ -32,17 +32,22 @@ export default defineConfig(({ mode }) => ({
     __BUILD_DATE__: JSON.stringify(buildDate),
     __COMMIT_HASH__: JSON.stringify(gitCommitHash),
   },
+  ssr: isSsrBuild ? {
+    noExternal: ["react-helmet-async"],
+  } : undefined,
   build: {
     cssCodeSplit: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ["react", "react-dom", "react-router-dom", "react-helmet-async"],
-          query: ["@tanstack/react-query", "@supabase/supabase-js"],
-          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-toast"],
-          animation: ["framer-motion"],
+    rollupOptions: isSsrBuild
+      ? undefined
+      : {
+          output: {
+            manualChunks: {
+              react: ["react", "react-dom", "react-router-dom", "react-helmet-async"],
+              query: ["@tanstack/react-query", "@supabase/supabase-js"],
+              ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-toast"],
+              animation: ["framer-motion"],
+            },
+          },
         },
-      },
-    },
   },
 }));
