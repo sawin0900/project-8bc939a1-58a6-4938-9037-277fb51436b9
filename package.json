@@ -14,7 +14,8 @@
     "test:full": "vitest run",
     "test:watch": "vitest",
     "security:smoke": "bash ./scripts/security-smoke-check.sh",
-    "build:heroes": "node ./scripts/build-hero-webp.mjs"
+    "build:heroes": "node ./scripts/build-hero-webp.mjs",
+    "postbuild": "node ./scripts/prerender.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

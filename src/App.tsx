@@ -8,9 +8,16 @@ import { usePageTracking } from "@/hooks/usePageTracking";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense, useEffect } from "react";
 import { I18nProvider, useI18n } from "@/i18n";
+import IndexPage from "./pages/Index";
+import ServicesPage from "./pages/Services";
 
-const Index = lazy(() => import("./pages/Index"));
-const Services = lazy(() => import("./pages/Services"));
+const shouldUseSyncRoutes = typeof window === "undefined";
+const prerenderable = <T extends React.ComponentType<any>>(loader: () => Promise<{ default: T }>, syncComponent: T) => (
+  shouldUseSyncRoutes ? syncComponent : lazy(loader)
+);
+
+const Index = prerenderable(() => import("./pages/Index"), IndexPage);
+const Services = prerenderable(() => import("./pages/Services"), ServicesPage);
 const ServiceLanding = lazy(() => import("./pages/ServiceLanding"));
 const WorkStages = lazy(() => import("./pages/WorkStages"));
 const Documentation = lazy(() => import("./pages/Documentation"));
