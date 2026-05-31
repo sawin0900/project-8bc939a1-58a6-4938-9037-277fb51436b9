@@ -11,10 +11,17 @@ interface SEOHeadProps {
   ogType?: "website" | "article";
 }
 
+const DEFAULT_DESCRIPTION = 'Центр Притяжения выполняет судоподъём затонувших судов, водолазные обследования, демонтаж и проектную документацию в Приморском крае.';
+
 function normalizeCanonicalPath(path: string) {
   const withoutQuery = path.split('?')[0].split('#')[0] || '/';
   if (withoutQuery === '/') return '/';
   return withoutQuery.endsWith('/') ? withoutQuery.slice(0, -1) : withoutQuery;
+}
+
+function normalizeDescription(description: string) {
+  const normalized = description.replace(/\s+/g, ' ').trim();
+  return normalized || DEFAULT_DESCRIPTION;
 }
 
 export function SEOHead({
@@ -34,6 +41,8 @@ export function SEOHead({
     ? ogImage
     : `${baseUrl}${ogImage}`;
 
+  const metaDescription = normalizeDescription(description);
+
   const defaultHreflang = [
     { lang: 'en', url: `${fullCanonical}?lang=en` },
     { lang: 'zh', url: `${fullCanonical}?lang=zh` },
@@ -45,7 +54,7 @@ export function SEOHead({
   return (
     <Helmet>
       <title>{title}</title>
-      <meta name="description" content={description} />
+      <meta name="description" content={metaDescription} />
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
       <link rel="canonical" href={fullCanonical} />
@@ -55,14 +64,14 @@ export function SEOHead({
       ))}
 
       <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
+      <meta property="og:description" content={metaDescription} />
       <meta property="og:url" content={fullCanonical} />
       <meta property="og:type" content={ogType} />
       <meta property="og:image" content={fullOgImage} />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:description" content={metaDescription} />
     </Helmet>
   );
 }

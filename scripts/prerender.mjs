@@ -1,7 +1,6 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
@@ -24,13 +23,10 @@ async function getSitemapRoutes() {
   }
 }
 
+
 const routes = Array.from(new Set([...staticRoutes, ...(await getSitemapRoutes())]));
 const template = await readFile(path.join(distDir, 'index.html'), 'utf8');
 
 for (const route of routes) {
   const file = route === '/' ? path.join(distDir, 'index.html') : path.join(distDir, route.slice(1), 'index.html');
   await mkdir(path.dirname(file), { recursive: true });
-  await writeFile(file, template, 'utf8');
-}
-
-console.log(`Prerendered static entry files for ${routes.length} public routes.`);
