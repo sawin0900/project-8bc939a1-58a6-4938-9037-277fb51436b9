@@ -28,8 +28,20 @@ echo "== Basic connectivity =="
 curl -sS -I "${base_url}" | head -n 1
 
 echo "== Status checks =="
+missing_suffix="$(date +%s)"
 check_code "${base_url}/" "200"
-check_code "${base_url}/this-page-must-not-exist-$(date +%s)" "404"
+check_code "${base_url}/services" "200"
+check_code "${base_url}/services/dismantling-cutting" "200"
+check_code "${base_url}/articles/chto-delat-esli-zatonulo-sudno" "200"
+check_code "${base_url}/this-page-must-not-exist-${missing_suffix}" "404"
+check_code "${base_url}/articles/this-article-must-not-exist-${missing_suffix}" "404"
+check_code "${base_url}/news/this-news-must-not-exist-${missing_suffix}" "404"
+
+echo "== Redirect checks =="
+www_code="$(curl -sS -o /dev/null -w '%{http_code} %{redirect_url}' "https://www.${domain}/")"
+echo "[INFO] https://www.${domain}/ -> ${www_code}"
+slash_code="$(curl -sS -o /dev/null -w '%{http_code} %{redirect_url}' "${base_url}/services/")"
+echo "[INFO] ${base_url}/services/ -> ${slash_code}"
 
 echo "== 5xx quick scan =="
 for path in / /news /services /contacts; do

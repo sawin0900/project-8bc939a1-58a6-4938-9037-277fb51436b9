@@ -12,7 +12,7 @@ import IndexPage from "./pages/Index";
 import ServicesPage from "./pages/Services";
 
 const shouldUseSyncRoutes = typeof window === "undefined";
-const prerenderable = <T extends React.ComponentType<any>>(loader: () => Promise<{ default: T }>, syncComponent: T) => (
+const prerenderable = <T extends React.ComponentType>(loader: () => Promise<{ default: T }>, syncComponent: T) => (
   shouldUseSyncRoutes ? syncComponent : lazy(loader)
 );
 

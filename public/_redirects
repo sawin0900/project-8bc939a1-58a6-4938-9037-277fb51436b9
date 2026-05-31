@@ -9,5 +9,11 @@ https://www.centr-prityazheniya.ru/* https://centr-prityazheniya.ru/:splat 301!
 # Dynamic sitemap with current published news from Supabase Edge Function
 /sitemap.xml https://ivrnoeomnbspvyxhhnwc.supabase.co/functions/v1/sitemap 200
 
-# SPA fallback (must be last)
-/* /index.html 200
+# Non-prerendered private SPA entry points
+/auth /index.html 200
+/admin /index.html 200
+/admin/analytics /index.html 200
+
+# Valid public application routes are prerendered into static /path/index.html files at build time.
+# Do not route unknown URLs to /index.html with HTTP 200: Yandex.Webmaster treats that as a soft 404.
+/* /404.html 404
