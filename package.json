@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "bash ./scripts/run-tests.sh",
+    "seo:meta": "node scripts/validate-meta-descriptions.mjs",
     "test:full": "vitest run",
     "test:watch": "vitest",
     "security:smoke": "bash ./scripts/security-smoke-check.sh",
