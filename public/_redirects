@@ -6,8 +6,9 @@ https://www.centr-prityazheniya.ru/* https://centr-prityazheniya.ru/:splat 301!
 # Normalize trailing slashes for non-root URLs
 /:path/ /:path 301!
 
-# Dynamic sitemap with current published news from Supabase Edge Function
+# Dynamic sitemaps with current published news from Supabase Edge Function
 /sitemap.xml https://ivrnoeomnbspvyxhhnwc.supabase.co/functions/v1/sitemap 200
+/news-sitemap.xml https://ivrnoeomnbspvyxhhnwc.supabase.co/functions/v1/sitemap?type=news 200
 
 # Non-prerendered private SPA entry points
 /auth /index.html 200

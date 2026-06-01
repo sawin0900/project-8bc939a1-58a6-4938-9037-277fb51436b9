@@ -17,12 +17,27 @@ function buildCorsHeaders(origin: string | null) {
 }
 
 const BASE_URL = "https://centr-prityazheniya.ru";
+const VALID_CHANGEFREQ = new Set(["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"]);
+
+interface SitemapImage {
+  loc: string;
+  title?: string;
+}
 
 interface SitemapPage {
   path: string;
   priority: string;
   changefreq: string;
   lastmod?: string;
+  image?: SitemapImage;
+}
+
+interface NewsItem {
+  slug: string;
+  title: string | null;
+  image_url: string | null;
+  updated_at: string | null;
+  created_at: string;
 }
 
 function escapeXml(str: string): string {
@@ -34,6 +49,58 @@ function escapeXml(str: string): string {
     .replace(/'/g, "&apos;");
 }
 
+function normalizePath(path: string): string {
+  if (path === "/") return "/";
+  return `/${path.replace(/^\/+|\/+$/g, "")}`;
+}
+
+function normalizeAbsoluteUrl(value?: string | null): string | undefined {
+  if (!value) return undefined;
+
+  try {
+    return new URL(value, BASE_URL).toString();
+  } catch {
+    return undefined;
+  }
+}
+
+function asDate(value?: string | null): string {
+  if (!value) return new Date().toISOString().split("T")[0];
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? new Date().toISOString().split("T")[0] : date.toISOString().split("T")[0];
+}
+
+function normalizePriority(priority: string): string {
+  const numeric = Number(priority);
+  if (!Number.isFinite(numeric)) return "0.7";
+  return Math.min(1, Math.max(0, numeric)).toFixed(1);
+}
+
+function normalizeChangefreq(changefreq: string): string {
+  return VALID_CHANGEFREQ.has(changefreq) ? changefreq : "monthly";
+}
+
+function routeMeta(path: string): Pick<SitemapPage, "priority" | "changefreq"> {
+  if (path === "/") return { priority: "1.0", changefreq: "weekly" };
+  if (path === "/news") return { priority: "0.8", changefreq: "daily" };
+  if (path.startsWith("/news/")) return { priority: "0.7", changefreq: "daily" };
+  if (path === "/contacts") return { priority: "0.9", changefreq: "monthly" };
+  if (path.startsWith("/articles/")) return { priority: "0.7", changefreq: "monthly" };
+  if (path === "/articles") return { priority: "0.7", changefreq: "weekly" };
+  if (path === "/privacy-policy") return { priority: "0.3", changefreq: "yearly" };
+  if (path === "/faq") return { priority: "0.6", changefreq: "monthly" };
+  if (path === "/emergency") return { priority: "0.7", changefreq: "monthly" };
+  if (path === "/projects") return { priority: "0.8", changefreq: "weekly" };
+  return { priority: "0.8", changefreq: "monthly" };
+}
+
+function isIndexablePath(path: string): boolean {
+  if (!path || path.includes(":")) return false;
+  if (path.includes("*")) return false;
+  return !["/auth", "/admin", "/admin/analytics"].includes(path);
+}
+
 function parseStaticSitemap(xml: string): SitemapPage[] {
   const pages: SitemapPage[] = [];
   const urlBlocks = xml.match(/<url>[\s\S]*?<\/url>/g) || [];
@@ -42,19 +109,19 @@ function parseStaticSitemap(xml: string): SitemapPage[] {
     const loc = block.match(/<loc>(.*?)<\/loc>/)?.[1];
     if (!loc?.startsWith(BASE_URL)) continue;
 
-    const path = loc.slice(BASE_URL.length) || "/";
-    if (path === "/*" || path.includes(":")) continue;
+    const path = normalizePath(loc.slice(BASE_URL.length) || "/");
+    if (!isIndexablePath(path)) continue;
     if (path.startsWith("/news/")) continue;
 
     pages.push({
       path,
       lastmod: block.match(/<lastmod>(.*?)<\/lastmod>/)?.[1],
-      changefreq: block.match(/<changefreq>(.*?)<\/changefreq>/)?.[1] || "monthly",
-      priority: block.match(/<priority>(.*?)<\/priority>/)?.[1] || "0.7",
+      changefreq: normalizeChangefreq(block.match(/<changefreq>(.*?)<\/changefreq>/)?.[1] || "monthly"),
+      priority: normalizePriority(block.match(/<priority>(.*?)<\/priority>/)?.[1] || "0.7"),
     });
   }
 
-  return pages;
+  return dedupePages(pages);
 }
 
 async function getStaticPages(): Promise<SitemapPage[]> {
@@ -73,12 +140,98 @@ async function getStaticPages(): Promise<SitemapPage[]> {
 
   return [
     ...staticPages,
-    ...articlePages.map((path) => ({ path, priority: "0.7", changefreq: "monthly" })),
+    ...articlePages.map((path) => ({ path, ...routeMeta(path) })),
   ];
 }
 
+async function getPublishedNews(supabase: ReturnType<typeof createClient>): Promise<SitemapPage[]> {
+  const newsItems: NewsItem[] = [];
+  const pageSize = 1000;
+  let from = 0;
+
+  while (true) {
+    const to = from + pageSize - 1;
+    const { data, error } = await supabase
+      .from("news")
+      .select("slug, title, image_url, updated_at, created_at")
+      .eq("published", true)
+      .not("slug", "is", null)
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (error) throw error;
+    if (!data || data.length === 0) break;
+
+    newsItems.push(...(data as NewsItem[]));
+
+    if (data.length < pageSize) break;
+    from += pageSize;
+  }
+
+  return dedupePages(newsItems.map((news) => {
+    const slug = String(news.slug || "").trim().replace(/^\/+|\/+$/g, "");
+    const imageLoc = normalizeAbsoluteUrl(news.image_url);
+
+    return {
+      path: `/news/${slug}`,
+      lastmod: asDate(news.updated_at || news.created_at),
+      ...routeMeta(`/news/${slug}`),
+      image: imageLoc ? { loc: imageLoc, title: news.title || undefined } : undefined,
+    };
+  }).filter((page) => page.path !== "/news/" && isIndexablePath(page.path)));
+}
+
+function dedupePages(pages: SitemapPage[]): SitemapPage[] {
+  const seen = new Set<string>();
+  const deduped: SitemapPage[] = [];
+
+  for (const page of pages) {
+    const path = normalizePath(page.path);
+    if (!isIndexablePath(path) || seen.has(path)) continue;
+    seen.add(path);
+    deduped.push({ ...page, path });
+  }
+
+  return deduped;
+}
+
+function renderUrl(page: SitemapPage): string {
+  const meta = routeMeta(page.path);
+  const image = page.image?.loc ? [
+    "    <image:image>",
+    `      <image:loc>${escapeXml(page.image.loc)}</image:loc>`,
+    page.image.title ? `      <image:title>${escapeXml(page.image.title)}</image:title>` : undefined,
+    "    </image:image>",
+  ].filter(Boolean) : [];
+
+  return [
+    "  <url>",
+    `    <loc>${escapeXml(`${BASE_URL}${page.path}`)}</loc>`,
+    `    <lastmod>${escapeXml(page.lastmod || asDate())}</lastmod>`,
+    `    <changefreq>${normalizeChangefreq(page.changefreq || meta.changefreq)}</changefreq>`,
+    `    <priority>${normalizePriority(page.priority || meta.priority)}</priority>`,
+    ...image,
+    "  </url>",
+  ].join("\n");
+}
+
+function renderUrlset(pages: SitemapPage[]): string {
+  const hasImages = pages.some((page) => page.image?.loc);
+  const namespace = hasImages
+    ? `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`
+    : `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+
+  return [
+    `<?xml version="1.0" encoding="UTF-8"?>`,
+    namespace,
+    ...pages.map(renderUrl),
+    `</urlset>`,
+    "",
+  ].join("\n");
+}
+
 // Static pages with their priorities and changefreq
-const staticPages = [
+const staticPages: SitemapPage[] = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/services", priority: "0.8", changefreq: "weekly" },
   { path: "/sudopodem-zatonuvshih-sudov", priority: "0.8", changefreq: "monthly" },
@@ -130,62 +283,16 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+    const requestUrl = new URL(req.url);
+    const type = requestUrl.searchParams.get("type");
 
-    // Fetch all published news in batches (Supabase returns max 1000 rows per request)
-    const newsItems: Array<{ slug: string; updated_at: string | null; created_at: string }> = [];
-    const pageSize = 1000;
-    let from = 0;
+    const newsPages = await getPublishedNews(supabase);
+    const pages = type === "news"
+      ? dedupePages([{ path: "/news", lastmod: newsPages[0]?.lastmod || asDate(), ...routeMeta("/news") }, ...newsPages])
+      : dedupePages([...(await getStaticPages()), ...newsPages]);
 
-    while (true) {
-      const to = from + pageSize - 1;
-      const { data, error } = await supabase
-        .from("news")
-        .select("slug, updated_at, created_at")
-        .eq("published", true)
-        .order("created_at", { ascending: false })
-        .range(from, to);
-
-      if (error) throw error;
-      if (!data || data.length === 0) break;
-
-      newsItems.push(...data);
-
-      if (data.length < pageSize) break;
-      from += pageSize;
-    }
-
-    const today = new Date().toISOString().split("T")[0];
-
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-
-    const pages = await getStaticPages();
-
-    // Static pages from generated static-sitemap.xml. Falls back to the route list above.
-    for (const page of pages) {
-      xml += `  <url>\n`;
-      xml += `    <loc>${escapeXml(`${BASE_URL}${page.path}`)}</loc>\n`;
-      xml += `    <lastmod>${page.lastmod || today}</lastmod>\n`;
-      xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
-      xml += `    <priority>${page.priority}</priority>\n`;
-      xml += `  </url>\n`;
-    }
-
-    // Dynamic news pages
-    for (const news of newsItems) {
-      const lastmod = (news.updated_at || news.created_at).split("T")[0];
-      xml += `  <url>\n`;
-      xml += `    <loc>${escapeXml(`${BASE_URL}/news/${news.slug}`)}</loc>\n`;
-      xml += `    <lastmod>${lastmod}</lastmod>\n`;
-      xml += `    <changefreq>daily</changefreq>\n`;
-      xml += `    <priority>0.7</priority>\n`;
-      xml += `  </url>\n`;
-    }
-
-    xml += `</urlset>`;
-
-    return new Response(xml, {
-      headers: { ...corsHeaders, "Cache-Control": "public, max-age=3600" },
+    return new Response(renderUrlset(pages), {
+      headers: { ...corsHeaders, "Cache-Control": "public, max-age=900" },
     });
   } catch (error) {
     console.error("Sitemap error:", error);
