@@ -1,4 +1,6 @@
 const BASE_URL = 'https://centr-prityazheniya.ru';
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://ivrnoeomnbspvyxhhnwc.supabase.co';
+const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2cm5vZW9tbmJzcHZ5eGhobndjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NzQ0OTYsImV4cCI6MjA4NDM1MDQ5Nn0.R6QfRVqlT_yvncL3744WDESzt0YN3IWYrkRCjaXq1xc';
 
 const STATIC_PAGES = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
@@ -52,49 +54,44 @@ function renderUrl({ loc, lastmod, changefreq, priority }) {
 
 export default async function handler(req, res) {
   const today = new Date().toISOString().slice(0, 10);
-  const supabaseUrl = process.env.VITE_SUPABASE_URL;
-  const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-
   const newsUrls = [];
 
-  if (supabaseUrl && supabaseKey) {
-    try {
-      const PAGE = 1000;
-      let offset = 0;
-      while (true) {
-        const url = new URL('/rest/v1/news', supabaseUrl);
-        url.searchParams.set('select', 'slug,updated_at,created_at');
-        url.searchParams.set('published', 'eq.true');
-        url.searchParams.set('slug', 'not.is.null');
-        url.searchParams.set('order', 'created_at.desc');
-        url.searchParams.set('offset', String(offset));
-        url.searchParams.set('limit', String(PAGE));
+  try {
+    const PAGE = 1000;
+    let offset = 0;
+    while (true) {
+      const url = new URL('/rest/v1/news', SUPABASE_URL);
+      url.searchParams.set('select', 'slug,updated_at,created_at');
+      url.searchParams.set('published', 'eq.true');
+      url.searchParams.set('slug', 'not.is.null');
+      url.searchParams.set('order', 'created_at.desc');
+      url.searchParams.set('offset', String(offset));
+      url.searchParams.set('limit', String(PAGE));
 
-        const r = await fetch(url.toString(), {
-          headers: {
-            apikey: supabaseKey,
-            Authorization: `Bearer ${supabaseKey}`,
-          },
-        });
+      const r = await fetch(url.toString(), {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+        },
+      });
 
-        if (!r.ok) break;
-        const items = await r.json();
-        if (!Array.isArray(items) || items.length === 0) break;
+      if (!r.ok) break;
+      const items = await r.json();
+      if (!Array.isArray(items) || items.length === 0) break;
 
-        for (const item of items) {
-          const slug = String(item.slug || '').trim().replace(/^\/+|\/+$/g, '');
-          if (!slug) continue;
-          const date = item.updated_at || item.created_at;
-          const lastmod = date ? new Date(date).toISOString().slice(0, 10) : today;
-          newsUrls.push({ loc: `${BASE_URL}/news/${slug}`, lastmod, changefreq: 'daily', priority: '0.7' });
-        }
-
-        if (items.length < PAGE) break;
-        offset += PAGE;
+      for (const item of items) {
+        const slug = String(item.slug || '').trim().replace(/^\/+|\/+$/g, '');
+        if (!slug) continue;
+        const date = item.updated_at || item.created_at;
+        const lastmod = date ? new Date(date).toISOString().slice(0, 10) : today;
+        newsUrls.push({ loc: `${BASE_URL}/news/${slug}`, lastmod, changefreq: 'daily', priority: '0.7' });
       }
-    } catch (_) {
-      // fall through to static pages only
+
+      if (items.length < PAGE) break;
+      offset += PAGE;
     }
+  } catch (_) {
+    // serve static pages only on error
   }
 
   const allUrls = [
